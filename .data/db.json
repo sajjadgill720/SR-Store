@@ -1,6 +1,34 @@
 {
   "orders": [
     {
+      "id": "ord_j6h3fkvp",
+      "orderNumber": "SR-5967",
+      "publicToken": "tok_nsnpgzghiohqzbnif3r7u",
+      "customerEmail": "testreader@knovera.com",
+      "customerName": "Test Reader",
+      "currency": "USD",
+      "totalAmount": 1999,
+      "discountAmount": 0,
+      "paymentStatus": "paid",
+      "provider": "development_simulator",
+      "providerOrderId": "sim_1791492663887_l6ls",
+      "items": [
+        {
+          "id": "item_p5rg4e",
+          "bookId": "book-deep-work",
+          "title": "The Focused Mind: Deep Work in a Distracted World",
+          "editionVersion": "Edition 2.1 (2026 Revised)",
+          "price": 1999,
+          "formats": [
+            "epub",
+            "pdf"
+          ]
+        }
+      ],
+      "createdAt": "2026-10-08T20:51:03.890Z",
+      "receiptUrl": "/orders/tok_nsnpgzghiohqzbnif3r7u"
+    },
+    {
       "id": "ord_w0hbmayt",
       "orderNumber": "SR-2919",
       "publicToken": "tok_nimsfok3qratrvudeofbl",
@@ -100,6 +128,14 @@
       "orderId": "ord_w0hbmayt",
       "status": "active",
       "grantedAt": "2026-10-07T22:02:36.067Z"
+    },
+    {
+      "id": "ent_0hj09lbz",
+      "customerEmail": "testreader@knovera.com",
+      "bookId": "book-deep-work",
+      "orderId": "ord_j6h3fkvp",
+      "status": "active",
+      "grantedAt": "2026-10-08T20:51:03.908Z"
     }
   ],
   "downloadTokens": [
@@ -185,6 +221,12 @@
     }
   ],
   "auditLogs": [
+    {
+      "id": "log_1791492663936_xiwh",
+      "action": "ORDER_FULFILLED",
+      "details": "Created order SR-5967 for testreader@knovera.com with 1 items",
+      "timestamp": "2026-10-08T20:51:03.936Z"
+    },
     {
       "id": "log_1791490038034_8g9l",
       "action": "FILE_DOWNLOADED",

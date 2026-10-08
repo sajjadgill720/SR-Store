@@ -7,13 +7,19 @@ import Footer from '../components/layout/Footer';
 import AddToCartModal from '../components/books/AddToCartModal';
 
 export const metadata: Metadata = {
-  title: 'Knovera | Curated Independent Book Studio',
-  description: 'Explore transformative non-fiction works, deep-focus frameworks, and companion toolkits by Knovera. Instant DRM-free downloads in universal PDF and reflowable EPUB.',
+  title: 'Knovera — Independent Book Studio',
+  description: 'Explore transformative non-fiction works, deep-focus frameworks, and companion toolkits by Knovera. Beautifully typeset, DRM-free EPUB and PDF editions with instant delivery and lifetime updates.',
   openGraph: {
-    title: 'Knovera | Curated Independent Book Studio',
-    description: 'Explore transformative non-fiction works, deep-focus frameworks, and companion toolkits by Knovera. Instant DRM-free downloads in universal PDF and reflowable EPUB.',
-    type: 'website'
-  }
+    title: 'Knovera — Independent Book Studio',
+    description: 'Explore transformative non-fiction works, deep-focus frameworks, and companion toolkits by Knovera. DRM-free downloads with lifetime updates.',
+    type: 'website',
+    siteName: 'Knovera',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Knovera — Independent Book Studio',
+    description: 'Explore transformative non-fiction. DRM-free EPUB & PDF with lifetime updates.',
+  },
 };
 
 export default function RootLayout({
@@ -22,8 +28,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen flex flex-col bg-[#FDFBF7] text-[#182A27]">
+    <html lang="en" className="scroll-smooth">
+      <body className="min-h-screen flex flex-col antialiased">
         <CartProvider>
           <TopBar />
           <Header />
