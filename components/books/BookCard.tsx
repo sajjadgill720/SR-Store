@@ -40,7 +40,8 @@ export default function BookCard({ book }: BookCardProps) {
             ? 'text-rose-500 bg-rose-50/90 scale-110' 
             : 'text-stone-400 hover:text-rose-500 hover:scale-110'
         }`}
-        aria-label="Save to Wishlist"
+        aria-label={wishlisted ? `Remove ${book.title} from wishlist` : `Save ${book.title} to wishlist`}
+        aria-pressed={wishlisted}
       >
         <Heart className={`w-4 h-4 ${wishlisted ? 'fill-current' : ''}`} />
       </button>
@@ -87,7 +88,7 @@ export default function BookCard({ book }: BookCardProps) {
 
           {/* Rating */}
           <div className="flex items-center gap-1.5 mt-2.5">
-            <div className="flex text-amber-400">
+            <div className="flex text-sky-400">
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}

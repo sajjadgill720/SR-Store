@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { BookOpen, ShieldCheck, Lock, Heart, ArrowRight } from 'lucide-react';
+import { BookOpen, ShieldCheck, LifeBuoy, Heart, ArrowRight } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -133,8 +133,8 @@ export default function Footer() {
 
           <div className="flex items-center gap-5 text-stone-400">
             <span className="flex items-center gap-1.5">
-              <Lock className="w-3.5 h-3.5 text-emerald-400" />
-              <span>256-Bit SSL</span>
+              <LifeBuoy className="w-3.5 h-3.5 text-sky-300" />
+              <Link href="/contact" className="hover:text-white transition-colors">Reader Support</Link>
             </span>
             <span className="flex items-center gap-1.5">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />

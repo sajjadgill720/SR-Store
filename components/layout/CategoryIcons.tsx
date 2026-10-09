@@ -52,10 +52,10 @@ export default function CategoryIcons() {
       label: 'Bestsellers',
       href: '/books?sort=popular',
       icon: Trophy,
-      color: 'text-amber-600',
-      bgColor: 'bg-amber-50',
-      hoverBg: 'group-hover:bg-amber-100',
-      ring: 'group-hover:ring-amber-200'
+      color: 'text-sky-600',
+      bgColor: 'bg-sky-50',
+      hoverBg: 'group-hover:bg-sky-100',
+      ring: 'group-hover:ring-sky-200'
     },
     {
       label: 'New Arrivals',

@@ -37,19 +37,19 @@ export default function Header() {
     { label: 'All Books & Releases', href: '/books', icon: Compass, color: 'text-[#1A4D3E]' },
     { label: 'Deep Work & Productivity', href: '/books?category=Productivity', dot: 'bg-sky-500' },
     { label: 'Habit Systems & Growth', href: '/books?category=Personal Growth', dot: 'bg-emerald-500' },
-    { label: 'Children & Family Printables', href: '/books?category=Children %26 Family', dot: 'bg-amber-500' },
+    { label: 'Children & Family Printables', href: '/books?category=Children %26 Family', dot: 'bg-sky-500' },
     { label: 'Box Sets & Bundles', href: '/books?category=Bundles', dot: 'bg-violet-500' },
   ];
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-xl border-b border-[#E8E4DA]/80 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
-      <div className="max-w-7xl mx-auto px-4 py-3 sm:py-3.5 flex items-center justify-between gap-3 sm:gap-6">
+      <div className="max-w-7xl mx-auto px-4 py-3 sm:py-3.5 flex flex-wrap sm:flex-nowrap items-center justify-between gap-3 sm:gap-6">
         
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-2.5 group shrink-0">
           <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-[#1A4D3E] to-[#0F1D2F] flex items-center justify-center text-white shadow-md group-hover:shadow-lg transition-all duration-300 group-hover:scale-105">
             <BookOpen className="w-5 h-5 text-emerald-300 group-hover:rotate-6 transition-transform duration-300" />
-            <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-amber-400 border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-sky-400 border-2 border-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </div>
           <div className="flex flex-col">
             <span className="font-serif font-bold text-xl sm:text-2xl text-[#0F1D2F] tracking-tight">
@@ -64,6 +64,8 @@ export default function Header() {
         {/* Categories Dropdown */}
         <div className="relative hidden lg:block">
           <button
+            aria-expanded={isCategoryOpen}
+            aria-label="Explore book categories"
             onClick={() => setIsCategoryOpen(!isCategoryOpen)}
             className={`flex items-center gap-1.5 px-3.5 py-2 text-sm font-semibold rounded-lg transition-all duration-200 ${
               isCategoryOpen 
@@ -100,7 +102,7 @@ export default function Header() {
               ))}
               <div className="border-t border-stone-100 mt-1 pt-1">
                 <Link
-                  href="/bundles"
+                  href="/books?category=Bundles"
                   onClick={() => setIsCategoryOpen(false)}
                   className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#0369A1] hover:bg-sky-50 font-semibold transition-colors"
                 >
@@ -116,7 +118,7 @@ export default function Header() {
         {/* Search Bar */}
         <form 
           onSubmit={handleSearchSubmit} 
-          className="flex-1 max-w-xl relative flex items-center"
+          className="order-last basis-full sm:order-none sm:basis-auto sm:flex-1 sm:max-w-xl relative flex items-center"
         >
           <div className="relative w-full flex items-center group">
             <div className="absolute left-3 text-stone-400 group-focus-within:text-[#0369A1] transition-colors">
@@ -126,6 +128,7 @@ export default function Header() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              aria-label="Search titles, authors, or topics"
               placeholder="Search titles, authors, topics..."
               className="w-full pl-10 pr-10 py-2.5 text-sm bg-stone-50/80 border border-stone-200 rounded-xl focus:bg-white focus:outline-hidden focus:border-[#0369A1] focus:ring-2 focus:ring-[#0369A1]/10 transition-all text-[#0F1D2F] placeholder-stone-400"
             />
@@ -159,6 +162,8 @@ export default function Header() {
 
           {/* Mobile Menu Toggle */}
           <button
+            aria-label="Toggle navigation"
+            aria-expanded={isMobileMenuOpen}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="lg:hidden p-2 rounded-lg hover:bg-stone-100 text-[#0F1D2F] transition-colors"
           >

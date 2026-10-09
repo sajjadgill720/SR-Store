@@ -16,7 +16,7 @@ export default function DeviceHelpSection() {
       title: 'iPad & iPhone',
       icon: Smartphone,
       description: 'One-tap import into Apple Books. Adjust fonts, dark mode, and paper tint to your preference.',
-      link: '/help/apple-books',
+      link: '/help',
       gradient: 'from-sky-500 to-blue-600',
       bgLight: 'bg-sky-50',
     },
@@ -24,22 +24,22 @@ export default function DeviceHelpSection() {
       title: 'Android & Kobo',
       icon: Laptop,
       description: 'Read on Google Play Books, Moon+ Reader, Kobo devices, or any standard EPUB reader.',
-      link: '/help/android',
+      link: '/help',
       gradient: 'from-violet-500 to-indigo-600',
       bgLight: 'bg-violet-50',
     },
     {
       title: 'Home Printing',
       icon: Printer,
-      description: 'Optimized 300 DPI vector PDFs with generous margins for US Letter and A4 printers.',
-      link: '/help/printing',
-      gradient: 'from-amber-400 to-orange-500',
-      bgLight: 'bg-amber-50',
+      description: 'Print-friendly PDFs with generous margins for US Letter and A4 printers.',
+      link: '/help',
+      gradient: 'from-sky-400 to-blue-500',
+      bgLight: 'bg-sky-50',
     }
   ];
 
   return (
-    <section className="py-14 sm:py-20 bg-gradient-to-b from-[#FDFBF7] to-white border-t border-stone-100">
+    <section data-reveal className="py-14 sm:py-20 bg-gradient-to-b from-[#FDFBF7] to-white border-t border-stone-100">
       <div className="max-w-7xl mx-auto px-4">
         
         <div className="text-center max-w-xl mx-auto mb-12">

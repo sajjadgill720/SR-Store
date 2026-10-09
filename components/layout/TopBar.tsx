@@ -12,7 +12,7 @@ export default function TopBar() {
         {/* Left: Key value proposition */}
         <div className="flex items-center gap-2.5">
           <span className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-sm text-white text-[10px] font-bold px-2.5 py-1 rounded-full tracking-wide uppercase border border-white/10">
-            <Zap className="w-3 h-3 text-amber-300 fill-amber-300" />
+            <Zap className="w-3 h-3 text-sky-300 fill-sky-300" />
             Instant Delivery
           </span>
           <span className="font-medium text-white/75 hidden sm:inline">

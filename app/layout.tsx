@@ -1,10 +1,14 @@
 import type { Metadata } from 'next';
+import { DM_Sans, Cormorant_Garamond } from 'next/font/google';
 import './globals.css';
 import { CartProvider } from '../lib/store/cart';
 import TopBar from '../components/layout/TopBar';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import AddToCartModal from '../components/books/AddToCartModal';
+
+const sans = DM_Sans({ subsets: ['latin'], variable: '--font-sans', display: 'swap' });
+const serif = Cormorant_Garamond({ subsets: ['latin'], weight: ['400', '500', '600', '700'], style: ['normal', 'italic'], variable: '--font-editorial', display: 'swap' });
 
 export const metadata: Metadata = {
   title: 'Knovera — Independent Book Studio',
@@ -29,11 +33,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className="min-h-screen flex flex-col antialiased">
+      <body className={`${sans.variable} ${serif.variable} min-h-screen flex flex-col antialiased`}>
+        <a href="#main-content" className="skip-link">Skip to content</a>
         <CartProvider>
           <TopBar />
           <Header />
-          <main className="flex-1">
+          <main id="main-content" className="flex-1" tabIndex={-1}>
             {children}
           </main>
           <Footer />

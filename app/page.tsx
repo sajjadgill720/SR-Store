@@ -1,5 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
+import ScrollReveal from '../components/home/ScrollReveal';
+import TrustBar from '../components/home/TrustBar';
 import HeroBanner from '../components/home/HeroBanner';
 import CategoryIcons from '../components/layout/CategoryIcons';
 import ImpactStats from '../components/home/ImpactStats';
@@ -8,7 +10,7 @@ import DeviceHelpSection from '../components/home/DeviceHelpSection';
 import BookCard from '../components/books/BookCard';
 import { BUNDLES_DATA } from '../lib/data/books';
 import { db } from '../lib/db/store';
-import { Sparkles, ArrowRight, CheckCircle2, ShieldCheck, Download, RefreshCw, Smartphone } from 'lucide-react';
+import { Sparkles, ArrowRight, ShieldCheck, Download, RefreshCw } from 'lucide-react';
 
 export default function HomePage() {
   const allBooks = db.getBooks();
@@ -17,26 +19,27 @@ export default function HomePage() {
   const bundle = BUNDLES_DATA[0];
 
   return (
-    <div className="space-y-0">
+    <ScrollReveal>
       
       {/* 1. Hero Banner */}
       <HeroBanner featuredBook={featuredBook} />
+      <TrustBar />
 
       {/* 2. BetterWorldBooks Style Category Icons Row */}
       <CategoryIcons />
 
       {/* 3. Featured Books Section (BetterWorldBooks Grid) */}
-      <section className="py-12 sm:py-16 max-w-7xl mx-auto px-4">
+      <section data-reveal className="py-16 sm:py-24 max-w-7xl mx-auto px-4 catalog-section">
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-8 pb-4 border-b border-stone-200 gap-3">
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="w-2.5 h-2.5 rounded-full bg-[#008bd2]"></span>
               <span className="text-xs font-bold text-[#008bd2] uppercase tracking-widest">
-                DIRECT CATALOG
+                THE READING ROOM
               </span>
             </div>
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#182A27]">
-              Published Titles & Printable Packs
+            <h2 className="font-serif text-3xl sm:text-5xl font-semibold text-[#182A27]">
+              Ideas worth spending time with
             </h2>
           </div>
 
@@ -59,9 +62,9 @@ export default function HomePage() {
 
       {/* 4. Curated Digital Box Set / Bundle Banner */}
       {bundle && (
-        <section className="py-10 bg-[#182A27] text-white">
+        <section data-reveal className="bundle-section py-12 sm:py-20 text-white">
           <div className="max-w-7xl mx-auto px-4">
-            <div className="bg-[#23584B] rounded-2xl p-6 sm:p-10 border border-emerald-700/50 shadow-xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div className="bundle-panel rounded-3xl p-6 sm:p-10 border border-white/15 shadow-xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
               
               <div className="lg:col-span-8 space-y-4">
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-[#0284C7] text-white text-xs font-bold uppercase tracking-wider shadow-xs">
@@ -73,13 +76,13 @@ export default function HomePage() {
                   {bundle.title}
                 </h3>
 
-                <p className="text-sm text-emerald-100 max-w-2xl leading-relaxed">
+                <p className="text-sm text-sky-100 max-w-2xl leading-relaxed">
                   {bundle.description}
                 </p>
 
                 {/* Included titles breakdown */}
-                <div className="p-4 bg-[#182A27]/60 rounded-lg border border-emerald-800/60 max-w-2xl">
-                  <span className="text-xs font-bold uppercase tracking-wider text-emerald-300 block mb-2">
+                <div className="p-4 bg-white/5 rounded-lg border border-white/15 max-w-2xl">
+                  <span className="text-xs font-bold uppercase tracking-wider text-sky-200 block mb-2">
                     Included In This Box Set:
                   </span>
                   <div className="space-y-1.5 text-xs text-stone-200">
@@ -97,11 +100,11 @@ export default function HomePage() {
                     <span className="text-3xl font-bold text-white">
                       ${(bundle.price / 100).toFixed(2)}
                     </span>
-                    <span className="text-sm text-emerald-300/70 line-through">
+                    <span className="text-sm text-sky-200/70 line-through">
                       ${(bundle.originalPrice / 100).toFixed(2)}
                     </span>
                   </div>
-                  <span className="text-xs font-bold text-emerald-200 bg-emerald-800 px-2.5 py-1 rounded">
+                  <span className="text-xs font-bold text-sky-100 bg-sky-800 px-2.5 py-1 rounded">
                     Save {bundle.savingsPercentage}% Instantly
                   </span>
                 </div>
@@ -121,10 +124,10 @@ export default function HomePage() {
               <div className="lg:col-span-4 flex justify-center">
                 <div className="relative flex items-center justify-center">
                   <div className="w-40 h-56 rounded-lg overflow-hidden shadow-2xl rotate-[-6deg] border border-white/20">
-                    <img src={bundle.books[0].coverImage} alt="Cover 1" className="w-full h-full object-cover" />
+                    <img src={bundle.books[0].coverImage} alt={bundle.books[0].title} className="w-full h-full object-cover" />
                   </div>
                   <div className="w-40 h-56 rounded-lg overflow-hidden shadow-2xl rotate-[8deg] -ml-16 border border-white/20">
-                    <img src={bundle.books[1].coverImage} alt="Cover 2" className="w-full h-full object-cover" />
+                    <img src={bundle.books[1].coverImage} alt={bundle.books[1].title} className="w-full h-full object-cover" />
                   </div>
                 </div>
               </div>
@@ -138,13 +141,13 @@ export default function HomePage() {
       <ImpactStats />
 
       {/* 6. Why Buy Direct Section */}
-      <section className="py-12 sm:py-16 bg-white border-b border-stone-200">
+      <section data-reveal className="experience-section py-16 sm:py-24 border-b border-stone-200">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center max-w-2xl mx-auto mb-10">
             <span className="text-xs font-bold text-[#0284C7] uppercase tracking-widest block mb-1">
               THE KNOVERA EXPERIENCE
             </span>
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#11252B]">
+            <h2 className="font-serif text-3xl sm:text-5xl font-semibold text-[#11252B]">
               Built for Readers Who Cherish Depth
             </h2>
             <p className="text-xs sm:text-sm text-stone-600 mt-2">
@@ -153,7 +156,7 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="p-6 rounded-xl bg-stone-50 border border-stone-200 flex flex-col items-start hover:-translate-y-1 hover:shadow-md transition-all duration-300">
+            <div className="experience-card p-8 rounded-2xl bg-white/70 border border-white flex flex-col items-start hover:-translate-y-1 hover:shadow-md transition-all duration-300">
               <div className="w-12 h-12 rounded-lg bg-emerald-100 text-[#23584B] flex items-center justify-center mb-4 shadow-2xs">
                 <Download className="w-6 h-6" />
               </div>
@@ -165,7 +168,7 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="p-6 rounded-xl bg-stone-50 border border-stone-200 flex flex-col items-start hover:-translate-y-1 hover:shadow-md transition-all duration-300">
+            <div className="experience-card p-8 rounded-2xl bg-white/70 border border-white flex flex-col items-start hover:-translate-y-1 hover:shadow-md transition-all duration-300">
               <div className="w-12 h-12 rounded-lg bg-sky-100 text-[#0284C7] flex items-center justify-center mb-4 shadow-2xs">
                 <RefreshCw className="w-6 h-6" />
               </div>
@@ -177,7 +180,7 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="p-6 rounded-xl bg-stone-50 border border-stone-200 flex flex-col items-start hover:-translate-y-1 hover:shadow-md transition-all duration-300">
+            <div className="experience-card p-8 rounded-2xl bg-white/70 border border-white flex flex-col items-start hover:-translate-y-1 hover:shadow-md transition-all duration-300">
               <div className="w-12 h-12 rounded-lg bg-blue-100 text-[#0284C7] flex items-center justify-center mb-4 shadow-2xs">
                 <ShieldCheck className="w-6 h-6" />
               </div>
@@ -198,6 +201,6 @@ export default function HomePage() {
       {/* 8. Device Compatibility & Kindle Push Guide */}
       <DeviceHelpSection />
 
-    </div>
+    </ScrollReveal>
   );
 }

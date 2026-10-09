@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, Sparkles, BookOpen, CheckCircle, Zap, Star } from 'lucide-react';
+import { ArrowRight, Sparkles, BookOpen, CheckCircle, Zap } from 'lucide-react';
 import { BOOKS_DATA } from '../../lib/data/books';
 import { Book } from '../../lib/types';
 
@@ -19,13 +19,13 @@ export default function HeroBanner({ featuredBook: propBook }: HeroBannerProps) 
       {/* Atmospheric glow orbs */}
       <div className="absolute top-0 left-1/4 w-[32rem] h-[32rem] rounded-full bg-sky-200/30 blur-[80px] pointer-events-none animate-pulse-soft"></div>
       <div className="absolute -right-24 -bottom-24 w-[36rem] h-[36rem] rounded-full bg-blue-100/40 blur-[100px] pointer-events-none"></div>
-      <div className="absolute top-1/3 right-1/3 w-80 h-80 rounded-full bg-amber-50/40 blur-[60px] pointer-events-none"></div>
+      <div className="absolute top-1/3 right-1/3 w-80 h-80 rounded-full bg-sky-50/40 blur-[60px] pointer-events-none"></div>
       <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#0369A1]/15 to-transparent"></div>
 
       {/* Decorative dot pattern */}
       <div className="absolute inset-0 opacity-[0.07] pointer-events-none bg-[radial-gradient(#0369A1_0.8px,transparent_0.8px)] [background-size:24px_24px]"></div>
 
-      <div className="max-w-7xl mx-auto px-4 py-14 sm:py-24 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 py-14 sm:py-28 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-16 items-center">
           
           {/* Left Column */}
@@ -42,11 +42,11 @@ export default function HeroBanner({ featuredBook: propBook }: HeroBannerProps) 
               <span className="text-xs sm:text-sm font-bold tracking-[0.2em] uppercase text-[#0369A1]/70">
                 Curated Reading
               </span>
-              <h1 className="font-serif text-4xl sm:text-5xl lg:text-[3.75rem] font-bold tracking-tight text-[#0F1D2F] leading-[1.1]">
-                Discover your next
+              <h1 className="font-serif text-5xl sm:text-6xl lg:text-[5rem] font-bold tracking-tight text-[#0F1D2F] leading-[1.1]">
+                Make room for your
                 <br />
                 <span className="relative inline-block">
-                  <span className="text-gradient italic font-normal">great read</span>
+                  <span className="text-gradient italic font-normal">next chapter</span>
                   <svg className="absolute -bottom-2 left-0 w-full" viewBox="0 0 200 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M2 8C30 3 70 2 100 5C130 8 170 7 198 4" stroke="#0369A1" strokeWidth="2.5" strokeLinecap="round" strokeOpacity="0.25"/>
                   </svg>
@@ -93,34 +93,19 @@ export default function HeroBanner({ featuredBook: propBook }: HeroBannerProps) 
               </Link>
             </div>
 
-            {/* Social Proof Micro-Bar */}
-            <div className="flex items-center gap-3 pt-2 animate-fade-in-up delay-500">
-              <div className="flex -space-x-2">
-                {['bg-sky-400', 'bg-emerald-400', 'bg-amber-400', 'bg-violet-400'].map((c, i) => (
-                  <div key={i} className={`w-7 h-7 rounded-full ${c} border-2 border-white shadow-sm flex items-center justify-center text-white text-[9px] font-bold`}>
-                    {['SR', 'AK', 'JM', 'LP'][i]}
-                  </div>
-                ))}
-              </div>
-              <div className="text-xs text-[#718096]">
-                <div className="flex items-center gap-1">
-                  <div className="flex text-amber-400">
-                    {[...Array(5)].map((_, i) => <Star key={i} className="w-3 h-3 fill-current" />)}
-                  </div>
-                  <span className="font-semibold text-[#0F1D2F]">4.9</span>
-                </div>
-                <span>Loved by 5,600+ readers</span>
-              </div>
+            <div className="flex items-center gap-3 pt-3 animate-fade-in-up delay-500 text-xs text-slate-600">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full border border-sky-200 bg-white/70"><BookOpen className="w-4 h-4 text-sky-700" /></span>
+              <span>A thoughtful read. A fresh perspective.<br /><span className="text-slate-500">Start with a free chapter, at your own pace.</span></span>
             </div>
           </div>
 
           {/* Right Column — Book Showcase */}
           <div className="md:col-span-5 flex justify-center md:justify-end animate-fade-in-right delay-200">
-            <div className="relative group">
+            <div className="relative group hero-showcase">
               
               {/* Floating badges */}
               <div className="hidden sm:flex items-center gap-1.5 px-3.5 py-2 rounded-full glass text-[#0F1D2F] text-[11px] font-bold shadow-lg absolute -top-6 -left-8 z-20 animate-float-slow">
-                <Zap className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                <Zap className="w-3.5 h-3.5 text-sky-500 fill-sky-500" />
                 <span>Instant Delivery</span>
               </div>
 
@@ -130,13 +115,16 @@ export default function HeroBanner({ featuredBook: propBook }: HeroBannerProps) 
               </div>
 
               {/* Ambient glow */}
-              <div className="absolute inset-0 bg-gradient-to-br from-sky-200/40 to-amber-100/30 rounded-2xl rotate-3 scale-95 transition-transform duration-700 group-hover:rotate-5 blur-sm"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-sky-200/40 to-sky-100/30 rounded-2xl rotate-3 scale-95 transition-transform duration-700 group-hover:rotate-5 blur-sm"></div>
               
               {/* Book cover container */}
               <div className="relative bg-white p-4 rounded-2xl shadow-xl shadow-[#0F1D2F]/8 border border-stone-100/80 max-w-[280px] sm:max-w-[320px] transition-all duration-700 group-hover:scale-[1.02] animate-float card-hover">
                 <img
                   src={featuredBook.coverImage}
                   alt={featuredBook.title}
+                  fetchPriority="high"
+                  width={320}
+                  height={352}
                   className="w-full h-80 sm:h-[22rem] object-cover rounded-xl shadow-inner"
                 />
                 
