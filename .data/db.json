@@ -222,6 +222,12 @@
   ],
   "auditLogs": [
     {
+      "id": "log_1791545990835",
+      "action": "BOOK_DELETED",
+      "details": "Deleted title \"The Solo Architect: Building High-Leverage Software\" (book-solo-architect)",
+      "timestamp": "2026-10-09T11:39:50.835Z"
+    },
+    {
       "id": "log_1791492663936_xiwh",
       "action": "ORDER_FULFILLED",
       "details": "Created order SR-5967 for testreader@knovera.com with 1 items",
@@ -493,76 +499,6 @@
       "isPublished": true,
       "isInStock": true,
       "featured": false
-    },
-    {
-      "id": "book-solo-architect",
-      "slug": "the-solo-architect",
-      "title": "The Solo Architect: Building High-Leverage Software",
-      "subtitle": "From specification to production: how one disciplined engineer ships durable software in days, not quarters.",
-      "author": "S.R. Rehman",
-      "penName": "S.R. Rehman",
-      "category": "Nonfiction",
-      "productType": "ebook",
-      "coverImage": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=800&auto=format&fit=crop",
-      "accentColor": "#0f766e",
-      "price": 2400,
-      "originalPrice": 3200,
-      "badge": "New Release",
-      "conditionLabel": "Digital Master • EPUB + PDF",
-      "formats": [
-        "epub",
-        "pdf"
-      ],
-      "pageCount": 312,
-      "isbn": "978-1-95432-104-9",
-      "shortDescription": "The modern playbook for individual builders: ruthless prioritization, modular monoliths, and agentic leverage.",
-      "fullDescription": "Building resilient software no longer requires fifty engineers or layers of management. \"The Solo Architect\" details the engineering principles, architectural patterns, and automation workflows that allow a single craftsperson to conceive, engineer, and deploy mission-critical systems with speed and surgical precision.",
-      "targetAudience": "Software engineers, technical founders, and solo developers seeking maximum leverage.",
-      "whatsIncluded": [
-        "Reflowable EPUB + Typeset PDF format",
-        "System Architecture Blueprint Checklist",
-        "Production Deployment & Rollback Runbook template"
-      ],
-      "tableOfContents": [
-        "1. The Monolith Reclaimed: Simplicity as a Superpower",
-        "2. Invariant-Driven Design: Making Illegal States Unrepresentable",
-        "3. Ergonomic Schemas and Database-Backed Outbox Patterns",
-        "4. Agentic Pair Programming: Directing the Coding Assistant",
-        "5. Testing What Truly Matters in Commercial Software"
-      ],
-      "sampleExcerpt": "Chapter 1: The Monolith Reclaimed\n\nFor a decade, the software industry suffered from collective organizational mimicry. Startups with two engineers and twenty users were instructed to decompose their application into forty microservices, orchestrate them with Kubernetes clusters, and communicate via distributed message buses.\n\nThe result was predictable: overwhelming latency, distributed transaction chaos, and massive cloud hosting invoices.\n\nThe Solo Architect chooses a different path: the modular monolith. By co-locating domain boundaries in a single, well-typed repository with explicit database transactions, you eliminate network boundaries from your critical path...",
-      "rightsStatus": "wide",
-      "currentEdition": {
-        "id": "ed-sa-v1",
-        "version": "Edition 1.0 (First Release)",
-        "releaseDate": "October 2026",
-        "releaseNotes": "First published edition.",
-        "assets": [
-          {
-            "id": "asset-sa-epub",
-            "format": "epub",
-            "fileName": "The-Solo-Architect-v1.0.epub",
-            "fileSize": "4.1 MB",
-            "storageKey": "secure/books/solo-architect-1.0.epub",
-            "mimeType": "application/epub+zip",
-            "checksum": "sha256-789abcde..."
-          },
-          {
-            "id": "asset-sa-pdf",
-            "format": "pdf",
-            "fileName": "The-Solo-Architect-v1.0.pdf",
-            "fileSize": "9.2 MB",
-            "storageKey": "secure/books/solo-architect-1.0.pdf",
-            "mimeType": "application/pdf",
-            "checksum": "sha256-89abcdef..."
-          }
-        ]
-      },
-      "rating": 4.9,
-      "reviewCount": 38,
-      "isPublished": true,
-      "isInStock": true,
-      "featured": true
     }
   ]
 }
