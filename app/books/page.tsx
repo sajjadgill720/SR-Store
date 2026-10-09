@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { BOOKS_DATA } from '../../lib/data/books';
 import { Book } from '../../lib/types';
 import BookCard from '../../components/books/BookCard';
-import { Filter, SlidersHorizontal, Search, RotateCcw } from 'lucide-react';
+import { Search, RotateCcw } from 'lucide-react';
 
 function BooksCatalogContent() {
   const searchParams = useSearchParams();
@@ -40,7 +40,7 @@ function BooksCatalogContent() {
   }, [books]);
 
   const categories = dynamicCategories;
-  const formats = ['All', 'epub', 'pdf', 'printable_pdf'];
+
 
   const filteredBooks = useMemo(() => {
     return books.filter((book) => {
@@ -55,7 +55,7 @@ function BooksCatalogContent() {
 
       // Format filter
       if (selectedFormat !== 'All') {
-        if (!book.formats.includes(selectedFormat as any)) return false;
+        if (!book.formats.some(format => format === selectedFormat)) return false;
       }
 
       // In stock filter (BetterWorldBooks feature)
@@ -81,7 +81,7 @@ function BooksCatalogContent() {
       if (sortBy === 'popular') return b.reviewCount - a.reviewCount;
       return 0; // featured default
     });
-  }, [selectedCategory, selectedFormat, inStockOnly, searchQuery, sortBy]);
+  }, [books, selectedCategory, selectedFormat, inStockOnly, searchQuery, sortBy]);
 
   const resetFilters = () => {
     setSelectedCategory('All');
@@ -92,8 +92,8 @@ function BooksCatalogContent() {
   };
 
   return (
-    <div className="py-8 sm:py-12 max-w-7xl mx-auto px-4">
-      
+    <div className="catalog-page py-8 sm:py-12 max-w-7xl mx-auto px-4">
+
       {/* Title & Header */}
       <div className="mb-6">
         <h1 className="font-serif text-2xl sm:text-4xl font-bold text-[#182A27]">
@@ -106,16 +106,17 @@ function BooksCatalogContent() {
 
       {/* Pill-Style Filter Chips (BetterWorldBooks Filter Bar) */}
       <div className="bg-white p-4 rounded-xl border border-stone-200 shadow-2xs mb-8 flex flex-wrap items-center justify-between gap-4">
-        
+
         {/* Left Filter Controls */}
         <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-          
+
           {/* Category Dropdown */}
           <div className="flex items-center gap-1.5">
             <span className="text-xs font-bold text-stone-500 uppercase tracking-wider hidden sm:inline">
               Category:
             </span>
             <select
+              aria-label="Book category"
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
               className="text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded-md px-2.5 py-1.5 font-medium text-[#182A27] focus:outline-hidden focus:border-[#23584B]"
@@ -132,6 +133,7 @@ function BooksCatalogContent() {
               Format:
             </span>
             <select
+              aria-label="Book format"
               value={selectedFormat}
               onChange={(e) => setSelectedFormat(e.target.value)}
               className="text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded-md px-2.5 py-1.5 font-medium text-[#182A27] focus:outline-hidden focus:border-[#23584B]"
@@ -172,6 +174,7 @@ function BooksCatalogContent() {
             Sort by:
           </span>
           <select
+            aria-label="Sort books"
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
             className="text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded-md px-2.5 py-1.5 font-medium text-[#182A27] focus:outline-hidden focus:border-[#23584B]"
@@ -188,7 +191,7 @@ function BooksCatalogContent() {
 
       {/* Book Grid */}
       {filteredBooks.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="book-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {filteredBooks.map((book) => (
             <BookCard key={book.id} book={book} />
           ))}
@@ -200,7 +203,7 @@ function BooksCatalogContent() {
             No matching books found
           </h3>
           <p className="text-xs sm:text-sm text-stone-500 max-w-md mx-auto mt-1 mb-4">
-            We couldn't find any titles matching your selected filters. Try resetting the filters or modifying your query.
+            We couldn&apos;t find any titles matching your selected filters. Try resetting the filters or modifying your query.
           </p>
           <button
             onClick={resetFilters}

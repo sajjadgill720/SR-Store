@@ -6,6 +6,7 @@ import TopBar from '../components/layout/TopBar';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import AddToCartModal from '../components/books/AddToCartModal';
+import MobileNav from '../components/layout/MobileNav';
 
 const sans = DM_Sans({ subsets: ['latin'], variable: '--font-sans', display: 'swap' });
 const serif = Cormorant_Garamond({ subsets: ['latin'], weight: ['400', '500', '600', '700'], style: ['normal', 'italic'], variable: '--font-editorial', display: 'swap' });
@@ -42,6 +43,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <MobileNav />
           <AddToCartModal />
         </CartProvider>
       </body>

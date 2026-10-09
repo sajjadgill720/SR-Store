@@ -12,7 +12,7 @@ export default function HeroBanner({ featuredBook: propBook }: HeroBannerProps) 
   const featuredBook = propBook || BOOKS_DATA[0];
 
   return (
-    <section className="relative overflow-hidden noise-overlay">
+    <section className="mobile-hero relative overflow-hidden noise-overlay">
       {/* Multi-layered gradient background */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#F0F9FF] via-[#FDFBF7] to-[#F5F0E8]"></div>
       
@@ -25,11 +25,11 @@ export default function HeroBanner({ featuredBook: propBook }: HeroBannerProps) 
       {/* Decorative dot pattern */}
       <div className="absolute inset-0 opacity-[0.07] pointer-events-none bg-[radial-gradient(#0369A1_0.8px,transparent_0.8px)] [background-size:24px_24px]"></div>
 
-      <div className="max-w-7xl mx-auto px-4 py-14 sm:py-28 relative z-10">
+      <div className="hero-inner max-w-7xl mx-auto px-4 py-14 sm:py-28 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-16 items-center">
           
           {/* Left Column */}
-          <div className="md:col-span-7 flex flex-col items-start space-y-6">
+          <div className="hero-copy md:col-span-7 flex flex-col items-start space-y-6">
             
             {/* Pill Badge */}
             <div className="animate-fade-in-up inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-[#0369A1] text-xs font-semibold tracking-wider uppercase shadow-sm">
@@ -55,12 +55,12 @@ export default function HeroBanner({ featuredBook: propBook }: HeroBannerProps) 
             </div>
 
             {/* Subtext */}
-            <p className="text-sm sm:text-base text-[#4A5568] max-w-lg leading-relaxed animate-fade-in-up delay-200">
+            <p className="hero-description text-sm sm:text-base text-[#4A5568] max-w-lg leading-relaxed animate-fade-in-up delay-200">
               Welcome to <strong className="text-[#0F1D2F]">Knovera</strong> — beautifully typeset non-fiction that expands your mind and clarifies your goals. DRM-free EPUB & PDF, ready for any device.
             </p>
 
             {/* Value Props Grid */}
-            <div className="grid grid-cols-2 gap-x-6 gap-y-2.5 text-xs text-[#4A5568] py-1 animate-fade-in-up delay-300">
+            <div className="hero-perks grid grid-cols-2 gap-x-6 gap-y-2.5 text-xs text-[#4A5568] py-1 animate-fade-in-up delay-300">
               {[
                 'Instant DRM-Free Downloads',
                 'Free Lifetime Updates',
@@ -75,7 +75,7 @@ export default function HeroBanner({ featuredBook: propBook }: HeroBannerProps) 
             </div>
 
             {/* CTA Buttons */}
-            <div className="pt-1 flex flex-wrap gap-3.5 animate-fade-in-up delay-400">
+            <div className="hero-actions pt-1 flex flex-wrap gap-3.5 animate-fade-in-up delay-400">
               <Link
                 href="/books"
                 className="group px-7 py-3.5 rounded-xl bg-gradient-to-r from-[#0F1D2F] to-[#1A3A4F] hover:from-[#0369A1] hover:to-[#075985] text-white font-bold text-sm tracking-wide flex items-center gap-2.5 shadow-lg shadow-[#0F1D2F]/20 hover:shadow-[#0369A1]/25 transition-all duration-400 hover:-translate-y-0.5"
@@ -93,7 +93,7 @@ export default function HeroBanner({ featuredBook: propBook }: HeroBannerProps) 
               </Link>
             </div>
 
-            <div className="flex items-center gap-3 pt-3 animate-fade-in-up delay-500 text-xs text-slate-600">
+            <div className="hero-note flex items-center gap-3 pt-3 animate-fade-in-up delay-500 text-xs text-slate-600">
               <span className="flex h-9 w-9 items-center justify-center rounded-full border border-sky-200 bg-white/70"><BookOpen className="w-4 h-4 text-sky-700" /></span>
               <span>A thoughtful read. A fresh perspective.<br /><span className="text-slate-500">Start with a free chapter, at your own pace.</span></span>
             </div>
@@ -118,7 +118,8 @@ export default function HeroBanner({ featuredBook: propBook }: HeroBannerProps) 
               <div className="absolute inset-0 bg-gradient-to-br from-sky-200/40 to-sky-100/30 rounded-2xl rotate-3 scale-95 transition-transform duration-700 group-hover:rotate-5 blur-sm"></div>
               
               {/* Book cover container */}
-              <div className="relative bg-white p-4 rounded-2xl shadow-xl shadow-[#0F1D2F]/8 border border-stone-100/80 max-w-[280px] sm:max-w-[320px] transition-all duration-700 group-hover:scale-[1.02] animate-float card-hover">
+              <div className="hero-feature relative bg-white p-4 rounded-2xl shadow-xl shadow-[#0F1D2F]/8 border border-stone-100/80 max-w-[280px] sm:max-w-[320px] transition-all duration-700 group-hover:scale-[1.02] animate-float card-hover">
+                <Link href={`/books/${featuredBook.slug}`} aria-label={`Explore ${featuredBook.title}`} className="absolute inset-0 z-10 rounded-2xl" />
                 <img
                   src={featuredBook.coverImage}
                   alt={featuredBook.title}
@@ -129,12 +130,12 @@ export default function HeroBanner({ featuredBook: propBook }: HeroBannerProps) 
                 />
                 
                 {/* Book info bar */}
-                <div className="mt-3.5 p-3 bg-gradient-to-r from-stone-50 to-white rounded-lg text-[#0F1D2F] flex items-center justify-between border border-stone-100/60">
+                <div className="hero-feature-info mt-3.5 p-3 bg-gradient-to-r from-stone-50 to-white rounded-lg text-[#0F1D2F] flex items-center justify-between border border-stone-100/60">
                   <div className="min-w-0">
                     <span className="text-[10px] font-bold text-[#0369A1] uppercase tracking-[0.15em] block">
                       Featured
                     </span>
-                    <span className="font-serif font-bold text-xs truncate max-w-[180px] block text-[#0F1D2F]">
+                    <span className="hero-feature-title font-serif font-bold text-xs truncate max-w-[180px] block text-[#0F1D2F]">
                       {featuredBook.title}
                     </span>
                   </div>

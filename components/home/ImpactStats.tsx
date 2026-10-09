@@ -38,7 +38,7 @@ export default function ImpactStats() {
   ];
 
   return (
-    <section data-reveal className="relative bg-gradient-to-r from-[#F5FAFF] via-white to-[#F5FAFF] border-y border-stone-100 py-10 sm:py-14 overflow-hidden">
+    <section data-reveal className="benefits-section relative bg-gradient-to-r from-[#F5FAFF] via-white to-[#F5FAFF] border-y border-stone-100 py-10 sm:py-14 overflow-hidden">
       {/* Subtle accent line */}
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#0369A1]/10 to-transparent"></div>
       

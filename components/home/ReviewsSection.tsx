@@ -4,7 +4,7 @@ import { REVIEWS_DATA } from '../../lib/data/books';
 
 export default function ReviewsSection() {
   return (
-    <section data-reveal className="py-14 sm:py-20 bg-white border-t border-stone-100">
+    <section data-reveal className="reviews-section py-14 sm:py-20 bg-white border-t border-stone-100">
       <div className="max-w-7xl mx-auto px-4">
         
         {/* Header */}

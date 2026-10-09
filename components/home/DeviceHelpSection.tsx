@@ -39,7 +39,7 @@ export default function DeviceHelpSection() {
   ];
 
   return (
-    <section data-reveal className="py-14 sm:py-20 bg-gradient-to-b from-[#FDFBF7] to-white border-t border-stone-100">
+    <section data-reveal className="device-section py-14 sm:py-20 bg-gradient-to-b from-[#FDFBF7] to-white border-t border-stone-100">
       <div className="max-w-7xl mx-auto px-4">
         
         <div className="text-center max-w-xl mx-auto mb-12">

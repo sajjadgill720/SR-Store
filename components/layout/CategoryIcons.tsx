@@ -78,7 +78,7 @@ export default function CategoryIcons() {
   ];
 
   return (
-    <section className="bg-white border-b border-[#E8E4DA]/60 py-7 sm:py-10">
+    <section className="category-section bg-white border-b border-[#E8E4DA]/60 py-7 sm:py-10">
       <div className="max-w-7xl mx-auto px-4">
         <h2 className="text-center font-serif text-lg sm:text-xl font-semibold text-[#0F1D2F] mb-7 tracking-tight">
           Quick Browse

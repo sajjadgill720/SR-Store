@@ -29,9 +29,11 @@ export default function Footer() {
             <input
               type="email"
               name="email"
+              aria-label="Email for Reader Club"
+              autoComplete="email"
               required
               placeholder="Your email address..."
-              className="px-4 py-3 text-sm rounded-xl bg-white/8 border border-white/10 text-white placeholder-stone-500 focus:outline-hidden focus:border-[#0369A1] focus:ring-2 focus:ring-[#0369A1]/20 flex-1 backdrop-blur-sm transition-all"
+              className="min-w-0 px-4 py-3 text-sm rounded-xl bg-white/8 border border-white/10 text-white placeholder-stone-500 focus:outline-hidden focus:border-[#0369A1] focus:ring-2 focus:ring-[#0369A1]/20 flex-1 backdrop-blur-sm transition-all"
             />
             <button
               type="submit"

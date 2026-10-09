@@ -21,7 +21,7 @@ export default function BookCard({ book }: BookCardProps) {
   const origCents = book.originalPrice ? (book.originalPrice % 100).toString().padStart(2, '0') : null;
 
   return (
-    <div className="group bg-white rounded-2xl border border-stone-100 hover:border-sky-200/80 hover:shadow-xl hover:shadow-sky-900/5 transition-all duration-400 flex flex-col justify-between overflow-hidden relative card-hover">
+    <div className="book-card group bg-white rounded-2xl border border-stone-100 hover:border-sky-200/80 hover:shadow-xl hover:shadow-sky-900/5 transition-all duration-400 flex flex-col justify-between overflow-hidden relative card-hover">
       
       {/* Top badges */}
       <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
