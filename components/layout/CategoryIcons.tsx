@@ -22,8 +22,8 @@ export default function CategoryIcons() {
       ring: 'group-hover:ring-emerald-200'
     },
     {
-      label: 'Reader Club',
-      href: '/reader-club',
+      label: 'Community',
+      href: '/community',
       icon: HeartHandshake,
       color: 'text-rose-500',
       bgColor: 'bg-rose-50',

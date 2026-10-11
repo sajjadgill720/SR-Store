@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { BookOpen, Home, Library, ShoppingBag } from 'lucide-react';
+import { BookOpen, Home, Library, ShoppingBag, Users } from 'lucide-react';
 import { useCart } from '../../lib/store/cart';
 
 export default function MobileNav() {
@@ -11,6 +11,7 @@ export default function MobileNav() {
     <nav aria-label="Mobile quick navigation" className="mobile-nav sm:hidden">
       <Link href="/"><Home aria-hidden="true" /><span>Home</span></Link>
       <Link href="/books"><BookOpen aria-hidden="true" /><span>Explore</span></Link>
+      <Link href="/community"><Users aria-hidden="true" /><span>Community</span></Link>
       <Link href="/account/library"><Library aria-hidden="true" /><span>Library</span></Link>
       <Link href="/cart" aria-label={`Cart, ${cartCount} items`}>
         <span className="relative"><ShoppingBag aria-hidden="true" />{cartCount > 0 && <span className="mobile-cart-count">{cartCount}</span>}</span>

@@ -34,6 +34,7 @@ export default function Header() {
   };
 
   const categories = [
+    { label: 'Reader Community', href: '/community', icon: BookOpen, color: 'text-sky-700' },
     { label: 'All Books & Releases', href: '/books', icon: Compass, color: 'text-[#1A4D3E]' },
     { label: 'Deep Work & Productivity', href: '/books?category=Productivity', dot: 'bg-sky-500' },
     { label: 'Habit Systems & Growth', href: '/books?category=Personal Growth', dot: 'bg-emerald-500' },

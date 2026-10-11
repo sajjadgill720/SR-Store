@@ -9,6 +9,8 @@ This guide explains every implemented page and feature, where to find it in the 
 
 ## Contents
 
+- [Reader community update — 11 October 2026](#reader-community-update--11-october-2026)
+
 1. [Overview](#1-overview)
 2. [Complete website route map](#2-complete-website-route-map)
 3. [Shared site shell and navigation](#3-shared-site-shell-and-navigation)
@@ -851,3 +853,39 @@ Focused lint passed without errors, with an image-optimization warning. Earlier 
 
 This documentation is a source-code snapshot. Update it when routes, behavior, data sources, or integrations change.
 
+## Reader community update — 11 October 2026
+
+The reader community is now available as a clearly labeled interactive preview, separate from newsletter registration.
+
+| Route | Feature | Source |
+| --- | --- | --- |
+| `/community` | Circle discovery, conversation search, My circles/Saved filters, guidelines | [Hub](<E:/SR Store/app/community/page.tsx>) |
+| `/community/[slug]` | Circle intention, personal circle bookmark, conversations, reading practice, progress, About | [Circle page](<E:/SR Store/app/community/[slug]/page.tsx>) |
+| `/community/discussions/[slug]` | Guided article, saved discussion, private reflection, related reading | [Discussion page](<E:/SR Store/app/community/discussions/[slug]/page.tsx>) |
+
+Circle paths: `/community/the-focus-room`, `/community/small-steps-club`, `/community/curious-families`.
+
+Five discussion paths live under `/community/discussions/`: `protecting-your-first-hour`, `reading-without-finishing`, `make-the-next-step-smaller`, `design-a-reading-corner`, and `follow-one-good-question`.
+
+The [community UI](<E:/SR Store/components/community/CommunityExperience.tsx>) renders mobile-first discovery, detail pages, empty search/filter states, accessible toggle controls, and storage-error messages. The [scoped stylesheet](<E:/SR Store/app/community/community.css>) preserves the storefront theme. Loading, error/retry, and not-found files are included in `app/community`.
+
+The [content definitions](<E:/SR Store/lib/data/community.ts>) contain typed circles and guided discussions. These are studio sample prompts, not fabricated member posts or live member counts.
+
+The [activity store](<E:/SR Store/lib/store/community.ts>) persists circles, bookmarks, reading-practice completion, and private journal text using `knovera_community_v1` in localStorage. It uses hydration-safe React subscriptions, cross-tab storage events, malformed-data recovery, and write-failure reporting. Journal text is limited to 2,000 characters by the editor. Saving a reflection does not transmit it to a backend. Other users of the same browser profile can access local data; it is not encrypted or synchronized across devices.
+
+Adding a circle is a personal bookmark rather than public registration. There are no public posts, member replies, direct messages, notification feeds, authenticated memberships, or moderation backend in this preview. A live multi-user community requires verified identity, durable database storage, authorization, moderation/reporting, abuse prevention, and privacy controls before public participation opens.
+
+Entry links were added to the header menu, mobile bottom navigation, homepage Quick Browse, footer, and Reader Club page. The phone bar now provides Home, Explore, Community, Library, and Cart. Reader Club newsletter preferences remain a separate feature.
+
+Focused tests: `node --test tests/community.test.cjs`. Tests cover unique/valid content routes, bookmark/circle toggles, corrupt or blocked storage, and independent journal/progress persistence. Build and TypeScript validation pass.
+
+
+### Additional community source files
+
+- [Layout](<E:/SR Store/app/community/layout.tsx>) — scoped styling.
+- [Loading](<E:/SR Store/app/community/loading.tsx>) — loading placeholder.
+- [Error boundary](<E:/SR Store/app/community/error.tsx>) — retry.
+- [Not found](<E:/SR Store/app/community/not-found.tsx>) — missing circle/discussion recovery.
+- [Tests](<E:/SR Store/tests/community.test.cjs>) — data integrity and storage failure behavior.
+
+Dynamic route data is resolved inside Suspense boundaries for Next.js instant navigation. Browser checks confirmed private reflection persistence after reload and no horizontal overflow on the discussion page at 320px and 390px.

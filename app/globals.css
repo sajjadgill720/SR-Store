@@ -292,7 +292,7 @@ button:active { transform: translateY(1px); }
   inset: auto 0 0;
   z-index: 40;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   padding: 6px 12px calc(6px + env(safe-area-inset-bottom));
   background: rgba(253, 251, 247, .96);
   backdrop-filter: blur(18px);

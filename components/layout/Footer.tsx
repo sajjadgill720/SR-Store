@@ -94,7 +94,8 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2.5 text-xs">
               {[
-                { label: 'Member Benefits', href: '/reader-club' },
+                { label: 'Reader Community', href: '/community' },
+                { label: 'Reader Club Updates', href: '/reader-club' },
                 { label: 'Free Worksheets & Excerpts', href: '/free-resources' },
                 { label: 'My Purchased Library', href: '/account/library' },
                 { label: 'Topic Preferences', href: '/reader-club#preferences' },

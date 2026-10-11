@@ -33,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth" data-scroll-behavior="smooth">
       <body className={`${sans.variable} ${serif.variable} min-h-screen flex flex-col antialiased`}>
         <a href="#main-content" className="skip-link">Skip to content</a>
         <CartProvider>

@@ -72,12 +72,13 @@ export default function ReaderClubPage() {
           The Knovera Reader Club
         </h1>
         <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
-          Join over 5,600+ thoughtful readers. Receive genuine bonus companion worksheets, author release notes, and early book previews. No affiliate spam, unsubscribe anytime in one click.
+          Choose the reading topics you care about. Explore our reader circles for guided conversations, reading practices, and your private journal.
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
         
+        <Link href="/community" className="md:col-span-12 rounded-2xl border border-sky-200 bg-sky-50 p-6 flex items-center justify-between gap-4"><div><h2 className="font-serif text-2xl text-sky-950">Find your reading circle</h2><p className="text-sm text-slate-600 mt-1">Thoughtful reads, small practices, and room for your perspective.</p></div><ArrowRight className="shrink-0 text-sky-700" /></Link>
         {/* Left: Perks breakdown */}
         <div className="md:col-span-6 space-y-4">
           <div className="p-5 bg-white rounded-xl border border-stone-200 shadow-2xs flex items-start gap-3.5">
