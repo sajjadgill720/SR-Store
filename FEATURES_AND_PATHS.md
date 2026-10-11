@@ -889,3 +889,22 @@ Focused tests: `node --test tests/community.test.cjs`. Tests cover unique/valid 
 - [Tests](<E:/SR Store/tests/community.test.cjs>) — data integrity and storage failure behavior.
 
 Dynamic route data is resolved inside Suspense boundaries for Next.js instant navigation. Browser checks confirmed private reflection persistence after reload and no horizontal overflow on the discussion page at 320px and 390px.
+
+## Storefront decision-flow refresh — 12 October 2026
+
+This update supersedes the earlier homepage, catalog, product, reader, cart, checkout, and library descriptions where they differ. Routes and the existing commerce endpoints are retained.
+
+- The homepage now has one collection matching the published catalog, a compact featured-book hero, real sample links, and a concise studio introduction. Seeded rating/bestseller/discount displays and sample testimonials are no longer presented in this journey.
+- The catalog uses URL-backed search/topic/format/sort state and a local saved-books view at `/books?saved=1`. Detail return links preserve that state.
+- Product pages use the existing content and artwork, uncropped covers, digital-format/price information, a clear cart action, and prominent sample access. Contents are visible; edition metadata is a secondary disclosure.
+- The sample route paginates only `sampleExcerpt`, with previous/next, current section, keyboard arrows, text resizing, themes, and return actions. It does not fetch paid files.
+- Cart/wishlist retain their existing browser storage keys through a hydration-safe store. Unsupported coupon controls were removed from the interface; no server-side pricing contract was replaced. The bundle route clearly prices its books individually, matching the actual cart behavior.
+- Checkout still calls `/api/checkouts/simulate`. Confirmation now reflects recorded payment state and provider instead of always claiming paid delivery or sent email. Downloads are labeled as demo files.
+- Library offers real available formats, inline errors, purchase recovery, and an expandable email lookup with a forget-email action. No verified account or reading progress is implied.
+- Reader chrome follows the active URL because Next.js retains inactive pages in the DOM. Cart confirmation has keyboard focus wrapping, Escape, return focus, and scroll lock.
+- Help links now lead to existing guides and support routes. Recovery reports actual lookup errors and displays order links without promising an email.
+- Order and library API responses use private/no-store caching. Existing request shapes, simulator fulfillment, download endpoints, database data, and community features remain intact.
+
+Implementation details, limitations, tests, and screenshots: [Storefront verification](<E:/SR Store/artifacts/storefront/VERIFICATION.md>).
+
+Key new modules: [Catalog helpers](<E:/SR Store/lib/catalog.ts>), [Shopping persistence](<E:/SR Store/lib/store/shopping.ts>), [Cover](<E:/SR Store/components/books/BookCover.tsx>), [Catalog](<E:/SR Store/components/books/Catalog.tsx>), [Book detail](<E:/SR Store/components/books/BookDetail.tsx>), [Sample reader](<E:/SR Store/components/books/SampleReader.tsx>), [Order access](<E:/SR Store/components/books/OrderAccess.tsx>), [Newsletter](<E:/SR Store/components/layout/Newsletter.tsx>), [Route chrome](<E:/SR Store/components/layout/RouteChrome.tsx>), [Styling](<E:/SR Store/app/storefront.css>), and [Focused tests](<E:/SR Store/tests/storefront.test.cjs>).

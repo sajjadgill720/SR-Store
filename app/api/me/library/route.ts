@@ -21,5 +21,5 @@ export async function GET(req: NextRequest) {
     email: normEmail,
     count: books.length,
     books
-  });
+  }, { headers: { 'Cache-Control': 'private, no-store' } });
 }

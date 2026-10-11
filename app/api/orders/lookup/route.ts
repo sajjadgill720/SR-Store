@@ -22,8 +22,9 @@ export async function GET(req: NextRequest) {
       customerName: order.customerName,
       totalAmount: order.totalAmount,
       paymentStatus: order.paymentStatus,
+      provider: order.provider,
       createdAt: order.createdAt,
       items: order.items
     }
-  });
+  }, { headers: { 'Cache-Control': 'private, no-store' } });
 }
