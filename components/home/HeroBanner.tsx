@@ -8,10 +8,10 @@ export default function HeroBanner({ featuredBook: book }: {
 }) {
     return <section className="studio-hero">
     <div className="studio-hero-copy">
-    <span className="studio-kicker">THE KNOVERA READING ROOM</span>
-    <h1>Make space<br /> for a <em>good idea.</em>
+    <span className="studio-kicker">READ • DISCOVER • CONNECT</span>
+    <h1>Your next read.<br /> A whole <em>new world.</em>
     </h1>
-      <p>Thoughtfully written books for deeper focus, better habits, and everyday curiosity. Start with a few pages. Find the read that fits your life.</p>
+      <p>Follow your curiosity. Discover books, explore new perspectives, and find people who love a good conversation as much as you do.</p>
       <div className="studio-actions">
     <Link className="studio-button" href="/books">Explore books <ArrowRight size={17} aria-hidden="true"/>
     </Link>{book?.sampleExcerpt.trim() && <Link className="studio-button outline" href={`/samples/${book.slug}`}>

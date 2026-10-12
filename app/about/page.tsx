@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { BookOpen, Sparkles, HeartHandshake, CheckCircle2, ArrowRight, Compass } from 'lucide-react';
+import { BookOpen, Sparkles, HeartHandshake, ArrowRight, Compass } from 'lucide-react';
 
 export default function AboutPage() {
   return (
@@ -19,17 +19,17 @@ export default function AboutPage() {
             About Knovera
           </h1>
           <p className="text-base sm:text-lg text-stone-600 leading-relaxed font-serif italic pt-1">
-            &ldquo;Books crafted for deliberate minds seeking clarity, depth, and lifelong momentum.&rdquo;
+            &ldquo;A world of books, a community of readers, and a little more possibility.&rdquo;
           </p>
         </div>
 
         {/* Narrative / Pitch */}
         <div className="space-y-4 text-sm sm:text-base text-stone-700 leading-relaxed">
           <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#11252B]">
-            Crafting Ideas That Last
+            A Place for Your Curiosity
           </h2>
           <p>
-            In an era of endless digital noise and superficial takeaways, <strong>Knovera</strong> is an intentional space for deep work, transformative thinking, and actionable knowledge. 
+            In an era of endless digital noise and superficial takeaways, <strong>Knovera</strong> brings readers together through books, fresh perspectives, and conversations that matter.
           </p>
           <p>
             Each title in our catalog is born out of real-world experimentation, rigorous synthesis, and obsessive editorial refinement. We write for practitioners, thinkers, and lifelong learners who value substantive insight over quick hype.

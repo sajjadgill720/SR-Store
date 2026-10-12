@@ -3,6 +3,8 @@ import { Suspense } from 'react';
 import { DM_Sans, Cormorant_Garamond } from 'next/font/google';
 import './globals.css';
 import './storefront.css';
+import './product-ui.css';
+import './marketplace.css';
 import { CartProvider } from '../lib/store/cart';
 import TopBar from '../components/layout/TopBar';
 import Header from '../components/layout/Header';
@@ -15,18 +17,18 @@ const sans = DM_Sans({ subsets: ['latin'], variable: '--font-sans', display: 'sw
 const serif = Cormorant_Garamond({ subsets: ['latin'], weight: ['400', '500', '600', '700'], style: ['normal', 'italic'], variable: '--font-editorial', display: 'swap' });
 
 export const metadata: Metadata = {
-  title: 'Knovera — Independent Book Studio',
-  description: 'Explore practical nonfiction and printable activity books by Knovera. Read samples, browse digital formats, and find your next perspective.',
+  title: 'Knovera — Books, Ideas & Community',
+  description: 'Discover books, explore new ideas, and connect with readers. Browse digital editions, read samples, and find your next great read.',
   openGraph: {
-    title: 'Knovera — Independent Book Studio',
-    description: 'Explore independent nonfiction and companion activities. Start with a sample and find a book for where you are.',
+    title: 'Knovera — Books, Ideas & Community',
+    description: 'Find your next read and your next conversation. Discover books and connect with a community of curious readers.',
     type: 'website',
     siteName: 'Knovera',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Knovera — Independent Book Studio',
-    description: 'Independent books for focus, personal growth, and curiosity. Read a sample at your own pace.',
+    title: 'Knovera — Books, Ideas & Community',
+    description: 'Books for your curiosity. Conversations for your perspective. Discover Knovera.',
   },
 };
 

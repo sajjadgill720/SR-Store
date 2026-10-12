@@ -62,7 +62,7 @@ export default function Catalog({ books, bundles }: {
     </select>
     </label>
     <label>Sort<select value={sort} onChange={event => update('sort', event.target.value)}>
-    <option value="featured">Studio selection</option>
+    <option value="featured">Knovera picks</option>
     <option value="title">Title A–Z</option>
     <option value="price_asc">Price low to high</option>
     <option value="price_desc">Price high to low</option>
