@@ -290,3 +290,27 @@ body[data-reader=true] { padding-bottom: 0; }
 }
 @media(max-width:380px) { .edition-grid { grid-template-columns: 1fr; }.edition-card-art>a { max-width: 180px; }.studio-hero-feature { grid-template-columns: 85px minmax(0,1fr); padding: 14px; }.studio-hero-feature h2 { font-size: 22px; }.studio-hero h1 { font-size: 39px; }.studio-cart-link span { display: none; }.studio-newsletter>div { flex-direction: column; } }
 @media(prefers-reduced-motion:reduce) { .edition-card-art>a, .studio-button { transition: none; } }
+
+/* Knovera palette: cream paper, coastal blue, sage and a soft lilac accent. */
+:root { --studio-blue-wash: #dceef5; --studio-sage-wash: #e1ece4; --studio-lilac-wash: #eae5f2; }
+.studio-hero-feature { background: var(--studio-blue-wash); border: 1px solid #c8dfe9; border-radius: 18px; padding: 28px; }
+.studio-hero .studio-button:not(.outline) { background: #176783; border-color: #176783; }
+.studio-hero .studio-button:not(.outline):hover { background: #124f66; border-color: #124f66; }
+.studio-hero .studio-button.outline { background: #edf6fa; border-color: #b9d7e3; }
+#reading-room .edition-card-art { background: var(--studio-sage-wash); border-color: #cbded0; }
+#reading-room .edition-card:nth-child(3n+2) .edition-card-art { background: var(--studio-blue-wash); border-color: #c8dfe9; }
+#reading-room .edition-card:nth-child(3n+3) .edition-card-art { background: var(--studio-lilac-wash); border-color: #dbd2e9; }
+.studio-about-strip { background: var(--studio-sage-wash); border: 1px solid #cbded0; }
+.studio-reading-steps>div { border-top: 3px solid #a6cbdc; padding-top: 18px; }
+.studio-reading-steps>div:nth-child(2) { border-top-color: #afcbbb; }
+.studio-reading-steps>div:nth-child(3) { border-top-color: #c3b6d8; }
+@media(max-width:760px) { .studio-hero-feature { padding:18px; }.studio-reading-steps>div { padding-top:16px; } }
+@media(max-width:380px) { .studio-hero-feature { padding:14px; } }
+
+/* Studio updates invitation shares the coastal palette. */
+.studio-footer-invitation { background:var(--studio-blue-wash); border:1px solid #bfdbe7; border-radius:18px; padding:32px; }
+.studio-footer-invitation h2 { color:#124f66; }
+.studio-newsletter input { border-color:#a8cbdc; }
+.studio-newsletter .studio-button { background:#176783; border-color:#176783; }
+.studio-newsletter .studio-button:hover { background:#124f66; border-color:#124f66; }
+@media(max-width:760px) { .studio-footer-invitation { padding:24px 20px; border-radius:14px; } }

@@ -20,7 +20,7 @@ export default function PrivacyPage() {
 
         <div className="space-y-4 text-xs sm:text-sm text-stone-700 leading-relaxed">
           <p>
-            Knovera values your personal privacy. We collect only the information necessary to fulfill digital orders, issue download capability tokens, and provide reader support.
+            Knovera stores information used to fulfill digital orders, provide reader support, and operate optional reader community accounts.
           </p>
 
           <h2 className="font-serif text-lg font-bold text-[#182A27]">
@@ -30,6 +30,10 @@ export default function PrivacyPage() {
             <li><strong>Email Address:</strong> Required to issue order receipts, capability tokens, and reader library access.</li>
             <li><strong>Order Ledger:</strong> Record of purchased editions and format downloads to verify active entitlements.</li>
             <li><strong>Marketing Consent:</strong> Stored only when you explicitly opt in to the Reader Club. We do not automatically enroll buyers into marketing lists.</li>
+            <li><strong>Community Accounts:</strong> Your username, display name, salted password hash, and expiring login sessions are stored when you create an account. Your display name appears on public discussions and replies.</li>
+            <li><strong>Reading Space:</strong> Circles, bookmarks, reading practices, and private journals are stored with your signed-in account to synchronize across devices. Journals are visible only through your authenticated account, not public feeds or moderation tools. Server administrators can access stored data.</li>
+            <li><strong>Guest Activity:</strong> Guest reading activity stays in this browser. It is uploaded only when you sign in and explicitly select the import action.</li>
+            <li><strong>Public Participation:</strong> Discussions and replies are publicly visible. Content reports are available to configured moderators. Removing public content hides it; the server retains it for moderation.</li>
           </ul>
 
           <h2 className="font-serif text-lg font-bold text-[#182A27]">

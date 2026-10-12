@@ -908,3 +908,17 @@ This update supersedes the earlier homepage, catalog, product, reader, cart, che
 Implementation details, limitations, tests, and screenshots: [Storefront verification](<E:/SR Store/artifacts/storefront/VERIFICATION.md>).
 
 Key new modules: [Catalog helpers](<E:/SR Store/lib/catalog.ts>), [Shopping persistence](<E:/SR Store/lib/store/shopping.ts>), [Cover](<E:/SR Store/components/books/BookCover.tsx>), [Catalog](<E:/SR Store/components/books/Catalog.tsx>), [Book detail](<E:/SR Store/components/books/BookDetail.tsx>), [Sample reader](<E:/SR Store/components/books/SampleReader.tsx>), [Order access](<E:/SR Store/components/books/OrderAccess.tsx>), [Newsletter](<E:/SR Store/components/layout/Newsletter.tsx>), [Route chrome](<E:/SR Store/components/layout/RouteChrome.tsx>), [Styling](<E:/SR Store/app/storefront.css>), and [Focused tests](<E:/SR Store/tests/storefront.test.cjs>).
+
+## Sales landing update — 12 October 2026
+
+The homepage now leads with the current featured ebook and follows relevance → practical use → approved sample → clear digital offer → access answers. Other audiences have distinct book routes below the primary offer. Repeated purchase controls reuse the existing cart provider and become Continue to cart when already added. All controls disclose test checkout and placeholder download files.
+
+Sources: [Homepage](app/page.tsx), [SalesLanding](components/home/SalesLanding.tsx), [PurchaseAction](components/home/PurchaseAction.tsx), [styles](app/storefront.css). See [sales report and screenshots](artifacts/sales/REPORT.md) for verification, decision rationale and missing production services. No analytics provider was found; conversion impact has not been measured.
+
+## Landing page simplified — 12 October 2026
+
+The previous editorial homepage is restored: visual hero, Explore books and Read a sample actions, published book collection, concise studio introduction and reading/access guidance. The longer single-book sales sequence is no longer rendered. The sales report is historical; use the restored homepage as the current design.
+
+## Shared reader community — 12 October 2026
+
+The earlier community preview is now extended with username/password accounts, authenticated server-backed reading-space sync, public member discussions, nested replies, ownership checks, reporting, and moderator review/removal/restoration. Signed-in activity is stored in a separate transactional SQLite database; guest storage is retained and requires an explicit import to upload. Refresh/focus/reconnect and five-second polling retrieve changes. Revision and reflection-base checks prevent silent stale overwrites. See [community setup, validation, and limitations](COMMUNITY.md) for details, moderator configuration, and persistent-storage requirements. Email verification, password recovery, notification delivery, and multi-server database integration remain separate production work.
