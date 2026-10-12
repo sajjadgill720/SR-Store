@@ -1,4 +1,3 @@
-file:///e%3A/SR%20Store/proj.md {"mtime":1791403324944,"ctime":1791403324944,"size":0,"etag":"3goj0o9na0","orphaned":false,"typeId":""}
 Personal Ebook Store — Research and Complete Build Specification
 Project: A public storefront selling one owner's books, with private owner administration and customer accounts.
 Status: Implementation specification; no payment accounts, deployed website, or operating business are implied.
