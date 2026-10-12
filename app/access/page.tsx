@@ -1,11 +1,21 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, ArrowLeft } from 'lucide-react';
-import type { Order } from '../../lib/types';
-type RecoveredOrder = Pick<Order,'id'|'orderNumber'|'publicToken'|'totalAmount'|'createdAt'|'items'>;
+import { ArrowRight, ArrowLeft, Mail } from 'lucide-react';
 export default function AccessPage() {
-  const [email,setEmail]=useState('');const [orders,setOrders]=useState<RecoveredOrder[]>([]);const [busy,setBusy]=useState(false);const [submitted,setSubmitted]=useState(false);const [error,setError]=useState('');
-  const submit=async(event:React.FormEvent)=>{event.preventDefault();setBusy(true);setError('');setSubmitted(false);try{const response=await fetch('/api/access/request',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email.trim().toLowerCase()})});const data=await response.json();if(!response.ok)throw new Error(data.error||'Could not find your order. Please try again.');setOrders(data.orders||[]);setSubmitted(true);}catch(reason){setError(reason instanceof Error?reason.message:'Could not look up your order. Your email has been kept so you can try again.');}finally{setBusy(false);}};
-  return <div className="storefront"><Link className="studio-back" href="/account/library"><ArrowLeft size={16}/>Back to your library</Link><div className="studio-page-heading"><span className="studio-kicker">FIND YOUR NEXT CHAPTER AGAIN</span><h1>Recover your purchase.</h1><p>Enter the email used for your order. We’ll show the matching order links here.</p></div><form className="studio-checkout-form studio-recovery-form" onSubmit={submit}><label htmlFor="recovery-email">Purchase email</label><input id="recovery-email" type="email" required autoComplete="email" value={email} onChange={event=>setEmail(event.target.value)}/>{error&&<p className="studio-error" role="alert">{error}</p>}<button className="studio-button" disabled={busy}>{busy?'Finding your orders…':'Find my orders'}<ArrowRight size={17}/></button><p className="studio-caption">This preview uses email lookup, not a verified sign-in. It does not send recovery emails.</p></form>{submitted&&<section className="studio-section" aria-live="polite"><h2>{orders.length?'Your order links.':'No orders found for this email.'}</h2>{orders.map(order=><article className="studio-order-file" key={order.id}><div><h3>{order.orderNumber}</h3>{order.items.map(item=><p key={item.id}>{item.title}</p>)}</div><Link className="studio-button outline" href={`/orders/${order.publicToken}`}>Open order<ArrowRight size={16}/></Link></article>)}{!orders.length&&<p>Try the address used at checkout. If you still need help, contact the studio with your order reference.</p>}<Link className="studio-text-link" href="/contact">Get help finding a purchase</Link></section>}</div>;
+  const [email, setEmail] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState('');
+  async function submit(event: React.FormEvent) {
+    event.preventDefault(); setBusy(true); setError(''); setSubmitted(false);
+    try {
+      const response = await fetch('/api/access/request', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Could not request recovery.');
+      setSubmitted(true);
+    } catch (reason) { setError(reason instanceof Error ? reason.message : 'Please try again later.'); }
+    finally { setBusy(false); }
+  }
+  return <div className="storefront"><Link className="studio-back" href="/account/library"><ArrowLeft size={16} />Back to your library</Link><div className="studio-page-heading"><span className="studio-kicker">BACK TO YOUR BOOKS</span><h1>Recover your purchase.</h1><p>Enter the email used at checkout. We’ll email your purchase links to that address.</p></div><form className="studio-checkout-form studio-recovery-form" onSubmit={submit}><label htmlFor="recovery-email">Purchase email</label><input id="recovery-email" type="email" required autoComplete="email" value={email} onChange={event => { setEmail(event.target.value); setSubmitted(false); }} />{error && <p className="studio-error" role="alert">{error}</p>}<button className="studio-button" disabled={busy}>{busy ? 'Requesting…' : 'Email my purchase links'}<ArrowRight size={17} /></button><p className="studio-caption">Your order links are private. They will only be sent to your purchase email.</p></form>{submitted && <section className="studio-section" role="status"><Mail size={28} /><h2>Check your inbox.</h2><p>If a purchase matches this address, we’ll email its order links. Check your spam folder too, and allow a few minutes for delivery.</p><Link className="studio-text-link" href="/contact">Need help? Contact support</Link></section>}</div>;
 }

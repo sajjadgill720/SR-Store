@@ -227,6 +227,10 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="py-8 sm:py-12 max-w-7xl mx-auto px-4">
+      <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+        <strong>Development dashboard.</strong> Supabase authentication is not connected yet.{' '}
+        <Link href="/admin/login" className="font-semibold underline underline-offset-4">Preview admin sign-in</Link>
+      </div>
       
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 mb-8 border-b border-stone-200 gap-4">

@@ -1,0 +1,11 @@
+import type { Order } from '../types';
+export function emailAddress(value: unknown): string;
+export function available(): void;
+export function cooldown(key: string, seconds?: number): boolean;
+export function deliver(id: string): Promise<string | undefined>;
+export function receipt(order: Order): string;
+export function recovery(email: string, orders: Order[]): string | null;
+export function subscribe(email: string, topics: string[]): string | null;
+export function confirm(token: string): { email: string; topics: string[]; consent: number } | null;
+export function unsubscribe(token: string): boolean;
+export function contactStatus(email: string): string | undefined;

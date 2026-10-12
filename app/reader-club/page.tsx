@@ -19,6 +19,7 @@ export default function ReaderClubPage() {
   ]);
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
   const availableTopics = [
     { id: 'deep-work', label: 'Deep Work & Productivity Protocol updates' },
@@ -38,6 +39,7 @@ export default function ReaderClubPage() {
     if (!email.trim() || !email.includes('@')) return;
 
     setIsSubmitting(true);
+    setError('');
     try {
       const res = await fetch('/api/newsletter/subscribe', {
         method: 'POST',
@@ -47,11 +49,11 @@ export default function ReaderClubPage() {
           topics: selectedTopics
         })
       });
-      if (res.ok) {
-        setSubmitted(true);
-      }
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || 'Could not save your signup.');
+      setSubmitted(true);
     } catch (err) {
-      console.error(err);
+      setError(err instanceof Error ? err.message : 'Please try again later.');
     } finally {
       setIsSubmitting(false);
     }
@@ -120,14 +122,15 @@ export default function ReaderClubPage() {
 
         {/* Right: Signup & Preferences Form */}
         <div className="md:col-span-6 bg-white p-6 sm:p-8 rounded-2xl border border-stone-200 shadow-sm" id="preferences">
+          {error && <p role="alert" className="studio-error">{error}</p>}
           {submitted ? (
             <div className="text-center py-8 space-y-4">
               <CheckCircle2 className="w-12 h-12 text-emerald-600 mx-auto" />
               <h3 className="font-serif text-2xl font-bold text-[#182A27]">
-                Welcome to the Reader Club!
+                Check your inbox
               </h3>
               <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
-                We have registered <strong>{email}</strong> with your selected topics. You can explore free companion files immediately on our Free Resources hub.
+                Check <strong>{email}</strong> for a confirmation link. Already subscribed? You’re all set. Free resources are available while you wait.
               </p>
               <Link
                 href="/free-resources"

@@ -1,46 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db/store';
-
+import { emailAddress, subscribe, deliver } from '@/lib/email/service.mjs';
 export async function POST(req: NextRequest) {
   try {
-    let email = '';
-    let topics: string[] = [];
-
-    // Support both JSON body and Form POST
-    const contentType = req.headers.get('content-type') || '';
-    if (contentType.includes('application/json')) {
-      const body = await req.json();
-      email = body.email;
-      topics = body.topics || ['general'];
-    } else {
-      const formData = await req.formData();
-      email = formData.get('email') as string;
-      topics = ['general'];
-    }
-
-    if (!email || !email.includes('@')) {
-      return NextResponse.json({ error: 'Valid email required' }, { status: 400 });
-    }
-
-    const normEmail = email.toLowerCase().trim();
-
-    db.addSubscriber({
-      id: 'sub_' + Date.now(),
-      email: normEmail,
-      topics,
-      consentTimestamp: new Date().toISOString(),
-      status: 'subscribed'
-    });
-
-    db.addAuditLog('NEWSLETTER_SUBSCRIBED', `Subscriber ${normEmail} joined Reader Club`);
-
-    if (!contentType.includes('application/json')) {
-      // Redirect back with success indicator
-      return NextResponse.redirect(new URL('/reader-club?status=success', req.url));
-    }
-
-    return NextResponse.json({ success: true, email: normEmail });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    const raw = await req.text();
+    if (raw.length > 4000) return NextResponse.json({ error: 'Request too large' }, { status: 413 });
+    const json = req.headers.get('content-type')?.includes('application/json');
+    const input = json ? JSON.parse(raw) : { email: new URLSearchParams(raw).get('email'), topics: ['general'] };
+    const email = emailAddress(input.email);
+    const allowed = ['general', 'deep-work', 'habit-systems', 'children-activities', 'new-releases'];
+    const topics: string[] = Array.isArray(input.topics) ? [...new Set<string>(input.topics.filter((topic: unknown) => typeof topic === 'string' && allowed.includes(topic)))] : ['general'];
+    const id = subscribe(email, topics.length ? topics : ['general']);
+    if (id) await deliver(id);
+    if (!json) return NextResponse.redirect(new URL('/newsletter/confirm', req.url), 303);
+    return NextResponse.json({ success: true, message: 'Check your inbox to confirm your subscription. If you are already subscribed, you are all set.' });
+  } catch (error) {
+    const invalid = error instanceof SyntaxError || (error instanceof Error && error.message === 'Valid email required');
+    return NextResponse.json({ error: invalid ? 'Enter a valid email address.' : 'Newsletter signup is unavailable. Please try again later.' }, { status: invalid ? 400 : 503 });
   }
 }

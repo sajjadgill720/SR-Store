@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { fulfillSimulatorOrder } from '@/lib/payments/adapter';
+import { receipt } from '@/lib/email/service.mjs';
 
 export async function POST(req: NextRequest) {
   try {
@@ -23,6 +24,8 @@ export async function POST(req: NextRequest) {
       providerOrderId
     });
 
+    // Simulator receipts remain local previews, even with live mail configured.
+    try { receipt(order); } catch { console.error('Could not queue simulator receipt'); }
     return NextResponse.json({
       success: true,
       orderNumber: order.orderNumber,

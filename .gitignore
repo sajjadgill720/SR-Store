@@ -43,3 +43,5 @@ next-env.d.ts
 # Private community accounts, sessions, journals, and test databases
 /.data/community.sqlite*
 /artifacts/community/*.sqlite*
+/.data/email.sqlite*
+/.data/email-preview.html

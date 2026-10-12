@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db/store';
+import { contactStatus } from '@/lib/email/service.mjs';
 
 export async function GET() {
   const storeData = db.get();
+  const subscribers = storeData.subscribers.map(subscriber => ({ ...subscriber, status: contactStatus(subscriber.email) || 'unconfirmed' }));
 
   const totalRevenue = storeData.orders
     .filter((o) => o.paymentStatus === 'paid')
@@ -17,14 +19,14 @@ export async function GET() {
       totalOrders: storeData.orders.length,
       activeEntitlementsCount,
       openTicketsCount,
-      subscriberCount: storeData.subscribers.length
+      subscriberCount: subscribers.filter(subscriber => subscriber.status === 'subscribed').length
     },
     orders: storeData.orders,
     books: storeData.books || [],
     entitlements: storeData.entitlements,
     tickets: storeData.supportTickets,
     reviews: storeData.reviews,
-    subscribers: storeData.subscribers,
+    subscribers,
     auditLogs: storeData.auditLogs.slice(0, 20)
   });
 }
