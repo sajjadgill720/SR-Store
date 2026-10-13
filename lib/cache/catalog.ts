@@ -39,6 +39,13 @@ export function createCatalogCache(storage: () => Storage, request: typeof fetch
     getSnapshot: () => state,
     subscribe: (listener:() => void) => { listeners.add(listener); return () => { listeners.delete(listener); }; },
     hydrate,
+    seed(initial: CatalogSnapshot) {
+      hydrate();
+      if (!valid(initial) || (state.data && BigInt(state.data.version) >= BigInt(initial.version))) return;
+      state = {data:initial,error:null};
+      try { storage().setItem(CATALOG_STORAGE_KEY,JSON.stringify(initial)); } catch { /* Memory fallback. */ }
+      emit();
+    },
     refresh() {
       hydrate();
       if (pending) return pending;

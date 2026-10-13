@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useBrowserSearch, replaceCatalogSearch } from '@/lib/use-browser-search';
 import { Bookmark, Search, X, ArrowRight } from 'lucide-react';
 import type { Book, BundleOffer } from '../../lib/types';
 import { discoverBooks } from '../../lib/catalog';
@@ -10,7 +10,7 @@ export default function Catalog({ books, bundles }: {
     books: Book[];
     bundles: BundleOffer[];
 }) {
-    const params = useSearchParams();
+    const params = useBrowserSearch();
     const query = params.get('q') || '';
     const category = params.get('category') || 'All';
     const format = params.get('format') || 'All';
@@ -24,9 +24,9 @@ export default function Catalog({ books, bundles }: {
             next.delete(key);
         else
             next.set(key, value);
-        window.history.replaceState(null, '', '/books' + (next.size ? '?' + next.toString() : ''));
+        replaceCatalogSearch('/books' + (next.size ? '?' + next.toString() : ''));
     };
-    const reset = () => window.history.replaceState(null, '', '/books');
+    const reset = () => replaceCatalogSearch('/books');
     const categories = ['All', ...new Set(books.map(book => book.category)), ...(bundles.length && !books.some(book => book.category === 'Bundles') ? ['Bundles'] : [])];
     const filtered = discoverBooks(books, query, category, savedOnly ? wishlist : undefined)
         .filter(book => format === 'All' || book.formats.includes(format as Book['formats'][number]))

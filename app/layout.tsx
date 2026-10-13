@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { siteOrigin } from '@/lib/seo';
 import { Suspense } from 'react';
 import { DM_Sans, Cormorant_Garamond } from 'next/font/google';
 import './globals.css';
@@ -18,6 +19,7 @@ const sans = DM_Sans({ subsets: ['latin'], variable: '--font-sans', display: 'sw
 const serif = Cormorant_Garamond({ subsets: ['latin'], weight: ['400', '500', '600', '700'], style: ['normal', 'italic'], variable: '--font-editorial', display: 'swap' });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteOrigin()),
   title: 'Knovera — Books, Ideas & Community',
   description: 'Discover books, explore new ideas, and connect with readers. Browse digital editions, read samples, and find your next great read.',
   openGraph: {

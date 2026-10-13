@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useBrowserSearch } from '@/lib/use-browser-search';
 import { Bookmark, BookOpen, ArrowLeft, ShoppingBag, LifeBuoy } from 'lucide-react';
 import type { Book } from '../../lib/types';
 import { formatsLabel, money } from '../../lib/catalog';
@@ -10,7 +10,7 @@ export default function BookDetail({ book }: {
     book: Book;
 }) {
     const { addToCart, toggleWishlist, isWishlisted, storageError } = useCart();
-    const params = useSearchParams();
+    const params = useBrowserSearch();
     const from = params.get('from') || '/books';
     const back = /^\/books(?:\?|$)/.test(from) ? from : '/books';
     const samplePath = `/samples/${book.slug}?from=${encodeURIComponent(back)}`;

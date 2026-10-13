@@ -3,8 +3,8 @@
 Supabase is the source of truth. Browsing uses one public metadata snapshot in localStorage (`knovera:public-catalog:v1`) and memory, shared by homepage, catalog, book details, samples and bundle pages. There is no second hardcoded catalog.
 
 ## Read flow
-1. Hydrate the saved snapshot immediately, including after closing and reopening the browser.
-2. On first use with no valid snapshot, request `/api/catalog` once. Concurrent consumers share this request.
+1. Serve complete prerendered HTML using the shared server catalog. Seed the browser cache from the same snapshot without downloading it again. Hydrate a newer saved snapshot when available.
+2. If a caller has neither a server snapshot nor a valid saved snapshot, request `/api/catalog` once. Concurrent consumers share this request.
 3. On later mounts, focus, reconnect and every 60 seconds while visible, request only `/api/catalog/version`. This reads one small revision row, not the books table.
 4. Download the full catalog only when its revision differs. Persist the replacement only after validation. There is no browser TTL that redownloads unchanged books.
 5. Offline or failed checks retain the saved metadata and show an update warning. Corrupt storage is discarded; storage quota/private-mode failures fall back to memory, so persistence cannot be guaranteed when browser storage is unavailable.
@@ -28,6 +28,10 @@ Only public published metadata is persisted. Account roles, purchase access, ord
 Checkout rechecks authoritative prices and availability. Downloads verify ownership, paid status and entitlements before issuing a private Storage URL valid for 300 seconds. Browser metadata never authorizes payment or download access. PDF/EPUB files are fetched only through authorized delivery, not bundled into the catalog.
 
 ## Tradeoffs and checks
-Public pages now render a shell followed by browser metadata. This avoids server catalog reads on navigation, but removes server-rendered book content and server-side missing-title 404s; search-engine visibility may be reduced. Missing titles show an unavailable state in the browser. A saved offline catalog can show an older price or archived title, but checkout still validates it.
+Public homepage, catalog, known book, sample and bundle URLs are prerendered with visible content in HTML. Browser storage enhances that content after hydration. Missing titles use Next.js notFound. Canonical catalog URLs omit search/filter query strings. Details have unique metadata and social previews; book pages include escaped JSON-LD with actual prices and no invented reviews.
 
-Tests: `node --test tests/persistent-catalog.test.cjs tests/catalog-cache.test.cjs tests/database.test.cjs`. These cover persistent reload, unchanged revision, changed revision, concurrent callers, offline retention, corrupt/quota storage, transactional revision triggers, public-file sanitization and database access restrictions. Build with `npm run build`.
+The shared SEO snapshot revalidates after five minutes when requested, checking the revision before reusing the version-keyed record cache. It does not fetch all books on every page load. Admin writes invalidate it immediately; direct SQL edits can take until the next revalidation to appear in cached HTML. Cold caches, deployments and record-cache eviction can require a full database read. Existing browser tabs still check revisions every 60 seconds. Saved offline metadata can be older; checkout validates current prices.
+
+Set `SITE_URL=https://your-real-domain` in deployment environment variables before building. This supplies absolute canonical URLs, structured-data URLs and the sitemap. Localhost builds intentionally have an empty sitemap and disallow crawling. After deploying with the actual domain, submit `/sitemap.xml` in your search-console account. Rankings cannot be guaranteed; content quality, crawlability, hosting performance and links still matter.
+
+Tests: `node --test tests/persistent-catalog.test.cjs tests/catalog-cache.test.cjs tests/database.test.cjs tests/seo.test.cjs`. These cover persistent reload, unchanged revision, changed revision, concurrent callers, offline retention, corrupt/quota storage, transactional revision triggers, public-file sanitization and database access restrictions. Build with `npm run build`.

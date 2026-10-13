@@ -1,7 +1,7 @@
 'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useBrowserSearch } from '@/lib/use-browser-search';
 import { ArrowLeft, ArrowRight, Minus, Plus, X, ShoppingBag } from 'lucide-react';
 import type { Book } from '../../lib/types';
 import { sampleSections, money } from '../../lib/catalog';
@@ -10,7 +10,7 @@ export default function SampleReader({ book }: {
     book: Book;
 }) {
     const sections = sampleSections(book.sampleExcerpt);
-    const from = useSearchParams().get('from');
+    const from = useBrowserSearch().get('from');
     const bookPath = `/books/${book.slug}${from && /^\/books(?:\?|$)/.test(from) ? '?from=' + encodeURIComponent(from) : ''}`;
     const [position, setPosition] = useState(0);
     const [size, setSize] = useState(18);

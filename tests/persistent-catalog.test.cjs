@@ -29,6 +29,18 @@ test('corrupt or unavailable storage recovers using memory',async()=>{
   const cache=factory()(()=>({getItem:()=>'{bad',setItem:()=>{throw new Error('quota');}}),async()=>({ok:true,json:async()=>({version:'1',books:[],bundles:[]})}));
   await cache.refresh();assert.equal(cache.getSnapshot().data.version,'1');assert.equal(cache.getSnapshot().error,null);
 });
+test('server-rendered snapshot seeds storage without a second catalog download and never downgrades a newer cache',async()=>{
+  let saved=null,full=0;
+  const cache=factory()(()=>({getItem:()=>saved,setItem:(_,value)=>{saved=value;}}),async url=>{
+    if(!url.endsWith('/version'))full++;
+    return {ok:true,json:async()=>({version:'2'})};
+  });
+  cache.seed({version:'2',books:[],bundles:[]});
+  await cache.refresh();
+  assert.equal(full,0);assert.equal(JSON.parse(saved).version,'2');
+  cache.seed({version:'1',books:[],bundles:[]});
+  assert.equal(cache.getSnapshot().data.version,'2');
+});
 test('catalog triggers advance revisions transactionally and deny browser database access',async()=>{
   const {engine,adapter}=await setup();
   try {

@@ -33,6 +33,15 @@ export async function getPublicCatalog() {
   throw new Error('Catalog is busy; please retry');
 }
 
+// Shared prerender input. Admin writes invalidate this tag immediately; direct
+// database edits are discovered by a small revision check after five minutes.
+export async function getSeoCatalog() {
+  'use cache';
+  cacheLife({stale:300,revalidate:300,expire:3600});
+  cacheTag(CATALOG_TAG);
+  return getPublicCatalog();
+}
+
 // Route handlers call this only after a successful, authorized catalog mutation.
 export function invalidatePublicCatalog() {
   revalidateTag(CATALOG_TAG, { expire: 0 });
