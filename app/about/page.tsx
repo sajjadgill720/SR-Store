@@ -11,11 +11,11 @@ export default function AboutPage() {
         
         {/* Header Block */}
         <div className="space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 text-[#0284C7] border border-sky-200 text-xs font-semibold tracking-wider uppercase">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--store-sage)] text-[var(--store-green)] border border-[#c6ddd0] text-xs font-semibold tracking-wider uppercase">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Our Story & Vision</span>
           </div>
-          <h1 className="font-serif text-3xl sm:text-5xl font-bold text-[#11252B] tracking-tight">
+          <h1 className="font-serif text-3xl sm:text-5xl font-bold text-[var(--store-ink)] tracking-tight">
             About Knovera
           </h1>
           <p className="text-base sm:text-lg text-stone-600 leading-relaxed font-serif italic pt-1">
@@ -25,7 +25,7 @@ export default function AboutPage() {
 
         {/* Narrative / Pitch */}
         <div className="space-y-4 text-sm sm:text-base text-stone-700 leading-relaxed">
-          <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#11252B]">
+          <h2 className="font-serif text-xl sm:text-2xl font-bold text-[var(--store-ink)]">
             A Place for Your Curiosity
           </h2>
           <p>
@@ -38,18 +38,18 @@ export default function AboutPage() {
 
         {/* Four Reader Pillars */}
         <div className="space-y-4 pt-2">
-          <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#11252B]">
+          <h2 className="font-serif text-xl sm:text-2xl font-bold text-[var(--store-ink)]">
             The Knovera Reader Experience
           </h2>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
             
-            <div className="p-5 rounded-xl bg-stone-50 border border-stone-200 flex flex-col justify-between hover:border-sky-300 transition-colors">
+            <div className="p-5 rounded-xl bg-stone-50 border border-stone-200 flex flex-col justify-between hover:border-[#c6ddd0] transition-colors">
               <div>
-                <div className="w-10 h-10 rounded-lg bg-sky-100 text-[#0284C7] flex items-center justify-center mb-3">
+                <div className="w-10 h-10 rounded-lg bg-[var(--store-sage)] text-[var(--store-green)] flex items-center justify-center mb-3">
                   <BookOpen className="w-5 h-5" />
                 </div>
-                <h3 className="font-serif font-bold text-base text-[#11252B] mb-1">
+                <h3 className="font-serif font-bold text-base text-[var(--store-ink)] mb-1">
                   Pure Reader Freedom
                 </h3>
                 <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
@@ -58,12 +58,12 @@ export default function AboutPage() {
               </div>
             </div>
 
-            <div className="p-5 rounded-xl bg-stone-50 border border-stone-200 flex flex-col justify-between hover:border-sky-300 transition-colors">
+            <div className="p-5 rounded-xl bg-stone-50 border border-stone-200 flex flex-col justify-between hover:border-[#c6ddd0] transition-colors">
               <div>
-                <div className="w-10 h-10 rounded-lg bg-emerald-100 text-[#23584B] flex items-center justify-center mb-3">
+                <div className="w-10 h-10 rounded-lg bg-emerald-100 text-[var(--store-green)] flex items-center justify-center mb-3">
                   <Sparkles className="w-5 h-5" />
                 </div>
-                <h3 className="font-serif font-bold text-base text-[#11252B] mb-1">
+                <h3 className="font-serif font-bold text-base text-[var(--store-ink)] mb-1">
                   Free Lifetime Updates
                 </h3>
                 <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
@@ -72,12 +72,12 @@ export default function AboutPage() {
               </div>
             </div>
 
-            <div className="p-5 rounded-xl bg-stone-50 border border-stone-200 flex flex-col justify-between hover:border-sky-300 transition-colors">
+            <div className="p-5 rounded-xl bg-stone-50 border border-stone-200 flex flex-col justify-between hover:border-[#c6ddd0] transition-colors">
               <div>
-                <div className="w-10 h-10 rounded-lg bg-blue-100 text-[#0284C7] flex items-center justify-center mb-3">
+                <div className="w-10 h-10 rounded-lg bg-[var(--store-sage)] text-[var(--store-green)] flex items-center justify-center mb-3">
                   <Compass className="w-5 h-5" />
                 </div>
-                <h3 className="font-serif font-bold text-base text-[#11252B] mb-1">
+                <h3 className="font-serif font-bold text-base text-[var(--store-ink)] mb-1">
                   Actionable Frameworks
                 </h3>
                 <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
@@ -86,12 +86,12 @@ export default function AboutPage() {
               </div>
             </div>
 
-            <div className="p-5 rounded-xl bg-stone-50 border border-stone-200 flex flex-col justify-between hover:border-sky-300 transition-colors">
+            <div className="p-5 rounded-xl bg-stone-50 border border-stone-200 flex flex-col justify-between hover:border-[#c6ddd0] transition-colors">
               <div>
                 <div className="w-10 h-10 rounded-lg bg-teal-100 text-teal-800 flex items-center justify-center mb-3">
                   <HeartHandshake className="w-5 h-5" />
                 </div>
-                <h3 className="font-serif font-bold text-base text-[#11252B] mb-1">
+                <h3 className="font-serif font-bold text-base text-[var(--store-ink)] mb-1">
                   Direct Author Dialogue
                 </h3>
                 <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
@@ -104,8 +104,8 @@ export default function AboutPage() {
         </div>
 
         {/* Editorial Standard Card */}
-        <div className="p-6 bg-gradient-to-r from-sky-50/60 to-stone-50 rounded-xl border border-sky-100 space-y-2">
-          <h3 className="font-serif font-bold text-base text-[#11252B]">
+        <div className="p-6 bg-gradient-to-r from-[var(--store-sage)] to-stone-50 rounded-xl border border-[#c6ddd0] space-y-2">
+          <h3 className="font-serif font-bold text-base text-[var(--store-ink)]">
             Our Editorial Standard
           </h3>
           <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
@@ -117,7 +117,7 @@ export default function AboutPage() {
         <div className="pt-4 border-t border-stone-200 flex flex-wrap gap-4 items-center justify-between">
           <Link
             href="/books"
-            className="px-6 py-3 bg-[#0F2537] hover:bg-[#0284C7] text-white text-xs sm:text-sm font-bold rounded-lg flex items-center gap-2 shadow-sm transition-all duration-300 hover:-translate-y-0.5"
+            className="px-6 py-3 bg-[#0F2537] hover:bg-[var(--store-gold)] text-[var(--store-ink)] text-xs sm:text-sm font-bold rounded-lg flex items-center gap-2 shadow-sm transition-all duration-300 hover:-translate-y-0.5"
           >
             <span>Explore the Catalog</span>
             <ArrowRight className="w-4 h-4" />

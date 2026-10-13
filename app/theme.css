@@ -1,0 +1,66 @@
+/* Shared brand palette. Product covers and semantic status colors remain distinct. */
+:root {
+  --store-ink: #17263c;
+  --store-gold: #ffcb77;
+  --store-gold-hover: #ffc05c;
+  --store-green: #3e7564;
+  --store-sage: #edf5f1;
+  --store-canvas: #f1f3f6;
+  --studio-paper: var(--store-canvas);
+  --studio-tint: var(--store-sage);
+  --studio-ink: var(--store-ink);
+  --studio-accent: var(--store-green);
+  --studio-blue-wash: var(--store-sage);
+  --studio-sage-wash: var(--store-sage);
+  --studio-lilac-wash: #f8f1e5;
+  --bg-paper: var(--store-canvas);
+  --bg-cream: var(--store-sage);
+  --bg-warm: #f8f1e5;
+  --color-ink: var(--store-ink);
+  --color-accent: var(--store-green);
+  --color-accent-hover: #305e50;
+  --color-accent-light: #e2eee7;
+  --color-accent-soft: var(--store-sage);
+  --color-gold: var(--store-gold);
+  --color-border: #e4e7ed;
+}
+
+::selection { background: #d9eee7; color: var(--store-ink); }
+.studio-button,
+.studio-hero .studio-button:not(.outline),
+.studio-newsletter .studio-button,
+.admin-access-submit {
+  background: var(--store-gold);
+  border-color: #ecc071;
+  color: var(--store-ink);
+  box-shadow: 0 3px 8px #4330180c;
+}
+.studio-button:hover,
+.studio-hero .studio-button:not(.outline):hover,
+.studio-newsletter .studio-button:hover,
+.admin-access-submit:hover {
+  background: var(--store-gold-hover);
+  border-color: #ecc071;
+}
+.studio-button.outline,
+.studio-hero .studio-button.outline {
+  background: white;
+  color: var(--store-green);
+  border-color: #c6ddd0;
+  box-shadow: none;
+}
+.studio-button.outline:hover { background: var(--store-sage); }
+.studio-header .studio-desktop-nav a:hover,
+.studio-header .studio-icon-button:hover { background: #ffffff12; color: var(--store-gold); }
+.studio-header .studio-mobile-menu a[aria-current] { background: #ffffff12; color: var(--store-gold); }
+.studio-header-placeholder .studio-brand { color: white; }
+.studio-footer-invitation { background: var(--store-sage); border-color: #c6ddd0; }
+.studio-footer-invitation h2 { color: #193c36; }
+.studio-notice { background: var(--store-sage); border-color: #c6ddd0; }
+
+/* Reading preferences keep their paper/sepia/dark surfaces and contrast. */
+.reader-dark .studio-button { background: var(--store-gold); border-color: #ecc071; color: var(--store-ink); }
+.reader-dark .studio-button:hover { background: var(--store-gold-hover); }
+.reader-dark .studio-button.outline { background: transparent; color: #e8edf0; border-color: #697b88; }
+.reader-dark .studio-button.outline:hover { background: #2c4150; }
+.reader-dark .studio-icon-button:hover { background: #2c4150; color: #e8edf0; }

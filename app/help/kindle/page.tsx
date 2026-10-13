@@ -10,9 +10,9 @@ export default function KindleHelpPage() {
       
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1.5 text-xs text-stone-500 mb-6">
-        <Link href="/" className="hover:text-[#23584B]">Home</Link>
+        <Link href="/" className="hover:text-[var(--store-green)]">Home</Link>
         <ChevronRight className="w-3.5 h-3.5" />
-        <Link href="/help" className="hover:text-[#23584B]">Help & Guides</Link>
+        <Link href="/help" className="hover:text-[var(--store-green)]">Help & Guides</Link>
         <ChevronRight className="w-3.5 h-3.5" />
         <span className="text-stone-800 font-medium">Send to Kindle Guide</span>
       </nav>
@@ -20,10 +20,10 @@ export default function KindleHelpPage() {
       <div className="bg-white p-6 sm:p-10 rounded-2xl border border-stone-200 shadow-sm space-y-8">
         
         <div>
-          <span className="text-xs font-bold text-[#23584B] uppercase tracking-widest block mb-1">
+          <span className="text-xs font-bold text-[var(--store-green)] uppercase tracking-widest block mb-1">
             OFFICIAL AMAZON INTEGRATION
           </span>
-          <h1 className="font-serif text-2xl sm:text-4xl font-bold text-[#182A27] mb-3">
+          <h1 className="font-serif text-2xl sm:text-4xl font-bold text-[var(--store-ink)] mb-3">
             How to Read Your Purchased EPUB on Amazon Kindle
           </h1>
           <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
@@ -34,10 +34,10 @@ export default function KindleHelpPage() {
         {/* Method 1: Amazon Web Tool (Fastest & Recommended) */}
         <div className="p-6 bg-emerald-50/70 border border-emerald-200 rounded-xl space-y-4">
           <div className="flex items-center gap-2">
-            <span className="w-6 h-6 rounded-full bg-[#23584B] text-white text-xs font-bold flex items-center justify-center">
+            <span className="w-6 h-6 rounded-full bg-[var(--store-gold)] text-[var(--store-ink)] text-xs font-bold flex items-center justify-center">
               1
             </span>
-            <h2 className="font-serif font-bold text-base sm:text-lg text-[#182A27]">
+            <h2 className="font-serif font-bold text-base sm:text-lg text-[var(--store-ink)]">
               Method 1: Amazon "Send to Kindle" Webpage (Fastest)
             </h2>
           </div>
@@ -52,7 +52,7 @@ export default function KindleHelpPage() {
                 href="https://www.amazon.com/sendtokindle"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#008bd2] font-bold hover:underline inline-flex items-center gap-1"
+                className="text-[var(--store-green)] font-bold hover:underline inline-flex items-center gap-1"
               >
                 <span>amazon.com/sendtokindle</span>
                 <ExternalLink className="w-3.5 h-3.5" />
@@ -73,7 +73,7 @@ export default function KindleHelpPage() {
             <span className="w-6 h-6 rounded-full bg-stone-700 text-white text-xs font-bold flex items-center justify-center">
               2
             </span>
-            <h2 className="font-serif font-bold text-base sm:text-lg text-[#182A27]">
+            <h2 className="font-serif font-bold text-base sm:text-lg text-[var(--store-ink)]">
               Method 2: Email Directly to Your @Kindle.com Address
             </h2>
           </div>
@@ -100,7 +100,7 @@ export default function KindleHelpPage() {
         </div>
 
         <div className="pt-4 border-t border-stone-200 flex justify-between items-center text-xs">
-          <Link href="/help" className="text-[#008bd2] font-bold hover:underline">
+          <Link href="/help" className="text-[var(--store-green)] font-bold hover:underline">
             ← Back to all device guides
           </Link>
           <Link href="/contact" className="text-stone-500 hover:text-stone-800">

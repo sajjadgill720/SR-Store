@@ -5,6 +5,7 @@ import './globals.css';
 import './storefront.css';
 import './product-ui.css';
 import './marketplace.css';
+import './theme.css';
 import { CartProvider } from '../lib/store/cart';
 import TopBar from '../components/layout/TopBar';
 import Header from '../components/layout/Header';

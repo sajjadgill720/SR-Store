@@ -13,7 +13,7 @@ function Navigation() {
     const trigger = useRef<HTMLButtonElement>(null);
     const { cartCount } = useCart();
     const active = (href: string) => path === href || path.startsWith(href + '/');
-    return <header className={`studio-header${marketplace ? ' market-header' : path.startsWith('/community') ? ' community-header' : ''}`} onKeyDown={event => { if (event.key === 'Escape' && open) {
+    return <header className={`studio-header${marketplace ? ' market-header' : ''}`} onKeyDown={event => { if (event.key === 'Escape' && open) {
         setMenuPath(null);
         trigger.current?.focus();
     } }}>

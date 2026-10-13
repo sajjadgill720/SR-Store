@@ -234,7 +234,7 @@ export default function AdminDashboardPage() {
   if (loading) {
     return (
       <div className="py-20 text-center text-stone-500">
-        <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-2 text-[#23584B]" />
+        <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-2 text-[var(--store-green)]" />
         <span>Loading owner administration portal...</span>
       </div>
     );
@@ -254,19 +254,19 @@ export default function AdminDashboardPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 mb-8 border-b border-stone-200 gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <ShieldCheck className="w-5 h-5 text-[#23584B]" />
-            <span className="text-xs font-bold text-[#23584B] uppercase tracking-widest">
+            <ShieldCheck className="w-5 h-5 text-[var(--store-green)]" />
+            <span className="text-xs font-bold text-[var(--store-green)] uppercase tracking-widest">
               OWNER ADMINISTRATION
             </span>
           </div>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#182A27]">
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[var(--store-ink)]">
             Knovera Operations Dashboard
           </h1>
         </div>
 
         <button
           onClick={fetchData}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-stone-100 hover:bg-stone-200 text-[#182A27] text-xs font-semibold rounded transition-colors self-start sm:self-auto cursor-pointer"
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-stone-100 hover:bg-stone-200 text-[var(--store-ink)] text-xs font-semibold rounded transition-colors self-start sm:self-auto cursor-pointer"
         >
           <RefreshCw className="w-3.5 h-3.5" />
           <span>Refresh Data</span>
@@ -285,7 +285,7 @@ export default function AdminDashboardPage() {
           <span className="text-xs font-bold text-stone-400 uppercase tracking-wider block">
             Net Revenue
           </span>
-          <span className="font-serif text-2xl sm:text-3xl font-bold text-[#182A27] block mt-1">
+          <span className="font-serif text-2xl sm:text-3xl font-bold text-[var(--store-ink)] block mt-1">
             ${((kpis.totalRevenue || 0) / 100).toFixed(2)}
           </span>
           <span className="text-[11px] text-emerald-700 font-semibold mt-1 block">
@@ -297,7 +297,7 @@ export default function AdminDashboardPage() {
           <span className="text-xs font-bold text-stone-400 uppercase tracking-wider block">
             Total Orders
           </span>
-          <span className="font-serif text-2xl sm:text-3xl font-bold text-[#182A27] block mt-1">
+          <span className="font-serif text-2xl sm:text-3xl font-bold text-[var(--store-ink)] block mt-1">
             {kpis.totalOrders || 0}
           </span>
           <span className="text-[11px] text-stone-500 font-medium mt-1 block">
@@ -309,7 +309,7 @@ export default function AdminDashboardPage() {
           <span className="text-xs font-bold text-stone-400 uppercase tracking-wider block">
             Catalog Books
           </span>
-          <span className="font-serif text-2xl sm:text-3xl font-bold text-[#23584B] block mt-1">
+          <span className="font-serif text-2xl sm:text-3xl font-bold text-[var(--store-green)] block mt-1">
             {catalogBooks.length}
           </span>
           <span className="text-[11px] text-stone-500 font-medium mt-1 block">
@@ -345,7 +345,7 @@ export default function AdminDashboardPage() {
             onClick={() => setTab(t.id as any)}
             className={`px-4 py-2.5 text-xs sm:text-sm font-bold border-b-2 whitespace-nowrap transition-colors cursor-pointer ${
               tab === t.id
-                ? 'border-[#23584B] text-[#23584B]'
+                ? 'border-[var(--store-green)] text-[var(--store-green)]'
                 : 'border-transparent text-stone-500 hover:text-stone-800'
             }`}
           >
@@ -358,13 +358,13 @@ export default function AdminDashboardPage() {
       {tab === 'overview' && (
         <div className="space-y-6">
           <div className="p-6 bg-white rounded-xl border border-stone-200 shadow-2xs space-y-4">
-            <h3 className="font-serif font-bold text-lg text-[#182A27]">
+            <h3 className="font-serif font-bold text-lg text-[var(--store-ink)]">
               Store Configuration & Payment Provider Readiness
             </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
               <div className="p-4 bg-stone-50 rounded-lg border border-stone-200 space-y-1.5">
-                <p className="font-bold text-[#182A27]">Payment Adapter Status:</p>
+                <p className="font-bold text-[var(--store-ink)]">Payment Adapter Status:</p>
                 <p className="text-emerald-700 font-semibold">
                   • Development Simulator (Active & Fulfilling)
                 </p>
@@ -374,7 +374,7 @@ export default function AdminDashboardPage() {
               </div>
 
               <div className="p-4 bg-stone-50 rounded-lg border border-stone-200 space-y-1.5">
-                <p className="font-bold text-[#182A27]">Publishing Exclusivity Check:</p>
+                <p className="font-bold text-[var(--store-ink)]">Publishing Exclusivity Check:</p>
                 <p className="text-emerald-700 font-semibold">
                   • All Titles Declared "WIDE" (Eligible for direct sale)
                 </p>
@@ -405,7 +405,7 @@ export default function AdminDashboardPage() {
               <tbody className="divide-y divide-stone-100">
                 {data?.orders?.map((ord: any) => (
                   <tr key={ord.id} className="hover:bg-stone-50">
-                    <td className="p-3.5 font-bold text-[#182A27]">{ord.orderNumber}</td>
+                    <td className="p-3.5 font-bold text-[var(--store-ink)]">{ord.orderNumber}</td>
                     <td className="p-3.5">{ord.customerEmail}</td>
                     <td className="p-3.5 font-bold">${(ord.totalAmount / 100).toFixed(2)}</td>
                     <td className="p-3.5">
@@ -422,7 +422,7 @@ export default function AdminDashboardPage() {
                       <Link
                         href={`/orders/${ord.publicToken}`}
                         target="_blank"
-                        className="text-[#008bd2] hover:underline font-bold"
+                        className="text-[var(--store-green)] hover:underline font-bold"
                       >
                         Receipt
                       </Link>
@@ -450,7 +450,7 @@ export default function AdminDashboardPage() {
           {/* Header Action Bar */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-4 border-b border-stone-200 gap-4 bg-white p-5 rounded-xl border shadow-2xs">
             <div>
-              <h3 className="font-serif font-bold text-lg sm:text-xl text-[#182A27]">
+              <h3 className="font-serif font-bold text-lg sm:text-xl text-[var(--store-ink)]">
                 Live Storefront Catalog ({catalogBooks.length} Titles)
               </h3>
               <p className="text-xs text-stone-500 mt-0.5">
@@ -460,7 +460,7 @@ export default function AdminDashboardPage() {
             
             <button
               onClick={() => setIsAddBookOpen(!isAddBookOpen)}
-              className="px-4 py-2.5 bg-[#008bd2] hover:bg-[#0077b5] text-white text-xs font-bold rounded-lg shadow-sm flex items-center gap-1.5 transition-transform hover:-translate-y-0.5 cursor-pointer shrink-0"
+              className="px-4 py-2.5 bg-[var(--store-gold)] hover:bg-[var(--store-gold-hover)] text-[var(--store-ink)] text-xs font-bold rounded-lg shadow-sm flex items-center gap-1.5 transition-transform hover:-translate-y-0.5 cursor-pointer shrink-0"
             >
               {isAddBookOpen ? <X className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
               <span>{isAddBookOpen ? 'Cancel & Close Form' : 'Add New Book'}</span>
@@ -469,14 +469,14 @@ export default function AdminDashboardPage() {
 
           {/* Collapsible Add New Book Form */}
           {isAddBookOpen && (
-            <div className="bg-white p-6 sm:p-8 rounded-xl border-2 border-[#23584B]/30 shadow-md animate-in fade-in slide-in-from-top-3 duration-200">
+            <div className="bg-white p-6 sm:p-8 rounded-xl border-2 border-[var(--store-green)]/30 shadow-md animate-in fade-in slide-in-from-top-3 duration-200">
               <div className="flex items-center justify-between pb-4 mb-6 border-b border-stone-200">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-emerald-100 text-[#23584B] flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-emerald-100 text-[var(--store-green)] flex items-center justify-center">
                     <Plus className="w-5 h-5" />
                   </div>
                   <div>
-                    <h4 className="font-serif font-bold text-lg text-[#182A27]">
+                    <h4 className="font-serif font-bold text-lg text-[var(--store-ink)]">
                       Add New Digital Book to Storefront
                     </h4>
                     <p className="text-xs text-stone-500">
@@ -498,7 +498,7 @@ export default function AdminDashboardPage() {
                 {/* Basic Information */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs font-bold text-[#182A27] block mb-1">
+                    <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
                       Book Title <span className="text-rose-500">*</span>
                     </label>
                     <input
@@ -507,12 +507,12 @@ export default function AdminDashboardPage() {
                       placeholder="e.g. Systems Thinking for Leaders"
                       value={newBookForm.title}
                       onChange={(e) => setNewBookForm({ ...newBookForm, title: e.target.value })}
-                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[#23584B]"
+                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[var(--store-green)]"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-bold text-[#182A27] block mb-1">
+                    <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
                       Subtitle / Tagline
                     </label>
                     <input
@@ -520,7 +520,7 @@ export default function AdminDashboardPage() {
                       placeholder="e.g. Mental models for high-stakes problem solving"
                       value={newBookForm.subtitle}
                       onChange={(e) => setNewBookForm({ ...newBookForm, subtitle: e.target.value })}
-                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[#23584B]"
+                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[var(--store-green)]"
                     />
                   </div>
                 </div>
@@ -528,25 +528,25 @@ export default function AdminDashboardPage() {
                 {/* Author, Category, Sales Badge */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
-                    <label className="text-xs font-bold text-[#182A27] block mb-1">
+                    <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
                       Author
                     </label>
                     <input
                       type="text"
                       value={newBookForm.author}
                       onChange={(e) => setNewBookForm({ ...newBookForm, author: e.target.value })}
-                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[#23584B]"
+                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[var(--store-green)]"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-bold text-[#182A27] block mb-1">
+                    <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
                       Category
                     </label>
                     <select
                       value={newBookForm.category}
                       onChange={(e) => setNewBookForm({ ...newBookForm, category: e.target.value })}
-                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[#23584B]"
+                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[var(--store-green)]"
                     >
                       <option value="Productivity">Productivity</option>
                       <option value="Personal Growth">Personal Growth</option>
@@ -558,7 +558,7 @@ export default function AdminDashboardPage() {
                   </div>
 
                   <div>
-                    <label className="text-xs font-bold text-[#182A27] block mb-1">
+                    <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
                       Badge Label
                     </label>
                     <input
@@ -566,7 +566,7 @@ export default function AdminDashboardPage() {
                       placeholder="e.g. New Release, Bestseller"
                       value={newBookForm.badge}
                       onChange={(e) => setNewBookForm({ ...newBookForm, badge: e.target.value })}
-                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[#23584B]"
+                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[var(--store-green)]"
                     />
                   </div>
                 </div>
@@ -574,7 +574,7 @@ export default function AdminDashboardPage() {
                 {/* Pricing & Length */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
-                    <label className="text-xs font-bold text-[#182A27] block mb-1">
+                    <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
                       Sale Price ($ USD) <span className="text-rose-500">*</span>
                     </label>
                     <input
@@ -584,12 +584,12 @@ export default function AdminDashboardPage() {
                       placeholder="19.99"
                       value={newBookForm.price}
                       onChange={(e) => setNewBookForm({ ...newBookForm, price: e.target.value })}
-                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[#23584B]"
+                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[var(--store-green)]"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-bold text-[#182A27] block mb-1">
+                    <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
                       Original / Compare Price ($ USD)
                     </label>
                     <input
@@ -598,12 +598,12 @@ export default function AdminDashboardPage() {
                       placeholder="29.99"
                       value={newBookForm.originalPrice}
                       onChange={(e) => setNewBookForm({ ...newBookForm, originalPrice: e.target.value })}
-                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[#23584B]"
+                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[var(--store-green)]"
                     />
                   </div>
 
                   <div>
-                    <label className="text-xs font-bold text-[#182A27] block mb-1">
+                    <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
                       Page Count
                     </label>
                     <input
@@ -611,14 +611,14 @@ export default function AdminDashboardPage() {
                       placeholder="250"
                       value={newBookForm.pageCount}
                       onChange={(e) => setNewBookForm({ ...newBookForm, pageCount: e.target.value })}
-                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[#23584B]"
+                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[var(--store-green)]"
                     />
                   </div>
                 </div>
 
                 {/* Cover Image URL with Presets */}
                 <div>
-                  <label className="text-xs font-bold text-[#182A27] block mb-1">
+                  <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
                     Cover Image URL
                   </label>
                   <div className="flex gap-2">
@@ -627,7 +627,7 @@ export default function AdminDashboardPage() {
                       required
                       value={newBookForm.coverImage}
                       onChange={(e) => setNewBookForm({ ...newBookForm, coverImage: e.target.value })}
-                      className="flex-1 px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[#23584B]"
+                      className="flex-1 px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[var(--store-green)]"
                     />
                     <div className="w-10 h-10 rounded border overflow-hidden shrink-0">
                       <img src={newBookForm.coverImage} alt="Preview" className="w-full h-full object-cover" />
@@ -639,7 +639,7 @@ export default function AdminDashboardPage() {
                     <button
                       type="button"
                       onClick={() => setNewBookForm({ ...newBookForm, coverImage: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=800&auto=format&fit=crop' })}
-                      className="text-[#008bd2] hover:underline"
+                      className="text-[var(--store-green)] hover:underline"
                     >
                       Minimalist Navy
                     </button>
@@ -647,7 +647,7 @@ export default function AdminDashboardPage() {
                     <button
                       type="button"
                       onClick={() => setNewBookForm({ ...newBookForm, coverImage: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?q=80&w=800&auto=format&fit=crop' })}
-                      className="text-[#008bd2] hover:underline"
+                      className="text-[var(--store-green)] hover:underline"
                     >
                       Warm Amber
                     </button>
@@ -655,7 +655,7 @@ export default function AdminDashboardPage() {
                     <button
                       type="button"
                       onClick={() => setNewBookForm({ ...newBookForm, coverImage: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=800&auto=format&fit=crop' })}
-                      className="text-[#008bd2] hover:underline"
+                      className="text-[var(--store-green)] hover:underline"
                     >
                       Emerald Foliage
                     </button>
@@ -663,7 +663,7 @@ export default function AdminDashboardPage() {
                     <button
                       type="button"
                       onClick={() => setNewBookForm({ ...newBookForm, coverImage: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=800&auto=format&fit=crop' })}
-                      className="text-[#008bd2] hover:underline"
+                      className="text-[var(--store-green)] hover:underline"
                     >
                       Modern Notebook
                     </button>
@@ -673,7 +673,7 @@ export default function AdminDashboardPage() {
                 {/* Descriptions */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs font-bold text-[#182A27] block mb-1">
+                    <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
                       Short Description (For Catalog Cards & Search) <span className="text-rose-500">*</span>
                     </label>
                     <textarea
@@ -682,12 +682,12 @@ export default function AdminDashboardPage() {
                       placeholder="Brief 1-2 sentence hook for the book cards..."
                       value={newBookForm.shortDescription}
                       onChange={(e) => setNewBookForm({ ...newBookForm, shortDescription: e.target.value })}
-                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[#23584B]"
+                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[var(--store-green)]"
                     ></textarea>
                   </div>
 
                   <div>
-                    <label className="text-xs font-bold text-[#182A27] block mb-1">
+                    <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
                       Full Editorial Description (For Book Detail Page)
                     </label>
                     <textarea
@@ -695,7 +695,7 @@ export default function AdminDashboardPage() {
                       placeholder="Comprehensive overview of the book's core premise and value..."
                       value={newBookForm.fullDescription}
                       onChange={(e) => setNewBookForm({ ...newBookForm, fullDescription: e.target.value })}
-                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[#23584B]"
+                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[var(--store-green)]"
                     ></textarea>
                   </div>
                 </div>
@@ -703,40 +703,40 @@ export default function AdminDashboardPage() {
                 {/* Table of Contents & What's Included */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs font-bold text-[#182A27] block mb-1">
+                    <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
                       Table of Contents (One chapter per line)
                     </label>
                     <textarea
                       rows={4}
                       value={newBookForm.tableOfContents}
                       onChange={(e) => setNewBookForm({ ...newBookForm, tableOfContents: e.target.value })}
-                      className="w-full px-3.5 py-2.5 text-xs font-mono bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[#23584B]"
+                      className="w-full px-3.5 py-2.5 text-xs font-mono bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[var(--store-green)]"
                     ></textarea>
                   </div>
 
                   <div>
-                    <label className="text-xs font-bold text-[#182A27] block mb-1">
+                    <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
                       What's Included (One item per line)
                     </label>
                     <textarea
                       rows={4}
                       value={newBookForm.whatsIncluded}
                       onChange={(e) => setNewBookForm({ ...newBookForm, whatsIncluded: e.target.value })}
-                      className="w-full px-3.5 py-2.5 text-xs bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[#23584B]"
+                      className="w-full px-3.5 py-2.5 text-xs bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[var(--store-green)]"
                     ></textarea>
                   </div>
                 </div>
 
                 {/* Opening Excerpt for Sample Reader */}
                 <div>
-                  <label className="text-xs font-bold text-[#182A27] block mb-1">
+                  <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
                     Sample Excerpt (For Client-Side Instant Sample Reader)
                   </label>
                   <textarea
                     rows={4}
                     value={newBookForm.sampleExcerpt}
                     onChange={(e) => setNewBookForm({ ...newBookForm, sampleExcerpt: e.target.value })}
-                    className="w-full px-3.5 py-2.5 text-xs bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[#23584B]"
+                    className="w-full px-3.5 py-2.5 text-xs bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[var(--store-green)]"
                   ></textarea>
                 </div>
 
@@ -747,7 +747,7 @@ export default function AdminDashboardPage() {
                     id="featured-check"
                     checked={newBookForm.featured}
                     onChange={(e) => setNewBookForm({ ...newBookForm, featured: e.target.checked })}
-                    className="w-4 h-4 rounded text-[#23584B] focus:ring-[#23584B]"
+                    className="w-4 h-4 rounded text-[var(--store-green)] focus:ring-[var(--store-green)]"
                   />
                   <label htmlFor="featured-check" className="text-xs font-semibold text-stone-700 cursor-pointer">
                     Set as Featured Flagship on Homepage Hero Banner
@@ -766,7 +766,7 @@ export default function AdminDashboardPage() {
                   <button
                     type="submit"
                     disabled={submittingBook}
-                    className="px-6 py-2.5 bg-[#23584B] hover:bg-[#182A27] text-white text-xs font-bold rounded-lg shadow-sm flex items-center gap-2 transition-transform hover:-translate-y-0.5 cursor-pointer disabled:opacity-50"
+                    className="px-6 py-2.5 bg-[var(--store-gold)] hover:bg-[var(--store-gold-hover)] text-[var(--store-ink)] text-xs font-bold rounded-lg shadow-sm flex items-center gap-2 transition-transform hover:-translate-y-0.5 cursor-pointer disabled:opacity-50"
                   >
                     {submittingBook ? (
                       <RefreshCw className="w-4 h-4 animate-spin" />
@@ -797,7 +797,7 @@ export default function AdminDashboardPage() {
                     />
                     <div className="space-y-1.5 flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-[10px] font-bold text-[#23584B] bg-emerald-50 px-2 py-0.5 rounded">
+                        <span className="text-[10px] font-bold text-[var(--store-green)] bg-emerald-50 px-2 py-0.5 rounded">
                           {book.category}
                         </span>
                         {book.badge && (
@@ -806,13 +806,13 @@ export default function AdminDashboardPage() {
                           </span>
                         )}
                         {book.featured && (
-                          <span className="text-[10px] font-bold text-sky-800 bg-sky-50 px-2 py-0.5 rounded">
+                          <span className="text-[10px] font-bold text-[var(--store-green)] bg-[var(--store-sage)] px-2 py-0.5 rounded">
                             Hero Flagship
                           </span>
                         )}
                       </div>
 
-                      <h3 className="font-serif font-bold text-base text-[#182A27] line-clamp-1">
+                      <h3 className="font-serif font-bold text-base text-[var(--store-ink)] line-clamp-1">
                         {book.title}
                       </h3>
                       {book.subtitle && (
@@ -820,7 +820,7 @@ export default function AdminDashboardPage() {
                       )}
 
                       <div className="flex items-baseline gap-2 pt-0.5">
-                        <span className="font-bold text-sm text-[#182A27]">
+                        <span className="font-bold text-sm text-[var(--store-ink)]">
                           ${(book.price / 100).toFixed(2)}
                         </span>
                         {book.originalPrice && (
@@ -843,7 +843,7 @@ export default function AdminDashboardPage() {
                   <Link 
                     href={`/books/${book.slug}`} 
                     target="_blank" 
-                    className="font-bold text-[#008bd2] hover:underline flex items-center gap-1"
+                    className="font-bold text-[var(--store-green)] hover:underline flex items-center gap-1"
                   >
                     <span>View Book Page</span>
                     <ExternalLink className="w-3.5 h-3.5" />
@@ -872,7 +872,7 @@ export default function AdminDashboardPage() {
           {data?.tickets?.map((t: any) => (
             <div key={t.id} className="p-5 bg-white rounded-xl border border-stone-200 shadow-2xs space-y-2">
               <div className="flex items-center justify-between">
-                <span className="font-bold text-[#182A27] text-sm">
+                <span className="font-bold text-[var(--store-ink)] text-sm">
                   #{t.ticketNumber} • {t.subject}
                 </span>
                 <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
@@ -887,7 +887,7 @@ export default function AdminDashboardPage() {
                 <div className="pt-2">
                   <button
                     onClick={() => handleResolveTicket(t.id)}
-                    className="px-3 py-1.5 bg-[#23584B] hover:bg-[#182A27] text-white text-xs font-bold rounded cursor-pointer"
+                    className="px-3 py-1.5 bg-[var(--store-gold)] hover:bg-[var(--store-gold-hover)] text-[var(--store-ink)] text-xs font-bold rounded cursor-pointer"
                   >
                     Mark Resolved
                   </button>
@@ -905,7 +905,7 @@ export default function AdminDashboardPage() {
             <div key={r.id} className="p-5 bg-white rounded-xl border border-stone-200 shadow-2xs space-y-2">
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="font-bold text-sm text-[#182A27]">{r.authorName}</span>
+                  <span className="font-bold text-sm text-[var(--store-ink)]">{r.authorName}</span>
                   <span className="text-xs text-stone-400 ml-2">({r.location})</span>
                 </div>
                 <div className="flex items-center gap-1 text-amber-500">
@@ -946,7 +946,7 @@ export default function AdminDashboardPage() {
               {data?.auditLogs?.map((log: any) => (
                 <tr key={log.id} className="hover:bg-stone-50">
                   <td className="p-3.5 text-stone-400 whitespace-nowrap">{new Date(log.timestamp).toLocaleString()}</td>
-                  <td className="p-3.5 font-bold text-[#182A27] font-mono">{log.action}</td>
+                  <td className="p-3.5 font-bold text-[var(--store-ink)] font-mono">{log.action}</td>
                   <td className="p-3.5 text-stone-600">{log.details}</td>
                 </tr>
               ))}

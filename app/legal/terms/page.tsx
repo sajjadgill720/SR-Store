@@ -7,10 +7,10 @@ export default function TermsPage() {
     <div className="py-12 sm:py-16 max-w-4xl mx-auto px-4">
       <div className="bg-white p-6 sm:p-12 rounded-2xl border border-stone-200 shadow-sm space-y-6">
         <div>
-          <span className="text-xs font-bold text-[#23584B] uppercase tracking-widest block mb-1">
+          <span className="text-xs font-bold text-[var(--store-green)] uppercase tracking-widest block mb-1">
             LEGAL AGREEMENT
           </span>
-          <h1 className="font-serif text-3xl font-bold text-[#182A27] mb-2">
+          <h1 className="font-serif text-3xl font-bold text-[var(--store-ink)] mb-2">
             Terms of Service
           </h1>
           <p className="text-xs text-stone-500">
@@ -23,21 +23,21 @@ export default function TermsPage() {
             By accessing or purchasing from Knovera, you agree to these Terms of Service.
           </p>
 
-          <h2 className="font-serif text-lg font-bold text-[#182A27]">
+          <h2 className="font-serif text-lg font-bold text-[var(--store-ink)]">
             1. Intellectual Property
           </h2>
           <p>
             All texts, illustrations, cover artwork, and companion worksheets are the intellectual property of S.R. Rehman. Purchases grant personal reading and household printing licenses, not transfer of copyright.
           </p>
 
-          <h2 className="font-serif text-lg font-bold text-[#182A27]">
+          <h2 className="font-serif text-lg font-bold text-[var(--store-ink)]">
             2. Content Accuracy & Disclaimers
           </h2>
           <p>
             Our non-fiction publications are intended for educational and self-development purposes. They do not constitute certified medical, financial, or legal advice.
           </p>
 
-          <h2 className="font-serif text-lg font-bold text-[#182A27]">
+          <h2 className="font-serif text-lg font-bold text-[var(--store-ink)]">
             3. Account & Access Security
           </h2>
           <p>

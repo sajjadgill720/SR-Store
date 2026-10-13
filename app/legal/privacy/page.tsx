@@ -7,10 +7,10 @@ export default function PrivacyPage() {
     <div className="py-12 sm:py-16 max-w-4xl mx-auto px-4">
       <div className="bg-white p-6 sm:p-12 rounded-2xl border border-stone-200 shadow-sm space-y-6">
         <div>
-          <span className="text-xs font-bold text-[#23584B] uppercase tracking-widest block mb-1">
+          <span className="text-xs font-bold text-[var(--store-green)] uppercase tracking-widest block mb-1">
             DATA PROTECTION
           </span>
-          <h1 className="font-serif text-3xl font-bold text-[#182A27] mb-2">
+          <h1 className="font-serif text-3xl font-bold text-[var(--store-ink)] mb-2">
             Privacy Policy
           </h1>
           <p className="text-xs text-stone-500">
@@ -23,7 +23,7 @@ export default function PrivacyPage() {
             Knovera stores information used to fulfill digital orders, provide reader support, and operate optional reader community accounts.
           </p>
 
-          <h2 className="font-serif text-lg font-bold text-[#182A27]">
+          <h2 className="font-serif text-lg font-bold text-[var(--store-ink)]">
             Information We Collect
           </h2>
           <ul className="list-disc pl-5 space-y-1">
@@ -36,14 +36,14 @@ export default function PrivacyPage() {
             <li><strong>Public Participation:</strong> Discussions and replies are publicly visible. Content reports are available to configured moderators. Removing public content hides it; the server retains it for moderation.</li>
           </ul>
 
-          <h2 className="font-serif text-lg font-bold text-[#182A27]">
+          <h2 className="font-serif text-lg font-bold text-[var(--store-ink)]">
             Payment Security
           </h2>
           <p>
             We do not store or process payment card numbers or security codes on our servers. All transactions are securely processed by authorized merchant-of-record hosted checkout providers.
           </p>
 
-          <h2 className="font-serif text-lg font-bold text-[#182A27]">
+          <h2 className="font-serif text-lg font-bold text-[var(--store-ink)]">
             Data Retention & Deletion
           </h2>
           <p>

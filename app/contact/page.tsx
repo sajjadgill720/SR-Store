@@ -48,13 +48,13 @@ export default function ContactSupportPage() {
       <div className="bg-white p-6 sm:p-10 rounded-2xl border border-stone-200 shadow-sm">
         
         <div className="text-center mb-8">
-          <div className="w-12 h-12 rounded-xl bg-sky-50 text-[#008bd2] flex items-center justify-center mx-auto mb-3">
+          <div className="w-12 h-12 rounded-xl bg-[var(--store-sage)] text-[var(--store-green)] flex items-center justify-center mx-auto mb-3">
             <Mail className="w-6 h-6" />
           </div>
-          <span className="text-xs font-bold text-[#23584B] uppercase tracking-widest block mb-1">
+          <span className="text-xs font-bold text-[var(--store-green)] uppercase tracking-widest block mb-1">
             HUMAN CUSTOMER SUPPORT
           </span>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#182A27]">
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[var(--store-ink)]">
             How Can We Assist You?
           </h1>
           <p className="text-xs sm:text-sm text-stone-600 mt-2">
@@ -65,7 +65,7 @@ export default function ContactSupportPage() {
         {submitted ? (
           <div className="p-6 bg-emerald-50 border border-emerald-200 rounded-xl text-center space-y-3">
             <CheckCircle2 className="w-10 h-10 text-emerald-600 mx-auto" />
-            <h2 className="font-serif text-xl font-bold text-[#182A27]">
+            <h2 className="font-serif text-xl font-bold text-[var(--store-ink)]">
               Ticket Received (#{ticketNumber})
             </h2>
             <p className="text-xs sm:text-sm text-stone-600 max-w-md mx-auto">
@@ -74,7 +74,7 @@ export default function ContactSupportPage() {
             <div className="pt-2">
               <Link
                 href="/books"
-                className="inline-block px-5 py-2.5 bg-[#23584B] text-white text-xs font-bold rounded"
+                className="inline-block px-5 py-2.5 bg-[var(--store-gold)] text-[var(--store-ink)] text-xs font-bold rounded"
               >
                 Return to Storefront
               </Link>
@@ -84,7 +84,7 @@ export default function ContactSupportPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             
             <div>
-              <label className="text-xs font-bold text-[#182A27] block mb-1">
+              <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
                 Your Email Address <span className="text-rose-500">*</span>
               </label>
               <input
@@ -93,19 +93,19 @@ export default function ContactSupportPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="reader@example.com"
-                className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[#23584B]"
+                className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[var(--store-green)]"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-bold text-[#182A27] block mb-1">
+                <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
                   Inquiry Category
                 </label>
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value as any)}
-                  className="w-full px-3 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[#23584B]"
+                  className="w-full px-3 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[var(--store-green)]"
                 >
                   <option value="download_help">Download Link or Expired Access</option>
                   <option value="device_setup">E-Reader / Tablet / Device Setup</option>
@@ -115,7 +115,7 @@ export default function ContactSupportPage() {
               </div>
 
               <div>
-                <label className="text-xs font-bold text-[#182A27] block mb-1">
+                <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
                   Order Number (If known)
                 </label>
                 <input
@@ -123,13 +123,13 @@ export default function ContactSupportPage() {
                   value={orderRef}
                   onChange={(e) => setOrderRef(e.target.value)}
                   placeholder="e.g. SR-2026-8910"
-                  className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[#23584B]"
+                  className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[var(--store-green)]"
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-xs font-bold text-[#182A27] block mb-1">
+              <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
                 Subject
               </label>
               <input
@@ -138,12 +138,12 @@ export default function ContactSupportPage() {
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
                 placeholder="Summary of your question..."
-                className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[#23584B]"
+                className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[var(--store-green)]"
               />
             </div>
 
             <div>
-              <label className="text-xs font-bold text-[#182A27] block mb-1">
+              <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
                 Message & Context <span className="text-rose-500">*</span>
               </label>
               <textarea
@@ -152,7 +152,7 @@ export default function ContactSupportPage() {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Please describe the issue, device model (e.g. iPad, Kobo, Android, E-reader), or question..."
-                className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[#23584B]"
+                className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[var(--store-green)]"
               ></textarea>
             </div>
 
@@ -160,7 +160,7 @@ export default function ContactSupportPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3 px-4 bg-[#008bd2] hover:bg-[#0077b5] text-white font-bold text-xs sm:text-sm rounded transition-colors shadow-2xs cursor-pointer"
+                className="w-full py-3 px-4 bg-[var(--store-gold)] hover:bg-[var(--store-gold-hover)] text-[var(--store-ink)] font-bold text-xs sm:text-sm rounded transition-colors shadow-2xs cursor-pointer"
               >
                 {isSubmitting ? 'Submitting...' : 'Send Support Ticket'}
               </button>

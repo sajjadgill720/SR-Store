@@ -5,7 +5,7 @@
   --studio-tint: #eff5f8;
   --studio-ink: #142d3d;
   --studio-muted: #526674;
-  --studio-accent: #176783;
+  --studio-accent: #3e7564;
   --studio-line: #dce3e6;
   --studio-radius: 14px;
   --studio-space: clamp(16px, 3vw, 32px);
@@ -37,7 +37,7 @@
 .site-announcement a { text-decoration: underline; text-underline-offset: 3px; }
 .mobile-nav { grid-template-columns: repeat(5, minmax(0,1fr)); }
 .mobile-nav > a { min-width: 0; font-size: 10px; }
-.mobile-nav > a[aria-current=page] { background: #e6f0f6; color: #176783; }
+.mobile-nav > a[aria-current=page] { background: #e6f0f6; color: #3e7564; }
 .studio-header { position: sticky; top: 0; z-index: 40; background: var(--studio-paper); border-bottom: 1px solid var(--studio-line); }
 .studio-header-inner { max-width: 1264px; padding: 14px var(--studio-space); margin: auto; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
 .studio-brand { display: flex; align-items: center; gap: 10px; color: var(--studio-ink); }
@@ -294,9 +294,9 @@ body[data-reader=true] { padding-bottom: 0; }
 /* Knovera palette: cream paper, coastal blue, sage and a soft lilac accent. */
 :root { --studio-blue-wash: #dceef5; --studio-sage-wash: #e1ece4; --studio-lilac-wash: #eae5f2; }
 .studio-hero-feature { background: var(--studio-blue-wash); border: 1px solid #c8dfe9; border-radius: 18px; padding: 28px; }
-.studio-hero .studio-button:not(.outline) { background: #176783; border-color: #176783; }
-.studio-hero .studio-button:not(.outline):hover { background: #124f66; border-color: #124f66; }
-.studio-hero .studio-button.outline { background: #edf6fa; border-color: #b9d7e3; }
+.studio-hero .studio-button:not(.outline) { background: #3e7564; border-color: #3e7564; }
+.studio-hero .studio-button:not(.outline):hover { background: #193c36; border-color: #193c36; }
+.studio-hero .studio-button.outline { background: #edf5f1; border-color: #c6ddd0; }
 #reading-room .edition-card-art { background: var(--studio-sage-wash); border-color: #cbded0; }
 #reading-room .edition-card:nth-child(3n+2) .edition-card-art { background: var(--studio-blue-wash); border-color: #c8dfe9; }
 #reading-room .edition-card:nth-child(3n+3) .edition-card-art { background: var(--studio-lilac-wash); border-color: #dbd2e9; }
@@ -309,8 +309,8 @@ body[data-reader=true] { padding-bottom: 0; }
 
 /* Studio updates invitation shares the coastal palette. */
 .studio-footer-invitation { background:var(--studio-blue-wash); border:1px solid #bfdbe7; border-radius:18px; padding:32px; }
-.studio-footer-invitation h2 { color:#124f66; }
-.studio-newsletter input { border-color:#a8cbdc; }
-.studio-newsletter .studio-button { background:#176783; border-color:#176783; }
-.studio-newsletter .studio-button:hover { background:#124f66; border-color:#124f66; }
+.studio-footer-invitation h2 { color:#193c36; }
+.studio-newsletter input { border-color:#b9d4c5; }
+.studio-newsletter .studio-button { background:#3e7564; border-color:#3e7564; }
+.studio-newsletter .studio-button:hover { background:#193c36; border-color:#193c36; }
 @media(max-width:760px) { .studio-footer-invitation { padding:24px 20px; border-radius:14px; } }

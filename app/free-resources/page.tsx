@@ -59,10 +59,10 @@ export default function FreeResourcesPage() {
         <div className="w-12 h-12 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center mx-auto mb-4">
           <Gift className="w-6 h-6" />
         </div>
-        <span className="text-xs font-bold text-[#23584B] uppercase tracking-widest block mb-1">
+        <span className="text-xs font-bold text-[var(--store-green)] uppercase tracking-widest block mb-1">
           OPEN TO ALL READERS
         </span>
-        <h1 className="font-serif text-3xl sm:text-5xl font-bold text-[#182A27] mb-3">
+        <h1 className="font-serif text-3xl sm:text-5xl font-bold text-[var(--store-ink)] mb-3">
           Free Reader Companion Resources
         </h1>
         <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
@@ -81,7 +81,7 @@ export default function FreeResourcesPage() {
                 <span className="bg-stone-100 px-2 py-0.5 rounded font-medium">Companion to {item.bookRef}</span>
                 <span>{item.fileSize}</span>
               </div>
-              <h2 className="font-serif font-bold text-lg text-[#182A27] mb-2">
+              <h2 className="font-serif font-bold text-lg text-[var(--store-ink)] mb-2">
                 {item.title}
               </h2>
               <p className="text-xs sm:text-sm text-stone-600 leading-relaxed mb-4">
@@ -93,7 +93,7 @@ export default function FreeResourcesPage() {
               <span className="text-xs font-semibold text-emerald-700">{item.fileType}</span>
               <button
                 onClick={() => handleDownloadResource(item.title)}
-                className="px-4 py-2 bg-[#008bd2] hover:bg-[#0077b5] text-white text-xs font-bold rounded flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="px-4 py-2 bg-[var(--store-gold)] hover:bg-[var(--store-gold-hover)] text-[var(--store-ink)] text-xs font-bold rounded flex items-center gap-1.5 transition-colors cursor-pointer"
               >
                 <Download className="w-3.5 h-3.5" />
                 <span>Instant Download</span>
@@ -104,7 +104,7 @@ export default function FreeResourcesPage() {
       </div>
 
       {/* Reader Club Promo Box */}
-      <div className="p-8 bg-[#182A27] text-white rounded-2xl text-center space-y-4 max-w-3xl mx-auto shadow-md">
+      <div className="p-8 bg-[var(--store-ink)] text-white rounded-2xl text-center space-y-4 max-w-3xl mx-auto shadow-md">
         <h3 className="font-serif text-2xl font-bold">
           Want new companion templates as they are released?
         </h3>
@@ -113,7 +113,7 @@ export default function FreeResourcesPage() {
         </p>
         <Link
           href="/reader-club"
-          className="inline-flex items-center gap-2 px-6 py-3 bg-[#008bd2] hover:bg-[#0077b5] text-white font-bold text-xs sm:text-sm rounded"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--store-gold)] hover:bg-[var(--store-gold-hover)] text-[var(--store-ink)] font-bold text-xs sm:text-sm rounded"
         >
           <span>Join Free Reader Club</span>
           <ArrowRight className="w-4 h-4" />
