@@ -9,3 +9,4 @@ export function subscribe(email: string, topics: string[]): string | null;
 export function confirm(token: string): { email: string; topics: string[]; consent: number } | null;
 export function unsubscribe(token: string): boolean;
 export function contactStatus(email: string): string | undefined;
+export function contacts(): {email: string; topics: string[]; status: string; consentTimestamp: string}[];

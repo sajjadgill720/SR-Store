@@ -3,20 +3,14 @@ const fs = require('node:fs');
 const path = require('node:path');
 const file = path.join(process.cwd(), 'artifacts/community/browser-fixture.json');
 async function main() {
+  if (process.env.COMMUNITY_TEST_DISPOSABLE !== '1' || !process.env.SUPABASE_DB_URL) throw new Error('Use a disposable Postgres project with COMMUNITY_TEST_DISPOSABLE=1');
   if (process.argv[2] === 'cleanup') {
     const fixture = JSON.parse(fs.readFileSync(file, 'utf8'));
-    const { DatabaseSync } = require('node:sqlite');
-    const db = new DatabaseSync(path.join(process.cwd(), '.data/community.sqlite'));
-    db.exec('PRAGMA busy_timeout=5000; BEGIN IMMEDIATE');
-    try {
-      db.prepare('DELETE FROM reports WHERE member=?').run(fixture.member.id);
-      db.prepare('DELETE FROM replies WHERE member=?').run(fixture.member.id);
-      db.prepare('DELETE FROM threads WHERE member=?').run(fixture.member.id);
-      db.prepare('DELETE FROM sessions WHERE member=?').run(fixture.member.id);
-      db.prepare('DELETE FROM activity WHERE member=?').run(fixture.member.id);
-      db.prepare('DELETE FROM members WHERE id=?').run(fixture.member.id);
-      db.exec('COMMIT');
-    } catch (error) { db.exec('ROLLBACK'); throw error; } finally { db.close(); }
+    const {transaction,close}=await import('../lib/db/postgres.mjs');
+    try {await transaction(async db=>{
+      for(const table of ['reports','replies','threads','sessions','activity']) await db.query('DELETE FROM knovera.'+table+' WHERE member=$1',[fixture.member.id]);
+      await db.query('DELETE FROM knovera.members WHERE id=$1',[fixture.member.id]);
+    });} finally {await close();}
     fs.unlinkSync(file);
     console.log('Browser-test account and its data removed.');
     return;

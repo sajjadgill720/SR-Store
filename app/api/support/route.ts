@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     const ticketNumber = 'TKT-' + (1000 + Math.floor(Math.random() * 9000));
     const ticketId = 'tick_' + Date.now();
 
-    db.addTicket({
+    await db.addTicket({
       id: ticketId,
       ticketNumber,
       customerEmail: customerEmail.trim().toLowerCase(),
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
       createdAt: new Date().toISOString()
     });
 
-    db.addAuditLog('SUPPORT_TICKET_CREATED', `Ticket ${ticketNumber} opened by ${customerEmail}`);
+    await db.addAuditLog('SUPPORT_TICKET_CREATED', `Ticket ${ticketNumber} opened by ${customerEmail}`);
 
     return NextResponse.json({
       success: true,

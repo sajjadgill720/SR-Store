@@ -1,6 +1,6 @@
 import { Order, OrderItem, Entitlement } from '../types';
 import { db } from '../db/store';
-import { getBookById } from '../data/books';
+import { randomUUID, randomBytes } from 'node:crypto';
 
 export interface ApprovedCheckoutInput {
   offerId: string;
@@ -39,7 +39,7 @@ export class DevelopmentSimulatorProvider implements PaymentProvider {
     // Calculate verified server-side total
     let total = 0;
     for (const item of input.items) {
-      const book = getBookById(item.bookId);
+      const book = await db.getBookById(item.bookId);
       if (!book) throw new Error(`Book not found: ${item.bookId}`);
       total += book.price * item.quantity;
     }
@@ -75,29 +75,30 @@ export class DevelopmentSimulatorProvider implements PaymentProvider {
   }
 
   async requestRefund(orderId: string): Promise<boolean> {
-    db.revokeEntitlement(orderId);
-    db.addAuditLog('SIMULATOR_REFUND', `Revoked entitlements for order ${orderId}`);
+    await db.refundOrder(orderId);
+    await db.addAuditLog('SIMULATOR_REFUND', `Revoked entitlements for order ${orderId}`);
     return true;
   }
 }
 
 // Helper to complete checkout and fulfill order atomically
-export function fulfillSimulatorOrder(params: {
+export async function fulfillSimulatorOrder(params: {
   customerEmail: string;
   customerName?: string;
   items: { bookId: string; quantity: number }[];
   providerOrderId: string;
-}): Order {
-  const publicToken = 'tok_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+}): Promise<Order> {
+  const publicToken = randomBytes(32).toString('hex');
   const orderNumber = 'SR-' + (1000 + Math.floor(Math.random() * 9000));
-  const orderId = 'ord_' + Math.random().toString(36).substring(2, 10);
+  const orderId = randomUUID();
 
   let totalAmount = 0;
   const orderItems: OrderItem[] = [];
 
   for (const item of params.items) {
-    const book = getBookById(item.bookId);
-    if (!book) continue;
+    const book = await db.getBookById(item.bookId);
+    if (!book || !book.isPublished || !book.isInStock || book.rightsStatus !== 'wide') throw new Error('Book unavailable');
+    if (!Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > 20) throw new Error('Invalid quantity');
     const itemTotal = book.price * item.quantity;
     totalAmount += itemTotal;
 
@@ -107,6 +108,7 @@ export function fulfillSimulatorOrder(params: {
       title: book.title,
       editionVersion: book.currentEdition.version,
       price: book.price,
+      quantity: item.quantity,
       formats: book.formats
     });
   }
@@ -129,7 +131,7 @@ export function fulfillSimulatorOrder(params: {
   };
 
   // Invariant: Save order
-  db.saveOrder(order);
+  const entitlements: Entitlement[] = [];
 
   // Invariant: Grant entitlements atomically for each book purchased
   for (const item of orderItems) {
@@ -141,12 +143,10 @@ export function fulfillSimulatorOrder(params: {
       status: 'active',
       grantedAt: new Date().toISOString()
     };
-    db.grantEntitlement(entitlement);
+    if (!entitlements.some(existing => existing.bookId === entitlement.bookId)) entitlements.push(entitlement);
   }
 
-  db.addAuditLog('ORDER_FULFILLED', `Created order ${orderNumber} for ${params.customerEmail} with ${orderItems.length} items`);
-
-  return order;
+  return db.fulfillOrder(order, entitlements);
 }
 
 export const activePaymentProvider = new DevelopmentSimulatorProvider();

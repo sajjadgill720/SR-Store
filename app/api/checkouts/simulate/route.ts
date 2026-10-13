@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
 
     const providerOrderId = 'sim_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
 
-    const order = fulfillSimulatorOrder({
+    const order = await fulfillSimulatorOrder({
       customerEmail: customerEmail.trim().toLowerCase(),
       customerName: customerName ? customerName.trim() : undefined,
       items,

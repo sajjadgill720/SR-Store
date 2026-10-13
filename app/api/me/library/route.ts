@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db/store';
-import { getBookById } from '@/lib/data/books';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -11,10 +10,9 @@ export async function GET(req: NextRequest) {
   }
 
   const normEmail = email.toLowerCase().trim();
-  const entitlements = db.getEntitlements(normEmail);
+  const entitlements = await db.getEntitlements(normEmail);
 
-  const books = entitlements
-    .map((ent) => db.getBookById(ent.bookId) || getBookById(ent.bookId))
+  const books = (await Promise.all([...new Set(entitlements.map(ent => ent.bookId))].map(id => db.getBookById(id))))
     .filter((b): b is NonNullable<typeof b> => b !== undefined);
 
   return NextResponse.json({

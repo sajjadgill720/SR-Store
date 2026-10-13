@@ -1,8 +1,9 @@
 import React from 'react';
 import { Star, BookOpen, Quote } from 'lucide-react';
-import { REVIEWS_DATA } from '../../lib/data/books';
+import { db } from '../../lib/db/store';
 
-export default function ReviewsSection() {
+export default async function ReviewsSection() {
+  const REVIEWS_DATA = (await db.getReviews()).filter(review => review.isApproved);
   return (
     <section data-reveal className="reviews-section py-14 sm:py-20 bg-white border-t border-stone-100">
       <div className="max-w-7xl mx-auto px-4">

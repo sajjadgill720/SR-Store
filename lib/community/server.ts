@@ -1,175 +1,136 @@
-import { DatabaseSync } from 'node:sqlite';
 import { randomBytes, randomUUID, scryptSync, timingSafeEqual, createHash } from 'node:crypto';
-import { mkdirSync } from 'node:fs';
-import path from 'node:path';
+import { query, transaction } from '../db/postgres.mjs';
 import { getCircle, getDiscussion } from '../data/community';
 import { emptyActivity, type Activity, type Member } from './types';
 
 export class CommunityError extends Error { constructor(message: string, public status = 400) { super(message); } }
-let database: DatabaseSync | undefined;
-export function communityDb() {
-  if (database) return database;
-  const file = process.env.COMMUNITY_DB_PATH || path.join(process.cwd(), '.data', 'community.sqlite');
-  mkdirSync(path.dirname(file), { recursive: true });
-  database = new DatabaseSync(file);
-  database.exec(`PRAGMA journal_mode=WAL; PRAGMA busy_timeout=5000; PRAGMA foreign_keys=ON;
-    CREATE TABLE IF NOT EXISTS members(id TEXT PRIMARY KEY, username TEXT UNIQUE NOT NULL, name TEXT NOT NULL, password TEXT NOT NULL);
-    CREATE TABLE IF NOT EXISTS sessions(token TEXT PRIMARY KEY, member TEXT NOT NULL REFERENCES members(id), expires INTEGER NOT NULL);
-    CREATE TABLE IF NOT EXISTS activity(member TEXT PRIMARY KEY REFERENCES members(id), value TEXT NOT NULL, revision INTEGER NOT NULL DEFAULT 0);
-    CREATE TABLE IF NOT EXISTS threads(id TEXT PRIMARY KEY, circle TEXT NOT NULL, title TEXT NOT NULL, body TEXT NOT NULL, member TEXT NOT NULL REFERENCES members(id), createdAt TEXT NOT NULL, hidden INTEGER NOT NULL DEFAULT 0);
-    CREATE TABLE IF NOT EXISTS replies(id TEXT PRIMARY KEY, discussion TEXT NOT NULL, parentId TEXT REFERENCES replies(id), body TEXT NOT NULL, member TEXT NOT NULL REFERENCES members(id), createdAt TEXT NOT NULL, hidden INTEGER NOT NULL DEFAULT 0);
-    CREATE TABLE IF NOT EXISTS reports(id TEXT PRIMARY KEY, target TEXT NOT NULL, kind TEXT NOT NULL, member TEXT NOT NULL REFERENCES members(id), reason TEXT NOT NULL, createdAt TEXT NOT NULL, resolved INTEGER NOT NULL DEFAULT 0, UNIQUE(target,kind,member));
-    CREATE TABLE IF NOT EXISTS limits(key TEXT PRIMARY KEY, count INTEGER NOT NULL, expires INTEGER NOT NULL);
-    CREATE INDEX IF NOT EXISTS replies_discussion ON replies(discussion,createdAt);
-    CREATE INDEX IF NOT EXISTS threads_circle ON threads(circle,createdAt);`);
-  return database;
-}
 export function text(value: unknown, min: number, max: number, label: string) {
   if (typeof value !== 'string' || value.trim().length < min || value.trim().length > max) throw new CommunityError(`${label} must be ${min}–${max} characters.`);
   return value.trim();
 }
-export function limit(key: string, max: number, windowMs: number) {
-  const db = communityDb();
-  const now = Date.now();
-  db.prepare('DELETE FROM limits WHERE expires < ?').run(now);
-  db.prepare('INSERT INTO limits VALUES (?,1,?) ON CONFLICT(key) DO UPDATE SET count=count+1').run(key, now + windowMs);
-  const row = db.prepare('SELECT count FROM limits WHERE key=?').get(key)!;
-  if (Number(row.count) > max) throw new CommunityError('Too many attempts. Please try again later.', 429);
+export async function limit(key: string, max: number, windowMs: number) {
+  const now=Date.now();
+  const {rows}=await query<{count:number}>('INSERT INTO knovera.limits VALUES($1,1,$2) ON CONFLICT(key) DO UPDATE SET count=CASE WHEN knovera.limits.expires<=$3 THEN 1 ELSE knovera.limits.count+1 END,expires=CASE WHEN knovera.limits.expires<=$3 THEN excluded.expires ELSE knovera.limits.expires END RETURNING count',[key,now+windowMs,now]);
+  if (rows[0].count>max) throw new CommunityError('Too many attempts. Please try again later.',429);
 }
-function publicMember(row: Record<string, unknown>): Member {
-  const moderators = (process.env.COMMUNITY_MODERATOR_IDS || '').split(',').map(v => v.trim());
-  return { id: String(row.id), username: String(row.username), name: String(row.name), moderator: moderators.includes(String(row.id)) };
+function publicMember(row: Record<string,unknown>): Member {
+  const moderators=(process.env.COMMUNITY_MODERATOR_IDS || '').split(',').map(value=>value.trim());
+  return {id:String(row.id),username:String(row.username),name:String(row.name),moderator:moderators.includes(String(row.id))};
 }
-const digest = (token: string) => createHash('sha256').update(token).digest('hex');
-export function sessionMember(token?: string) {
+const digest=(token:string)=>createHash('sha256').update(token).digest('hex');
+export async function sessionMember(token?:string) {
   if (!token) return null;
-  const row = communityDb().prepare('SELECT m.* FROM sessions s JOIN members m ON s.member=m.id WHERE s.token=? AND s.expires>?').get(digest(token), Date.now());
-  return row ? publicMember(row) : null;
+  const {rows}=await query('SELECT m.id,m.username,m.name FROM knovera.sessions s JOIN knovera.members m ON s.member=m.id WHERE s.token=$1 AND s.expires>$2',[digest(token),Date.now()]);
+  return rows[0]?publicMember(rows[0]):null;
 }
-export function authenticate(mode: string, usernameInput: unknown, passwordInput: unknown, nameInput: unknown) {
-  const username = text(usernameInput, 3, 32, 'Username').toLowerCase();
+export async function authenticate(mode:string, usernameInput:unknown,passwordInput:unknown,nameInput?:unknown) {
+  const username=text(usernameInput,3,32,'Username').toLowerCase();
   if (!/^[a-z0-9_-]+$/.test(username)) throw new CommunityError('Use letters, numbers, underscores, or hyphens for your username.');
-  const password = text(passwordInput, 10, 128, 'Password');
-  const db = communityDb();
-  limit(`login:${username}`, 20, 15 * 60_000);
-  let row = db.prepare('SELECT * FROM members WHERE username=?').get(username);
-  if (mode === 'register') {
-    if (row) throw new CommunityError('This username is already taken.', 409);
-    const name = text(nameInput, 2, 60, 'Display name');
-    const salt = randomBytes(16).toString('hex');
-    const hash = scryptSync(password, salt, 64).toString('hex');
-    const id = randomUUID();
-    db.prepare('INSERT INTO members VALUES (?,?,?,?)').run(id, username, name, `${salt}:${hash}`);
-    row = { id, username, name };
-  } else if (mode === 'login') {
-    const [salt, hash] = String(row?.password || 'dummy:' + '0'.repeat(128)).split(':');
-    if (!timingSafeEqual(scryptSync(password, salt, 64), Buffer.from(hash, 'hex')) || !row) throw new CommunityError('Username or password is incorrect.', 401);
+  const password=text(passwordInput,10,128,'Password');
+  await limit(`login:${username}`,20,15*60000);
+  let row=(await query('SELECT * FROM knovera.members WHERE username=$1',[username])).rows[0];
+  if (mode==='register') {
+    const name=text(nameInput,2,60,'Display name');
+    const salt=randomBytes(16).toString('hex');
+    const hash=scryptSync(password,salt,64).toString('hex');
+    const result=await query('INSERT INTO knovera.members VALUES($1,$2,$3,$4) ON CONFLICT(username) DO NOTHING RETURNING id,username,name',[randomUUID(),username,name,`${salt}:${hash}`]);
+    if (!result.rows[0]) throw new CommunityError('This username is already taken.',409);
+    row=result.rows[0];
+  } else if (mode==='login') {
+    const [salt,hash]=String(row?.password || `dummy:${'0'.repeat(128)}`).split(':');
+    if (!timingSafeEqual(scryptSync(password,salt,64),Buffer.from(hash,'hex')) || !row) throw new CommunityError('Username or password is incorrect.',401);
   } else throw new CommunityError('Unknown account action.');
-  const token = randomBytes(32).toString('hex');
-  db.prepare('DELETE FROM sessions WHERE expires < ?').run(Date.now());
-  db.prepare('INSERT INTO sessions VALUES (?,?,?)').run(digest(token), row!.id as string, Date.now() + 30 * 86400_000);
-  return { member: publicMember(row!), token };
+  const token=randomBytes(32).toString('hex');
+  await query('INSERT INTO knovera.sessions VALUES($1,$2,$3)',[digest(token),row.id,Date.now()+30*86400000]);
+  return {member:publicMember(row),token};
 }
-export function logout(token?: string) { if (token) communityDb().prepare('DELETE FROM sessions WHERE token=?').run(digest(token)); }
-export function getActivity(member: string) {
-  const row = communityDb().prepare('SELECT * FROM activity WHERE member=?').get(member);
-  return { activity: row ? JSON.parse(String(row.value)) as Activity : emptyActivity(), revision: Number(row?.revision || 0) };
+export async function logout(token?:string) { if(token) await query('DELETE FROM knovera.sessions WHERE token=$1',[digest(token)]); }
+export async function getActivity(member:string) {
+  const row=(await query<{value:Activity;revision:number}>('SELECT value,revision FROM knovera.activity WHERE member=$1',[member])).rows[0];
+  return {activity:row?.value || emptyActivity(),revision:row?.revision || 0};
 }
-export function discussionExists(id: string) { return !!getDiscussion(id) || !!communityDb().prepare('SELECT id FROM threads WHERE id=? AND hidden=0').get(id); }
-export function threadById(id: string, moderator = false) {
-  const row = communityDb().prepare('SELECT t.id,t.circle,t.title,t.body,t.member AS authorId,m.name AS author,t.createdAt,t.hidden FROM threads t JOIN members m ON m.id=t.member WHERE t.id=? AND (?=1 OR t.hidden=0)').get(id, moderator ? 1 : 0);
-  return row ? { ...row, hidden: !!row.hidden } : null;
+export async function discussionExists(id:string) { return !!getDiscussion(id) || (await query('SELECT id FROM knovera.threads WHERE id=$1 AND NOT hidden',[id])).rows.length>0; }
+const threadSelect='SELECT t.id,t.circle,t.title,t.body,t.member AS "authorId",m.name AS author,t."createdAt",t.hidden FROM knovera.threads t JOIN knovera.members m ON m.id=t.member';
+export async function threadById(id:string,moderator=false) { return (await query(`${threadSelect} WHERE t.id=$1 AND ($2 OR NOT t.hidden)`,[id,moderator])).rows[0] || null; }
+export async function threads(circle?:string,moderator=false) { return (await query(`${threadSelect} WHERE ($1::text IS NULL OR t.circle=$1) AND ($2 OR NOT t.hidden) ORDER BY t."createdAt" DESC,t.id LIMIT 100`,[circle || null,moderator])).rows; }
+export async function replies(discussion:string,moderator=false) {
+  return (await query('SELECT r.id,r.discussion,r."parentId",CASE WHEN r.hidden AND NOT $2 THEN \'[Reply removed]\' ELSE r.body END AS body,r.member AS "authorId",m.name AS author,r."createdAt",r.hidden FROM knovera.replies r JOIN knovera.members m ON m.id=r.member WHERE discussion=$1 ORDER BY r."createdAt",r.id LIMIT 300',[discussion,moderator])).rows;
 }
-export function changeActivity(member: string, input: Record<string, unknown>) {
-  const db = communityDb();
-  db.exec('BEGIN IMMEDIATE');
-  try {
-    const current = getActivity(member);
-    if (input.revision !== current.revision) throw new CommunityError('Your reading space changed elsewhere. Refresh and try again.', 409);
-    const field = input.field;
-    const id = text(input.id, 1, 120, 'Reading item');
-    if (field === 'joined') { if (!getCircle(id)) throw new CommunityError('Circle not found.', 404); }
-    else if (field === 'saved' || field === 'notes') { if (!discussionExists(id)) throw new CommunityError('Discussion not found.', 404); }
-    else if (field === 'completed') {
-      const [circle, index] = id.split(':');
-      if (!getCircle(circle)?.prompts[Number(index)] || !/^\d+$/.test(index)) throw new CommunityError('Practice not found.', 404);
-    } else throw new CommunityError('Invalid activity field.');
-    if (field === 'notes') {
-      if ('previousValue' in input && (current.activity.notes[id] ?? null) !== input.previousValue) throw new CommunityError('This reflection changed on another device. Keep your draft, then load the saved reflection before editing again.', 409);
-      if (input.value === null) delete current.activity.notes[id];
-      else current.activity.notes[id] = text(input.value, 0, 2000, 'Reflection');
+export async function changeActivity(member:string,input:Record<string,unknown>) {
+  const field=input.field;
+  const id=text(input.id,1,120,'Reading item');
+  if (field==='joined') { if(!getCircle(id)) throw new CommunityError('Circle not found.',404); }
+  else if(field==='saved' || field==='notes') { if(!await discussionExists(id)) throw new CommunityError('Discussion not found.',404); }
+  else if(field==='completed') {
+    const [circle,index]=id.split(':');
+    if(!getCircle(circle)?.prompts[Number(index)] || !/^\d+$/.test(index)) throw new CommunityError('Practice not found.',404);
+  } else throw new CommunityError('Invalid activity field.');
+  return transaction(async client=>{
+    await client.query('INSERT INTO knovera.activity VALUES($1,$2,0) ON CONFLICT DO NOTHING',[member,emptyActivity()]);
+    const row=(await client.query<{value:Activity;revision:number}>('SELECT value,revision FROM knovera.activity WHERE member=$1 FOR UPDATE',[member])).rows[0];
+    if(input.revision!==row.revision) throw new CommunityError('Your reading space changed elsewhere. Refresh and try again.',409);
+    if(field==='notes') {
+      if('previousValue' in input && (row.value.notes[id] ?? null)!==input.previousValue) throw new CommunityError('This reflection changed on another device. Keep your draft and load the saved reflection.',409);
+      if(input.value===null) delete row.value.notes[id]; else row.value.notes[id]=text(input.value,0,2000,'Reflection');
     } else {
-      if (typeof input.value !== 'boolean') throw new CommunityError('Invalid selection.');
-      current.activity[field] = current.activity[field].filter(item => item !== id);
-      if (input.value) current.activity[field].push(id);
+      if(typeof input.value!=='boolean') throw new CommunityError('Invalid selection.');
+      row.value[field]=row.value[field].filter(item=>item!==id);
+      if(input.value) row.value[field].push(id);
     }
-    const revision = current.revision + 1;
-    db.prepare('INSERT INTO activity VALUES (?,?,?) ON CONFLICT(member) DO UPDATE SET value=excluded.value,revision=excluded.revision').run(member, JSON.stringify(current.activity), revision);
-    db.exec('COMMIT');
-    return { activity: current.activity, revision };
-  } catch (error) { db.exec('ROLLBACK'); throw error; }
+    const revision=row.revision+1;
+    await client.query('UPDATE knovera.activity SET value=$2,revision=$3 WHERE member=$1',[member,row.value,revision]);
+    return {activity:row.value,revision};
+  });
 }
-export function threads(circle?: string, moderator = false) {
-  return communityDb().prepare(`SELECT t.id,t.circle,t.title,t.body,t.member AS authorId,m.name AS author,t.createdAt,t.hidden FROM threads t JOIN members m ON m.id=t.member WHERE (? IS NULL OR t.circle=?) AND (?=1 OR t.hidden=0) ORDER BY t.createdAt DESC LIMIT 100`).all(circle || null, circle || null, moderator ? 1 : 0).map(row => ({ ...row, hidden: !!row.hidden }));
+export async function createThread(member:Member,input:Record<string,unknown>) {
+  const circle=text(input.circle,1,80,'Circle');
+  if(!getCircle(circle)) throw new CommunityError('Circle not found.',404);
+  const title=text(input.title,5,160,'Title'); const body=text(input.body,1,5000,'Discussion');
+  await limit(`post:${member.id}`,10,60000);
+  const id=`member-${randomUUID()}`;
+  await query('INSERT INTO knovera.threads(id,circle,title,body,member,"createdAt") VALUES($1,$2,$3,$4,$5,$6)',[id,circle,title,body,member.id,new Date().toISOString()]);
+  return {id};
 }
-export function replies(discussion: string, moderator = false) {
-  return communityDb().prepare('SELECT r.id,r.discussion,r.parentId,r.body,r.member AS authorId,m.name AS author,r.createdAt,r.hidden FROM replies r JOIN members m ON m.id=r.member WHERE discussion=? ORDER BY createdAt LIMIT 300').all(discussion).map(row => ({ ...row, body: row.hidden && !moderator ? '[Reply removed]' : row.body, hidden: !!row.hidden }));
-}
-export function createThread(member: Member, input: Record<string, unknown>) {
-  const circle = text(input.circle, 1, 80, 'Circle');
-  if (!getCircle(circle)) throw new CommunityError('Circle not found.', 404);
-  const title = text(input.title, 5, 160, 'Title');
-  const body = text(input.body, 1, 5000, 'Discussion');
-  limit(`post:${member.id}`, 10, 60_000);
-  const id = `member-${randomUUID()}`;
-  communityDb().prepare('INSERT INTO threads(id,circle,title,body,member,createdAt) VALUES (?,?,?,?,?,?)').run(id, circle, title, body, member.id, new Date().toISOString());
-  return { id };
-}
-export function createReply(member: Member, input: Record<string, unknown>) {
-  const discussion = text(input.discussion, 1, 120, 'Discussion');
-  if (!discussionExists(discussion)) throw new CommunityError('Discussion not found.', 404);
-  const body = text(input.body, 1, 2000, 'Reply');
-  const parent = input.parentId ? text(input.parentId, 1, 80, 'Parent reply') : null;
-  if (parent && !communityDb().prepare('SELECT id FROM replies WHERE id=? AND discussion=? AND hidden=0').get(parent, discussion)) throw new CommunityError('Parent reply not found.', 404);
-  if (parent) {
-    let ancestor: string | null = parent;
-    let depth = 0;
-    while (ancestor) {
-      depth++;
-      if (depth > 8) throw new CommunityError('This reply chain is full. Start a new reply in this conversation.');
-      const row = communityDb().prepare('SELECT parentId FROM replies WHERE id=?').get(ancestor);
-      ancestor = row?.parentId ? String(row.parentId) : null;
+export async function createReply(member:Member,input:Record<string,unknown>) {
+  const discussion=text(input.discussion,1,120,'Discussion');
+  const body=text(input.body,1,2000,'Reply');
+  const parent=input.parentId?text(input.parentId,1,80,'Parent reply'):null;
+  await limit(`post:${member.id}`,10,60000);
+  await transaction(async client=>{
+    // Serializes the per-discussion count and parent checks, including guided discussions.
+    await client.query('SELECT pg_advisory_xact_lock(hashtext($1))',[discussion]);
+    if(!getDiscussion(discussion) && !(await client.query('SELECT id FROM knovera.threads WHERE id=$1 AND NOT hidden FOR SHARE',[discussion])).rows.length) throw new CommunityError('Discussion not found.',404);
+    let ancestor=parent; let depth=0;
+    while(ancestor) {
+      if(++depth>8) throw new CommunityError('This reply chain is full. Start a new reply in this conversation.');
+      const row=(await client.query<{parentId:string|null;hidden:boolean}>('SELECT "parentId",hidden FROM knovera.replies WHERE id=$1 AND discussion=$2 FOR SHARE',[ancestor,discussion])).rows[0];
+      if(!row || (ancestor===parent && row.hidden)) throw new CommunityError('Parent reply not found.',404);
+      ancestor=row.parentId;
     }
-  }
-  if (Number(communityDb().prepare('SELECT COUNT(*) AS count FROM replies WHERE discussion=?').get(discussion)?.count) >= 300) throw new CommunityError('This conversation has reached its reply limit. Start a new conversation.');
-  limit(`post:${member.id}`, 10, 60_000);
-  communityDb().prepare('INSERT INTO replies(id,discussion,parentId,body,member,createdAt) VALUES (?,?,?,?,?,?)').run(randomUUID(), discussion, parent, body, member.id, new Date().toISOString());
+    if(Number((await client.query('SELECT count(*) AS count FROM knovera.replies WHERE discussion=$1',[discussion])).rows[0].count)>=300) throw new CommunityError('This conversation has reached its reply limit. Start a new conversation.');
+    await client.query('INSERT INTO knovera.replies(id,discussion,"parentId",body,member,"createdAt") VALUES($1,$2,$3,$4,$5,$6)',[randomUUID(),discussion,parent,body,member.id,new Date().toISOString()]);
+  });
 }
-export function moderate(member: Member, input: Record<string, unknown>) {
-  const kind = input.kind;
-  if (kind !== 'thread' && kind !== 'reply') throw new CommunityError('Invalid content type.');
-  const table = kind === 'thread' ? 'threads' : 'replies';
-  const id = text(input.id, 1, 120, 'Content');
-  const db = communityDb();
-  const row = db.prepare(`SELECT member FROM ${table} WHERE id=?`).get(id);
-  if (!row) throw new CommunityError('Content not found.', 404);
-  if (input.action === 'report') {
-    const reason = text(input.reason, 5, 500, 'Report reason');
-    limit(`report:${member.id}`, 10, 60_000);
-    db.prepare('INSERT INTO reports(id,target,kind,member,reason,createdAt) VALUES (?,?,?,?,?,?) ON CONFLICT(target,kind,member) DO UPDATE SET reason=excluded.reason,createdAt=excluded.createdAt,resolved=0').run(randomUUID(), id, kind, member.id, reason, new Date().toISOString());
-    return;
-  }
-  if (input.action === 'dismiss') {
-    if (!member.moderator) throw new CommunityError('Moderator access required.', 403);
-    db.prepare('UPDATE reports SET resolved=1 WHERE target=? AND kind=?').run(id, kind);
-    return;
-  }
-  if (!member.moderator && (row.member !== member.id || input.action !== 'hide')) throw new CommunityError('You cannot change this content.', 403);
-  if (input.action !== 'hide' && input.action !== 'restore') throw new CommunityError('Invalid moderation action.');
-  db.exec('BEGIN IMMEDIATE');
-  try {
-    db.prepare(`UPDATE ${table} SET hidden=? WHERE id=?`).run(input.action === 'hide' ? 1 : 0, id);
-    db.prepare('UPDATE reports SET resolved=1 WHERE target=? AND kind=?').run(id, kind);
-    db.exec('COMMIT');
-  } catch (error) { db.exec('ROLLBACK'); throw error; }
+export async function moderate(member:Member,input:Record<string,unknown>) {
+  const kind=input.kind;
+  if(kind!=='thread' && kind!=='reply') throw new CommunityError('Invalid content type.');
+  const table=kind==='thread'?'threads':'replies';
+  const id=text(input.id,1,120,'Content');
+  if(input.action==='report') await limit(`report:${member.id}`,10,60000);
+  return transaction(async client=>{
+    const row=(await client.query(`SELECT member FROM knovera.${table} WHERE id=$1 FOR UPDATE`,[id])).rows[0];
+    if(!row) throw new CommunityError('Content not found.',404);
+    if(input.action==='report') {
+      const reason=text(input.reason,5,500,'Report reason');
+      await client.query('INSERT INTO knovera.reports(id,target,kind,member,reason,"createdAt") VALUES($1,$2,$3,$4,$5,$6) ON CONFLICT(target,kind,member) DO UPDATE SET reason=excluded.reason,"createdAt"=excluded."createdAt",resolved=false',[randomUUID(),id,kind,member.id,reason,new Date().toISOString()]); return;
+    }
+    if(input.action==='dismiss') { if(!member.moderator) throw new CommunityError('Moderator access required.',403); }
+    else {
+      if(!member.moderator && (row.member!==member.id || input.action!=='hide')) throw new CommunityError('You cannot change this content.',403);
+      if(input.action!=='hide' && input.action!=='restore') throw new CommunityError('Invalid moderation action.');
+      await client.query(`UPDATE knovera.${table} SET hidden=$2 WHERE id=$1`,[id,input.action==='hide']);
+    }
+    await client.query('UPDATE knovera.reports SET resolved=true WHERE target=$1 AND kind=$2',[id,kind]);
+  });
 }
+export async function reports() { return (await query(`SELECT p.id,p.target,p.kind,p.reason,p."createdAt",COALESCE(r.body,t.body) AS content,COALESCE(r.discussion,t.id) AS discussion FROM knovera.reports p LEFT JOIN knovera.replies r ON p.kind='reply' AND r.id=p.target LEFT JOIN knovera.threads t ON p.kind='thread' AND t.id=p.target WHERE NOT p.resolved ORDER BY p."createdAt"`)).rows; }

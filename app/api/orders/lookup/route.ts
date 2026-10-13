@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Missing token' }, { status: 400 });
   }
 
-  const order = db.getOrderByToken(token);
+  const order = await db.getOrderByToken(token);
   if (!order) {
     return NextResponse.json({ error: 'Order not found' }, { status: 404 });
   }

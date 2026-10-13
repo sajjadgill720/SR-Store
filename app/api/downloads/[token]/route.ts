@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db/store';
-import { getBookById } from '@/lib/data/books';
 
 export async function GET(
   req: NextRequest,
@@ -12,7 +11,7 @@ export async function GET(
     return new NextResponse('Missing download token', { status: 400 });
   }
 
-  const tokenRecord = db.getDownloadToken(token);
+  const tokenRecord = await db.getDownloadToken(token);
   if (!tokenRecord) {
     return new NextResponse(
       'Download link has expired or is invalid. Please request a fresh download link from your Reader Library or Access Recovery page.',
@@ -20,7 +19,7 @@ export async function GET(
     );
   }
 
-  const book = db.getBookById(tokenRecord.bookId) || getBookById(tokenRecord.bookId);
+  const book = await db.getBookById(tokenRecord.bookId);
   const bookTitle = book ? book.title : 'Book';
 
   // Generate genuine formatted digital reading file content for demonstration
@@ -53,7 +52,7 @@ Transfer this file directly to your favorite reading app or e-reader device.
   headers.set('Content-Type', tokenRecord.format === 'pdf' ? 'application/pdf' : 'application/epub+zip');
   headers.set('Cache-Control', 'private, no-store, max-age=0');
 
-  db.addAuditLog('FILE_DOWNLOADED', `Reader ${tokenRecord.customerEmail} downloaded ${tokenRecord.fileName}`);
+  await db.addAuditLog('FILE_DOWNLOADED', `Reader ${tokenRecord.customerEmail} downloaded ${tokenRecord.fileName}`);
 
   return new NextResponse(fileContent, {
     status: 200,

@@ -9,23 +9,23 @@ export async function GET(request: NextRequest) {
     const id = searchParams.get('id');
 
     if (slug) {
-      const book = db.getBookBySlug(slug);
-      if (!book) {
+      const book = await db.getBookBySlug(slug);
+      if (!book || !book.isPublished) {
         return NextResponse.json({ error: 'Book not found' }, { status: 404 });
       }
       return NextResponse.json({ book });
     }
 
     if (id) {
-      const book = db.getBookById(id);
-      if (!book) {
+      const book = await db.getBookById(id);
+      if (!book || !book.isPublished) {
         return NextResponse.json({ error: 'Book not found' }, { status: 404 });
       }
       return NextResponse.json({ book });
     }
 
-    const books = db.getBooks();
-    return NextResponse.json({ books });
+    const books = await db.getBooks();
+    return NextResponse.json({ books: books.filter(book => book.isPublished) });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     
     // Check for slug collision
     let counter = 1;
-    while (db.getBookBySlug(slug)) {
+    while (await db.getBookBySlug(slug)) {
       slug = `${rawSlug}-${counter++}`;
     }
 
@@ -124,7 +124,7 @@ export async function POST(request: NextRequest) {
       featured: Boolean(body.featured)
     };
 
-    const saved = db.addBook(newBook);
+    const saved = await db.addBook(newBook);
     return NextResponse.json({ success: true, book: saved }, { status: 201 });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -149,7 +149,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Book ID is required' }, { status: 400 });
     }
 
-    const success = db.deleteBook(id);
+    const success = await db.deleteBook(id);
     if (!success) {
       return NextResponse.json({ error: 'Book not found' }, { status: 404 });
     }

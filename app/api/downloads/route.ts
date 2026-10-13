@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db/store';
-import { getBookById } from '@/lib/data/books';
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,12 +12,12 @@ export async function POST(req: NextRequest) {
     const normEmail = email.toLowerCase().trim();
 
     // Check entitlement
-    const hasAccess = db.hasEntitlement(normEmail, bookId);
+    const hasAccess = await db.hasEntitlement(normEmail, bookId);
     if (!hasAccess) {
       return NextResponse.json({ error: 'No active entitlement found for this title' }, { status: 403 });
     }
 
-    const book = db.getBookById(bookId) || getBookById(bookId);
+    const book = await db.getBookById(bookId);
     if (!book) {
       return NextResponse.json({ error: 'Book asset not found' }, { status: 404 });
     }
@@ -29,7 +28,7 @@ export async function POST(req: NextRequest) {
     const token = 'dl_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     const expiresAt = Date.now() + 5 * 60 * 1000; // 5 minutes
 
-    db.createDownloadToken({
+    await db.createDownloadToken({
       token,
       customerEmail: normEmail,
       bookId,
@@ -39,7 +38,7 @@ export async function POST(req: NextRequest) {
       used: false
     });
 
-    db.addAuditLog('DOWNLOAD_TOKEN_ISSUED', `Issued 5-minute download token for ${normEmail} - ${asset.fileName}`);
+    await db.addAuditLog('DOWNLOAD_TOKEN_ISSUED', `Issued 5-minute download token for ${normEmail} - ${asset.fileName}`);
 
     return NextResponse.json({
       success: true,

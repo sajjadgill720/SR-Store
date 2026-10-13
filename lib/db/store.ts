@@ -1,352 +1,77 @@
-import fs from 'fs';
-import path from 'path';
-import { Order, Entitlement, SupportTicket, NewsletterSubscriber, Review, Book } from '../types';
-import { BOOKS_DATA, REVIEWS_DATA } from '../data/books';
+import { randomUUID } from 'node:crypto';
+import { query, transaction } from './postgres.mjs';
+import type { Book, BundleOffer, Order, Entitlement, SupportTicket, Review } from '../types';
 
-export interface DownloadTokenRecord {
-  token: string;
-  customerEmail: string;
-  bookId: string;
-  format: string;
-  fileName: string;
-  expiresAt: number; // epoch ms
-  used: boolean;
-}
-
-export interface StoreDbSchema {
-  books: Book[];
-  orders: Order[];
-  entitlements: Entitlement[];
-  downloadTokens: DownloadTokenRecord[];
-  subscribers: NewsletterSubscriber[];
-  supportTickets: SupportTicket[];
-  reviews: Review[];
-  auditLogs: { id: string; action: string; details: string; timestamp: string }[];
-}
-
-const DB_DIR = path.join(process.cwd(), '.data');
-const DB_FILE = path.join(DB_DIR, 'db.json');
-
-function ensureDbFile(): StoreDbSchema {
-  if (!fs.existsSync(DB_DIR)) {
-    fs.mkdirSync(DB_DIR, { recursive: true });
-  }
-
-  if (!fs.existsSync(DB_FILE)) {
-    // Initial seeded database
-    const initialDb: StoreDbSchema = {
-      books: [...BOOKS_DATA],
-      orders: [
-        {
-          id: 'ord_demo_101',
-          orderNumber: 'SR-2026-8910',
-          publicToken: 'demo-sample-order-token-12345',
-          customerEmail: 'reader@example.com',
-          customerName: 'Demo Reader',
-          currency: 'USD',
-          totalAmount: 1999,
-          discountAmount: 0,
-          paymentStatus: 'paid',
-          provider: 'development_simulator',
-          providerOrderId: 'sim_pay_891024',
-          createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
-          receiptUrl: '/orders/demo-sample-order-token-12345',
-          items: [
-            {
-              id: 'item_1',
-              bookId: 'book-deep-work',
-              title: 'The Focused Mind: Deep Work in a Distracted World',
-              editionVersion: 'Edition 2.1',
-              price: 1999,
-              formats: ['epub', 'pdf']
-            }
-          ]
-        }
-      ],
-      entitlements: [
-        {
-          id: 'ent_demo_1',
-          customerEmail: 'reader@example.com',
-          bookId: 'book-deep-work',
-          orderId: 'ord_demo_101',
-          status: 'active',
-          grantedAt: new Date(Date.now() - 86400000 * 2).toISOString()
-        }
-      ],
-      downloadTokens: [],
-      subscribers: [
-        {
-          id: 'sub_1',
-          email: 'reader@example.com',
-          topics: ['deep-work', 'new-releases'],
-          consentTimestamp: new Date().toISOString(),
-          status: 'subscribed'
-        }
-      ],
-      supportTickets: [
-        {
-          id: 'tick_1',
-          ticketNumber: 'TKT-1001',
-          customerEmail: 'reader@example.com',
-          subject: 'Question on Send-to-Kindle instructions',
-          category: 'device_setup',
-          message: 'Can I send the EPUB to my Paperwhite via the Amazon webpage or do I need the email address?',
-          status: 'resolved',
-          createdAt: new Date(Date.now() - 86400000).toISOString(),
-          adminNotes: 'Directed reader to /help/kindle guide with Send to Kindle web link.'
-        }
-      ],
-      reviews: [...REVIEWS_DATA],
-      auditLogs: [
-        {
-          id: 'log_1',
-          action: 'STORE_INITIALIZED',
-          details: 'Initialized database with default test order and entitlements.',
-          timestamp: new Date().toISOString()
-        }
-      ]
-    };
-    fs.writeFileSync(DB_FILE, JSON.stringify(initialDb, null, 2), 'utf8');
-    return initialDb;
-  }
-
-  try {
-    const raw = fs.readFileSync(DB_FILE, 'utf8');
-    const parsed: StoreDbSchema = JSON.parse(raw);
-    if (!parsed.books || parsed.books.length === 0) {
-      parsed.books = [...BOOKS_DATA];
-      saveDb(parsed);
-    }
-    return parsed;
-  } catch (e) {
-    console.error('Failed reading db.json, returning empty', e);
-    return {
-      books: [...BOOKS_DATA],
-      orders: [],
-      entitlements: [],
-      downloadTokens: [],
-      subscribers: [],
-      supportTickets: [],
-      reviews: [...REVIEWS_DATA],
-      auditLogs: []
-    };
-  }
-}
-
-function saveDb(data: StoreDbSchema) {
-  try {
-    if (!fs.existsSync(DB_DIR)) {
-      fs.mkdirSync(DB_DIR, { recursive: true });
-    }
-    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf8');
-  } catch (err) {
-    console.error('Failed writing db.json', err);
-  }
-}
+export interface DownloadTokenRecord { token: string; customerEmail: string; bookId: string; format: string; fileName: string; expiresAt: number; used: boolean; }
+type DocumentRow<T> = { id: string; data: Omit<T, 'id'> };
+const document = <T>(row: DocumentRow<T>): T => ({ id: row.id, ...row.data }) as T;
+const withoutId = <T extends { id: string }>(value: T) => { const { id, ...data } = value; if (!id) throw new Error('Record ID required'); return data; };
+async function books(where = '', values: unknown[] = []) { return (await query<DocumentRow<Book>>(`SELECT id,data FROM knovera.books ${where}`, values)).rows.map(document<Book>); }
+async function orders(where = '', values: unknown[] = []) { return (await query<DocumentRow<Order>>(`SELECT id,data FROM knovera.orders ${where}`, values)).rows.map(document<Order>); }
 
 export const db = {
-  get(): StoreDbSchema {
-    return ensureDbFile();
+  getBooks: () => books("ORDER BY data->>'title', id"),
+  async getBookBySlug(slug: string) { return (await books("WHERE data->>'slug'=$1", [slug]))[0]; },
+  async getBookById(id: string) { return (await books('WHERE id=$1', [id]))[0]; },
+  async addBook(book: Book) {
+    await transaction(async client => {
+      await client.query('INSERT INTO knovera.books VALUES($1,$2)', [book.id, withoutId(book)]);
+      await client.query('INSERT INTO knovera.audit_logs VALUES($1,$2,$3,$4)', [randomUUID(), 'BOOK_ADDED', `Added ${book.title}`, new Date().toISOString()]);
+    }); return book;
   },
-
-  // Books Catalog
-  getBooks(): Book[] {
-    return this.get().books || [];
-  },
-
-  getBookBySlug(slug: string): Book | undefined {
-    return this.getBooks().find((b) => b.slug === slug);
-  },
-
-  getBookById(id: string): Book | undefined {
-    return this.getBooks().find((b) => b.id === id);
-  },
-
-  addBook(book: Book): Book {
-    const current = this.get();
-    if (!current.books) current.books = [];
-    current.books.unshift(book);
-    current.auditLogs.unshift({
-      id: `log_${Date.now()}`,
-      action: 'BOOK_ADDED',
-      details: `Added new title "${book.title}" (${book.id})`,
-      timestamp: new Date().toISOString()
+  async deleteBook(id: string) {
+    // Archive to preserve purchases and foreign keys. No static fallback can resurrect it.
+    return transaction(async client => {
+      const result = await client.query("UPDATE knovera.books SET data=data || '{\"isPublished\":false,\"isInStock\":false}'::jsonb WHERE id=$1 RETURNING id", [id]);
+      if (!result.rowCount) return false;
+      await client.query('INSERT INTO knovera.audit_logs VALUES($1,$2,$3,$4)', [randomUUID(), 'BOOK_ARCHIVED', `Archived ${id}`, new Date().toISOString()]);
+      return true;
     });
-    saveDb(current);
-    return book;
   },
-
-  deleteBook(id: string): boolean {
-    const current = this.get();
-    if (!current.books) return false;
-    const target = current.books.find((b) => b.id === id);
-    if (!target) return false;
-    current.books = current.books.filter((b) => b.id !== id);
-    current.auditLogs.unshift({
-      id: `log_${Date.now()}`,
-      action: 'BOOK_DELETED',
-      details: `Deleted title "${target.title}" (${id})`,
-      timestamp: new Date().toISOString()
-    });
-    saveDb(current);
-    return true;
+  async getBundles(): Promise<BundleOffer[]> {
+    const result = await query<DocumentRow<BundleOffer>>('SELECT id,data FROM knovera.bundles');
+    const members = await query<{bundle_id: string; id: string; data: Omit<Book,'id'>}>("SELECT bb.bundle_id,b.id,b.data FROM knovera.bundle_books bb JOIN knovera.books b ON b.id=bb.book_id WHERE (b.data->>'isPublished')::boolean ORDER BY bb.position");
+    return result.rows.map(row => ({...document<BundleOffer>(row), books: members.rows.filter(member => member.bundle_id===row.id).map(document<Book>)})).filter(bundle => bundle.books.length>0);
   },
-
-  // Orders
-  getOrders(): Order[] {
-    return this.get().orders;
-  },
-
-  getOrderByToken(token: string): Order | undefined {
-    return this.get().orders.find((o) => o.publicToken === token);
-  },
-
-  getOrdersByEmail(email: string): Order[] {
-    const norm = email.toLowerCase().trim();
-    return this.get().orders.filter((o) => o.customerEmail.toLowerCase().trim() === norm);
-  },
-
-  saveOrder(order: Order) {
-    const current = this.get();
-    const idx = current.orders.findIndex((o) => o.id === order.id);
-    if (idx >= 0) {
-      current.orders[idx] = order;
-    } else {
-      current.orders.unshift(order);
-    }
-    saveDb(current);
-  },
-
-  // Entitlements
-  getEntitlements(customerEmail: string): Entitlement[] {
-    const norm = customerEmail.toLowerCase().trim();
-    return this.get().entitlements.filter(
-      (e) => e.customerEmail.toLowerCase().trim() === norm && e.status === 'active'
-    );
-  },
-
-  hasEntitlement(customerEmail: string, bookId: string): boolean {
-    const norm = customerEmail.toLowerCase().trim();
-    return this.get().entitlements.some(
-      (e) => e.customerEmail.toLowerCase().trim() === norm && e.bookId === bookId && e.status === 'active'
-    );
-  },
-
-  grantEntitlement(entitlement: Entitlement) {
-    const current = this.get();
-    // Invariant: duplicate check
-    const existing = current.entitlements.find(
-      (e) =>
-        e.customerEmail.toLowerCase().trim() === entitlement.customerEmail.toLowerCase().trim() &&
-        e.bookId === entitlement.bookId &&
-        e.status === 'active'
-    );
-    if (!existing) {
-      current.entitlements.push(entitlement);
-      saveDb(current);
-    }
-  },
-
-  revokeEntitlement(orderId: string) {
-    const current = this.get();
-    current.entitlements.forEach((e) => {
-      if (e.orderId === orderId) {
-        e.status = 'revoked';
-        e.revokedAt = new Date().toISOString();
+  getOrders: () => orders("ORDER BY data->>'createdAt' DESC,id"),
+  async getOrderByToken(token: string) { return (await orders("WHERE data->>'publicToken'=$1", [token]))[0]; },
+  getOrdersByEmail: (email: string) => orders("WHERE lower(data->>'customerEmail')=$1 ORDER BY data->>'createdAt' DESC", [email.trim().toLowerCase()]),
+  async fulfillOrder(order: Order, entitlements: Entitlement[]) {
+    return transaction(async client => {
+      const inserted = await client.query('INSERT INTO knovera.orders VALUES($1,$2) ON CONFLICT DO NOTHING RETURNING id', [order.id, withoutId(order)]);
+      if (!inserted.rowCount) {
+        const existing = await client.query<DocumentRow<Order>>("SELECT id,data FROM knovera.orders WHERE id=$1 OR (data->>'provider'=$2 AND data->>'providerOrderId'=$3)", [order.id,order.provider,order.providerOrderId]);
+        if (!existing.rows[0]) throw new Error('Order conflict');
+        return document<Order>(existing.rows[0]);
       }
+      for (const ent of entitlements) await client.query('INSERT INTO knovera.entitlements(id,"customerEmail","bookId","orderId",status,"grantedAt") VALUES($1,$2,$3,$4,$5,$6)',[ent.id,ent.customerEmail.toLowerCase().trim(),ent.bookId,order.id,ent.status,ent.grantedAt]);
+      await client.query('INSERT INTO knovera.audit_logs VALUES($1,$2,$3,$4)',[randomUUID(),'ORDER_FULFILLED',`Created order ${order.orderNumber}`,new Date().toISOString()]);
+      return order;
     });
-    saveDb(current);
   },
-
-  // Download tokens (short lived, e.g. 5 minutes)
-  createDownloadToken(tokenRecord: DownloadTokenRecord) {
-    const current = this.get();
-    // purge expired
-    const now = Date.now();
-    current.downloadTokens = current.downloadTokens.filter((t) => t.expiresAt > now);
-    current.downloadTokens.push(tokenRecord);
-    saveDb(current);
-  },
-
-  getDownloadToken(token: string): DownloadTokenRecord | undefined {
-    const current = this.get();
-    const found = current.downloadTokens.find((t) => t.token === token);
-    if (found && found.expiresAt > Date.now()) {
-      return found;
-    }
-    return undefined;
-  },
-
-  // Newsletter Subscribers
-  addSubscriber(sub: NewsletterSubscriber) {
-    const current = this.get();
-    const norm = sub.email.toLowerCase().trim();
-    const existing = current.subscribers.find((s) => s.email.toLowerCase().trim() === norm);
-    if (existing) {
-      existing.topics = Array.from(new Set([...existing.topics, ...sub.topics]));
-      existing.status = 'subscribed';
-    } else {
-      current.subscribers.push(sub);
-    }
-    saveDb(current);
-  },
-
-  getSubscribers(): NewsletterSubscriber[] {
-    return this.get().subscribers;
-  },
-
-  // Support tickets
-  addTicket(ticket: SupportTicket) {
-    const current = this.get();
-    current.supportTickets.unshift(ticket);
-    saveDb(current);
-  },
-
-  getTickets(): SupportTicket[] {
-    return this.get().supportTickets;
-  },
-
-  updateTicketStatus(id: string, status: 'open' | 'in_progress' | 'resolved', adminNotes?: string) {
-    const current = this.get();
-    const ticket = current.supportTickets.find((t) => t.id === id);
-    if (ticket) {
-      ticket.status = status;
-      if (adminNotes !== undefined) ticket.adminNotes = adminNotes;
-      saveDb(current);
-    }
-  },
-
-  // Reviews
-  addReview(review: Review) {
-    const current = this.get();
-    current.reviews.unshift(review);
-    saveDb(current);
-  },
-
-  getReviews(bookId?: string): Review[] {
-    const all = this.get().reviews;
-    if (bookId) return all.filter((r) => r.bookId === bookId);
-    return all;
-  },
-
-  updateReviewApproval(id: string, isApproved: boolean) {
-    const current = this.get();
-    const rev = current.reviews.find((r) => r.id === id);
-    if (rev) {
-      rev.isApproved = isApproved;
-      saveDb(current);
-    }
-  },
-
-  // Audit Log
-  addAuditLog(action: string, details: string) {
-    const current = this.get();
-    current.auditLogs.unshift({
-      id: 'log_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
-      action,
-      details,
-      timestamp: new Date().toISOString()
+  async refundOrder(id: string) {
+    return transaction(async client => {
+      const changed=await client.query("UPDATE knovera.orders SET data=jsonb_set(data,'{paymentStatus}','\"refunded\"') WHERE id=$1 RETURNING id",[id]);
+      if (!changed.rowCount) return false;
+      await client.query('UPDATE knovera.entitlements SET status=$1,"revokedAt"=$2 WHERE "orderId"=$3',['revoked',new Date().toISOString(),id]);
+      await client.query('INSERT INTO knovera.audit_logs VALUES($1,$2,$3,$4)',[randomUUID(),'ORDER_REFUNDED',`Refunded ${id}; purchase access revoked`,new Date().toISOString()]);
+      return true;
     });
-    saveDb(current);
-  }
+  },
+  async getEntitlements(email: string) { return (await query<Entitlement>('SELECT * FROM knovera.entitlements WHERE "customerEmail"=$1 AND status=$2',[email.trim().toLowerCase(),'active'])).rows; },
+  async hasEntitlement(email: string, bookId: string) { return (await query('SELECT id FROM knovera.entitlements WHERE "customerEmail"=$1 AND "bookId"=$2 AND status=$3 LIMIT 1',[email.trim().toLowerCase(),bookId,'active'])).rows.length>0; },
+  async createDownloadToken(record: DownloadTokenRecord) {
+    await query('INSERT INTO knovera.download_tokens VALUES($1,$2,$3,$4,$5,$6,$7)',[record.token,record.customerEmail,record.bookId,record.format,record.fileName,record.expiresAt,record.used]);
+  },
+  async getDownloadToken(token: string) { const row=(await query<DownloadTokenRecord>('SELECT * FROM knovera.download_tokens WHERE token=$1 AND "expiresAt">$2',[token,Date.now()])).rows[0]; return row ? {...row,expiresAt:Number(row.expiresAt)} : undefined; },
+  async addTicket(ticket: SupportTicket) { await query('INSERT INTO knovera.support_tickets VALUES($1,$2)',[ticket.id,withoutId(ticket)]); },
+  async getTickets() { return (await query<DocumentRow<SupportTicket>>("SELECT * FROM knovera.support_tickets ORDER BY data->>'createdAt' DESC")).rows.map(document<SupportTicket>); },
+  async updateTicketStatus(id: string, status: string, adminNotes?: string) { await query('UPDATE knovera.support_tickets SET data=data || $2::jsonb WHERE id=$1',[id,JSON.stringify({status,...(adminNotes!==undefined?{adminNotes}:{})})]); },
+  async getReviews(bookId?: string) { return (await query<DocumentRow<Review>>('SELECT * FROM knovera.reviews WHERE ($1::text IS NULL OR data->>\'bookId\'=$1)',[bookId || null])).rows.map(document<Review>); },
+  async updateReviewApproval(id: string, isApproved: boolean) { await query("UPDATE knovera.reviews SET data=jsonb_set(data,'{isApproved}',$2::jsonb) WHERE id=$1",[id,JSON.stringify(isApproved)]); },
+  async addAuditLog(action: string, details: string) { await query('INSERT INTO knovera.audit_logs VALUES($1,$2,$3,$4)',[randomUUID(),action,details,new Date().toISOString()]); },
+  async get() {
+    const [books,orders,entitlements,supportTickets,reviews,auditLogs]=await Promise.all([this.getBooks(),this.getOrders(),query<Entitlement>('SELECT * FROM knovera.entitlements'),this.getTickets(),this.getReviews(),query('SELECT * FROM knovera.audit_logs ORDER BY timestamp DESC LIMIT 100')]);
+    return { books,orders,entitlements:entitlements.rows,supportTickets,reviews,auditLogs:auditLogs.rows };
+  },
 };

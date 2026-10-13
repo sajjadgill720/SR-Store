@@ -22,7 +22,6 @@ import {
   ExternalLink,
   X
 } from 'lucide-react';
-import { BOOKS_DATA } from '../../lib/data/books';
 import { Book } from '../../lib/types';
 
 export default function AdminDashboardPage() {
@@ -223,7 +222,7 @@ export default function AdminDashboardPage() {
   }
 
   const kpis = data?.kpis || {};
-  const catalogBooks: Book[] = data?.books && data.books.length > 0 ? data.books : BOOKS_DATA;
+  const catalogBooks: Book[] = data?.books || [];
 
   return (
     <div className="py-8 sm:py-12 max-w-7xl mx-auto px-4">

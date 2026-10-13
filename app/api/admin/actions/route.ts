@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db/store';
-import { contactStatus } from '@/lib/email/service.mjs';
+import { contacts } from '@/lib/email/service.mjs';
 
 export async function GET() {
-  const storeData = db.get();
-  const subscribers = storeData.subscribers.map(subscriber => ({ ...subscriber, status: contactStatus(subscriber.email) || 'unconfirmed' }));
+  const storeData = await db.get();
+  const subscribers = contacts();
 
   const totalRevenue = storeData.orders
     .filter((o) => o.paymentStatus === 'paid')
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
 
     if (action === 'DELETE_BOOK') {
       const { bookId } = payload;
-      const success = db.deleteBook(bookId);
+      const success = await db.deleteBook(bookId);
       if (!success) {
         return NextResponse.json({ error: 'Book not found' }, { status: 404 });
       }
@@ -46,13 +46,7 @@ export async function POST(req: NextRequest) {
 
     if (action === 'REFUND_ORDER') {
       const { orderId } = payload;
-      const orders = db.getOrders();
-      const ord = orders.find((o) => o.id === orderId);
-      if (ord) {
-        ord.paymentStatus = 'refunded';
-        db.saveOrder(ord);
-        db.revokeEntitlement(orderId);
-        db.addAuditLog('ORDER_REFUNDED', `Order ${ord.orderNumber} refunded; entitlements revoked.`);
+      if (await db.refundOrder(orderId)) {
         return NextResponse.json({ success: true });
       }
       return NextResponse.json({ error: 'Order not found' }, { status: 404 });
@@ -60,13 +54,13 @@ export async function POST(req: NextRequest) {
 
     if (action === 'RESOLVE_TICKET') {
       const { ticketId, notes } = payload;
-      db.updateTicketStatus(ticketId, 'resolved', notes || 'Resolved by store administrator.');
+      await db.updateTicketStatus(ticketId, 'resolved', notes || 'Resolved by store administrator.');
       return NextResponse.json({ success: true });
     }
 
     if (action === 'TOGGLE_REVIEW_APPROVAL') {
       const { reviewId, isApproved } = payload;
-      db.updateReviewApproval(reviewId, isApproved);
+      await db.updateReviewApproval(reviewId, isApproved);
       return NextResponse.json({ success: true });
     }
 

@@ -1,7 +1,7 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const origin = process.env.COMMUNITY_TEST_URL;
-test('community HTTP contract across independent member sessions', { skip: !origin }, async () => {
+test('community HTTP contract across independent member sessions', { skip: !origin || process.env.COMMUNITY_TEST_DISPOSABLE !== '1' || !process.env.SUPABASE_DB_URL }, async () => {
   const suffix = Date.now().toString(36);
   const clients = [{}, {}, {}];
   async function request(client, route, input, options = {}) {
@@ -68,18 +68,14 @@ test('community HTTP contract across independent member sessions', { skip: !orig
   assert.equal((await request(a, 'session', { action: 'logout' })).status, 200);
   assert.equal((await request({cookie: cookieBeforeLogout}, 'session')).value.member, null);
   assert.equal((await request(anotherDevice, 'session')).value.member.id, registered.value.member.id, 'Logout revokes only the current device session');
-  // Remove only these test identities and their related content, keeping existing development data intact.
-  const { DatabaseSync } = require('node:sqlite');
-  const path = require('node:path');
-  const db = new DatabaseSync(process.env.COMMUNITY_DB_PATH || path.join(process.cwd(), '.data/community.sqlite'));
-  db.exec('PRAGMA busy_timeout=5000; BEGIN IMMEDIATE');
-  const ids = [registered.value.member.id, second.value.member.id];
-  try {
-    db.prepare('DELETE FROM reports WHERE member IN (?,?)').run(...ids);
-    db.prepare('DELETE FROM replies WHERE discussion=?').run(id);
-    db.prepare('DELETE FROM threads WHERE id=?').run(id);
-    for (const table of ['sessions', 'activity']) db.prepare(`DELETE FROM ${table} WHERE member IN (?,?)`).run(...ids);
-    db.prepare('DELETE FROM members WHERE id IN (?,?)').run(...ids);
-    db.exec('COMMIT');
-  } catch (error) { db.exec('ROLLBACK'); throw error; } finally { db.close(); }
+  // Run only against a disposable Postgres project used by the test server.
+  const {transaction,close}=await import('../lib/db/postgres.mjs');
+  try {await transaction(async db=>{
+    const ids=[registered.value.member.id,second.value.member.id];
+    await db.query('DELETE FROM knovera.reports WHERE member=ANY($1::text[])',[ids]);
+    await db.query('DELETE FROM knovera.replies WHERE discussion=$1',[id]);
+    await db.query('DELETE FROM knovera.threads WHERE id=$1',[id]);
+    for(const table of ['sessions','activity']) await db.query('DELETE FROM knovera.'+table+' WHERE member=ANY($1::text[])',[ids]);
+    await db.query('DELETE FROM knovera.members WHERE id=ANY($1::text[])',[ids]);
+  });} finally {await close();}
 });

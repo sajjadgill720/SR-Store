@@ -3,7 +3,6 @@ import { connection } from 'next/server';
 import { notFound } from 'next/navigation';
 import BookDetail from '../../../components/books/BookDetail';
 import { db } from '../../../lib/db/store';
-import { getBookBySlug } from '../../../lib/data/books';
 async function Content({ params }: {
     params: Promise<{
         slug: string;
@@ -11,7 +10,7 @@ async function Content({ params }: {
 }) {
     const { slug } = await params;
     await connection();
-    const book = db.getBookBySlug(slug) || getBookBySlug(slug);
+    const book = await db.getBookBySlug(slug);
     if (!book || !book.isPublished)
         notFound();
     return <BookDetail book={book}/>;

@@ -81,6 +81,7 @@ export interface CartItem {
 }
 
 export interface OrderItem {
+  quantity?: number;
   id: string;
   bookId: string;
   title: string;
