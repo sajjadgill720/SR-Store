@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
     const user = await currentUser();
     if (user) return NextResponse.json({ books:await accountLibrary(user),account:true,orderNumber:'Your account' }, {headers});
     const { order, entitlements } = await purchaseAccess(req.cookies.get(PURCHASE_COOKIE)?.value);
-    const books = (await Promise.all(entitlements.map(item => db.getBookById(item.bookId))))
+    const books = (await db.getBooksByIds(entitlements.map(item => item.bookId)))
       .filter((book): book is NonNullable<typeof book> => !!book)
       .map(book => ({ ...book, formats: book.formats.filter(format => order.items.some(item => item.bookId === book.id && item.formats.includes(format))) }));
     return NextResponse.json({ books, orderNumber: order.orderNumber }, { headers });

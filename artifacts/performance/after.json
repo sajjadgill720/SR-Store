@@ -1,0 +1,9 @@
+{
+  "fixture": "3 orders, 2 books each, same verified account",
+  "libraryQueries": 4,
+  "books": 2,
+  "concurrentReads": {
+    "consumers": 10,
+    "httpLoaderCalls": 1
+  }
+}

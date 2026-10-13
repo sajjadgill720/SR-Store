@@ -4,6 +4,16 @@ import { db } from '../../../lib/db/store';
 import { Book } from '../../../lib/types';
 import { requireAdmin } from '@/lib/auth/server';
 import { sameOrigin, authFailure } from '@/lib/auth/http';
+import { createHash } from 'node:crypto';
+
+function publicResponse(request: NextRequest, value: unknown) {
+  const body = JSON.stringify(value);
+  const etag = '"' + createHash('sha256').update(body).digest('hex') + '"';
+  // Revalidate over HTTP so an admin invalidation is not masked by a CDN TTL.
+  const headers = { 'Cache-Control': 'public, max-age=0, must-revalidate', ETag: etag, 'Content-Type': 'application/json' };
+  if (request.headers.get('if-none-match')?.split(',').map(tag=>tag.trim()).includes(etag)) return new NextResponse(null, {status:304,headers});
+  return new NextResponse(body, {headers});
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -17,7 +27,7 @@ export async function GET(request: NextRequest) {
       if (!book || !book.isPublished) {
         return NextResponse.json({ error: 'Book not found' }, { status: 404 });
       }
-      return NextResponse.json({ book });
+      return publicResponse(request, { book });
     }
 
     if (id) {
@@ -25,10 +35,10 @@ export async function GET(request: NextRequest) {
       if (!book || !book.isPublished) {
         return NextResponse.json({ error: 'Book not found' }, { status: 404 });
       }
-      return NextResponse.json({ book });
+      return publicResponse(request, { book });
     }
 
-    return NextResponse.json({ books });
+    return publicResponse(request, { books });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

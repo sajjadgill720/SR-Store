@@ -1,4 +1,5 @@
 'use client';
+import { browserReads } from '@/lib/cache/browser';
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -32,6 +33,7 @@ export default function CheckoutPage() {
                 localStorage.setItem('sr_reader_email', email.trim().toLowerCase());
             }
             catch { /* Access remains available through the order link. */ }
+            browserReads.invalidate('library');
             clearCart();
             router.push('/checkout/return?token=' + encodeURIComponent(data.publicToken));
         }

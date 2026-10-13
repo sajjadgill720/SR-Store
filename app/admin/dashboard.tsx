@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { 
   ShieldCheck, 
@@ -29,6 +29,8 @@ export default function AdminDashboardPage() {
   const [tab, setTab] = useState<'overview' | 'orders' | 'books' | 'support' | 'reviews' | 'logs'>('overview');
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const readGeneration = useRef(0);
+  const pendingRead = useRef<Promise<void> | null>(null);
   const [refreshingCatalog, setRefreshingCatalog] = useState(false);
   const [catalogMessage, setCatalogMessage] = useState('');
 
@@ -69,16 +71,20 @@ export default function AdminDashboardPage() {
     featured: false
   });
 
-  const fetchData = async () => {
-    try {
-      const res = await fetch('/api/admin/actions');
-      const json = await res.json();
-      setData(json);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
+  const fetchData = () => {
+    if (pendingRead.current) return pendingRead.current;
+    const generation = readGeneration.current;
+    const promise = (async () => {
+      try {
+        const res = await fetch('/api/admin/actions', {cache: 'no-store'});
+        if (!res.ok) throw new Error('Could not load administrator data.');
+        const json = await res.json();
+        if (readGeneration.current === generation) setData(json);
+      } catch (e) { console.error(e); }
+      finally { setLoading(false); pendingRead.current = null; }
+    })();
+    pendingRead.current = promise;
+    return promise;
   };
 
   useEffect(() => {
@@ -156,7 +162,8 @@ export default function AdminDashboardPage() {
         sampleExcerpt: 'Chapter 1: The Foundation\n\nWelcome to this comprehensive edition. This volume has been crafted specifically for direct digital readers seeking unbroken clarity and actionable methodologies...',
         featured: false
       });
-      fetchData();
+      ++readGeneration.current;
+      setData((previous: any) => ({...previous, books: [...previous.books, resJson.book]}));
     } catch (err: any) {
       alert(`Error adding book: ${err.message}`);
     } finally {
@@ -175,7 +182,8 @@ export default function AdminDashboardPage() {
       const resJson = await res.json();
       if (!res.ok) throw new Error(resJson.error || 'Failed to delete book');
       alert(`"${bookTitle}" deleted from the storefront.`);
-      fetchData();
+      ++readGeneration.current;
+      setData((previous: any) => ({...previous, books: previous.books.map((book: Book) => book.id === bookId ? {...book, isPublished:false,isInStock:false} : book)}));
     } catch (err: any) {
       alert(`Error deleting book: ${err.message}`);
     }
@@ -191,7 +199,9 @@ export default function AdminDashboardPage() {
       });
       if (res.ok) {
         alert('Order refunded and entitlements revoked.');
-        fetchData();
+        ++readGeneration.current;
+        await pendingRead.current;
+        await fetchData();
       }
     } catch (e) {
       alert('Failed to process refund');
@@ -206,7 +216,8 @@ export default function AdminDashboardPage() {
         body: JSON.stringify({ action: 'RESOLVE_TICKET', payload: { ticketId } })
       });
       if (res.ok) {
-        fetchData();
+        ++readGeneration.current;
+        setData((previous: any) => ({...previous, tickets: previous.tickets.map((ticket: any) => ticket.id === ticketId ? {...ticket,status:'resolved'} : ticket), kpis:{...previous.kpis,openTicketsCount:previous.tickets.filter((ticket: any)=>ticket.id !== ticketId && ticket.status === 'open').length}}));
       }
     } catch (e) {
       alert('Failed to resolve ticket');
@@ -224,7 +235,8 @@ export default function AdminDashboardPage() {
         })
       });
       if (res.ok) {
-        fetchData();
+        ++readGeneration.current;
+        setData((previous: any) => ({...previous, reviews:previous.reviews.map((review: any)=>review.id === reviewId ? {...review,isApproved:!currentApproval} : review)}));
       }
     } catch (e) {
       alert('Failed to update review moderation');

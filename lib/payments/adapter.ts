@@ -38,8 +38,9 @@ export class DevelopmentSimulatorProvider implements PaymentProvider {
   async createCheckout(input: ApprovedCheckoutInput): Promise<CheckoutResult> {
     // Calculate verified server-side total
     let total = 0;
+    const catalog = new Map((await db.getBooksByIds(input.items.map(item => item.bookId))).map(book => [book.id, book]));
     for (const item of input.items) {
-      const book = await db.getBookById(item.bookId);
+      const book = catalog.get(item.bookId);
       if (!book) throw new Error(`Book not found: ${item.bookId}`);
       total += book.price * item.quantity;
     }
@@ -95,8 +96,9 @@ export async function fulfillSimulatorOrder(params: {
   let totalAmount = 0;
   const orderItems: OrderItem[] = [];
 
+  const catalog = new Map((await db.getBooksByIds(params.items.map(item => item.bookId))).map(book => [book.id, book]));
   for (const item of params.items) {
-    const book = await db.getBookById(item.bookId);
+    const book = catalog.get(item.bookId);
     if (!book || !book.isPublished || !book.isInStock || book.rightsStatus !== 'wide') throw new Error('Book unavailable');
     if (!Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > 20) throw new Error('Invalid quantity');
     const itemTotal = book.price * item.quantity;

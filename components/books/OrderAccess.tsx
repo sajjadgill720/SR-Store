@@ -1,4 +1,5 @@
 'use client';
+import { browserReads } from '@/lib/cache/browser';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Download, CircleCheck, Clock, CircleAlert } from 'lucide-react';
@@ -26,7 +27,7 @@ export default function OrderAccess({ token }: {
             if (!response.ok || !data.order)
                 throw new Error(data.error || 'We could not find that order.');
             if (!controller.signal.aborted)
-                setOrder(data.order);
+                { setOrder(data.order); browserReads.invalidate('library'); }
         }
         catch (reason) {
             if (!controller.signal.aborted)

@@ -101,11 +101,11 @@ test('Realtime shares one subscription, debounces events, falls back, reconnects
   });
   const flush=()=>{const fn=scheduled;scheduled=null;fn?.();};
   const a=subscribeCommunityChanges(()=>refreshes++),b=subscribeCommunityChanges(()=>refreshes++);
-  assert.equal(subscriptions,1);status('SUBSCRIBED');flush();assert.equal(refreshes,2);
-  event();event();flush();assert.equal(refreshes,4);
-  interval();flush();assert.equal(refreshes,4);
-  status('CHANNEL_ERROR');interval();flush();assert.equal(refreshes,6);
-  status('SUBSCRIBED');flush();assert.equal(refreshes,8);
+  assert.equal(subscriptions,1);status('SUBSCRIBED');flush();assert.equal(refreshes,0);
+  event();event();flush();assert.equal(refreshes,2);
+  interval();flush();assert.equal(refreshes,2);
+  status('CHANNEL_ERROR');for(let i=0;i<6;i++) interval();flush();assert.equal(refreshes,4);
+  status('SUBSCRIBED');flush();assert.equal(refreshes,6);
   a();assert.equal(removed,0);b();assert.equal(removed,1);assert.equal(interval,null);assert.equal(handlers.size,0);
 });
 
@@ -125,6 +125,7 @@ test('HTTP routes reject email-only downloads, cookie-free library and productio
     const dependencies={
       'next/server':{NextResponse},
       '@/lib/db/store':{db},
+      '@/lib/catalog-version':{advanceCatalogVersion:async()=>{}},
       '@/lib/downloads/access':access,
       '@/lib/auth/server':auth,
       '@/lib/auth/http':http,
@@ -135,7 +136,7 @@ test('HTTP routes reject email-only downloads, cookie-free library and productio
       '../../../lib/db/store':{db},
       '@/lib/catalog-cache':{getPublicCatalog:async()=>({books:await db.getBooks()}),invalidatePublicCatalog:()=>{}},
     };
-    const route=file=>compiled(file,{process,URL,console,require:id=>{if(dependencies[id]) return dependencies[id];throw new Error(`Unexpected runtime dependency ${id}`);}});
+    const route=file=>compiled(file,{process,URL,console,require:id=>{if(id==='node:crypto') return require(id);if(dependencies[id]) return dependencies[id];throw new Error(`Unexpected runtime dependency ${id}`);}});
     const downloads=route('app/api/downloads/route.ts');
     const library=route('app/api/me/library/route.ts');
     const lookup=route('app/api/orders/lookup/route.ts');

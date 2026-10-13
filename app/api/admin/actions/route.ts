@@ -1,3 +1,4 @@
+import { advanceCatalogVersion } from '@/lib/catalog-version';
 import { invalidatePublicCatalog } from '@/lib/catalog-cache';
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db/store';
@@ -41,6 +42,7 @@ export async function POST(req: NextRequest) {
     const { action, payload } = await req.json();
 
     if (action === 'REFRESH_CATALOG') {
+      await advanceCatalogVersion();
       invalidatePublicCatalog();
       return NextResponse.json({ success: true });
     }

@@ -10,11 +10,14 @@ export async function accountRole(userId: string): Promise<'reader' | 'admin' | 
 export async function memberForUser(user: User): Promise<Member> {
   const name = typeof user.user_metadata?.name === 'string' ? user.user_metadata.name.trim().slice(0,60) : '';
   // Display metadata is cosmetic. Role/ownership never come from user_metadata.
-  const result = await query<{id:string;username:string;name:string}>(`INSERT INTO knovera.members(id,username,name,auth_user_id)
-    VALUES($1,$2,$3,$4) ON CONFLICT(auth_user_id) DO UPDATE SET auth_user_id=excluded.auth_user_id
-    RETURNING id,username,name`, [user.id,`reader-${user.id}`,name || 'Reader',user.id]);
-  const role = await accountRole(user.id);
-  return { ...result.rows[0], moderator: role === 'admin' || role === 'moderator' };
+  const read = () => query<{id:string;username:string;name:string;moderator:boolean}>(
+    "SELECT m.id,m.username,m.name,COALESCE(r.role IN ('admin','moderator'),false) AS moderator FROM knovera.members m LEFT JOIN knovera.account_roles r ON r.user_id=m.auth_user_id WHERE m.auth_user_id=$1", [user.id]);
+  let result = await read();
+  if (!result.rows.length) {
+    await query('INSERT INTO knovera.members(id,username,name,auth_user_id) VALUES($1,$2,$3,$4) ON CONFLICT(auth_user_id) DO NOTHING', [user.id,`reader-${user.id}`,name || 'Reader',user.id]);
+    result = await read();
+  }
+  return result.rows[0];
 }
 export async function accountOrders(user: User): Promise<Order[]> {
   if (!user.email_confirmed_at || !user.email || user.is_anonymous) return [];

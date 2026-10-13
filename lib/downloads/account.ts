@@ -7,12 +7,15 @@ import type { Book } from '../types';
 export async function accountLibrary(user: User) {
   const orders=await accountOrders(user);
   const books=new Map<string,Book>();
-  for(const order of orders) {
-    if(process.env.NODE_ENV==='production' && order.provider==='development_simulator') continue;
-    for(const entitlement of await db.getOrderEntitlements(order.id)) {
+  const eligible=orders.filter(order=>process.env.NODE_ENV!=='production' || order.provider!=='development_simulator');
+  if (!eligible.length) return [];
+  const entitlements=await db.getEntitlementsForOrders(eligible.map(order=>order.id));
+  const catalog=new Map((await db.getBooksByIds(entitlements.map(item=>item.bookId))).map(book=>[book.id,book]));
+  for(const order of eligible) {
+    for(const entitlement of entitlements.filter(item=>item.orderId===order.id)) {
       const item=order.items.find(item=>item.bookId===entitlement.bookId);
       if(!item) continue;
-      const book=await db.getBookById(entitlement.bookId);
+      const book=catalog.get(entitlement.bookId);
       if(!book) continue;
       const formats=book.formats.filter(format=>item.formats.includes(format));
       const previous=books.get(book.id);

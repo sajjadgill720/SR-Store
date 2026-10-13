@@ -14,6 +14,7 @@ export function subscribeCommunityChanges(listener: () => void) {
   listeners.add(listener);
   if (listeners.size === 1) {
     let connected = false;
+    let joinedOnce = false;
     let pending: ReturnType<typeof setTimeout> | undefined;
     let elapsed = 0;
     const refresh = () => {
@@ -23,9 +24,9 @@ export function subscribeCommunityChanges(listener: () => void) {
     const client = realtimeClient();
     const channel = client?.channel('knovera:community', { config: { private: true } })
       .on('broadcast', { event: 'changed' }, refresh)
-      .subscribe(status => { connected = status === 'SUBSCRIBED'; if (connected) { elapsed = 0; refresh(); } });
+      .subscribe(status => { connected = status === 'SUBSCRIBED'; if (connected) { elapsed = 0; if (joinedOnce) refresh(); joinedOnce = true; } });
     // Poll only while disconnected; reconcile once a minute to recover missed events.
-    const timer = setInterval(() => { elapsed += 5000; if (!connected || elapsed >= 60000) { elapsed = 0; refresh(); } }, 5000);
+    const timer = setInterval(() => { elapsed += 5000; if (elapsed >= (connected ? 60000 : 30000)) { elapsed = 0; refresh(); } }, 5000);
     const visible = () => { if (document.visibilityState === 'visible') refresh(); };
     window.addEventListener('focus', refresh);
     window.addEventListener('online', refresh);

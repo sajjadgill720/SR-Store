@@ -12,6 +12,10 @@ export const db = {
   getBooks: () => books("ORDER BY data->>'title', id"),
   async getBookBySlug(slug: string) { return (await books("WHERE data->>'slug'=$1", [slug]))[0]; },
   async getBookById(id: string) { return (await books('WHERE id=$1', [id]))[0]; },
+  getBooksByIds: (ids: string[]) => books('WHERE id=ANY($1::text[])', [[...new Set(ids)]]),
+  async getEntitlementsForOrders(ids: string[]) {
+    return (await query<Entitlement>('SELECT id,"bookId","orderId",status,"customerEmail","grantedAt" FROM knovera.entitlements WHERE "orderId"=ANY($1::text[]) AND status=$2',[ids,'active'])).rows;
+  },
   async addBook(book: Book) {
     await transaction(async client => {
       await client.query('INSERT INTO knovera.books VALUES($1,$2)', [book.id, withoutId(book)]);

@@ -1,26 +1,28 @@
 'use client';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { api, toggleActivity, updateActivity, useCommunityActivity, useMemberSession } from '../../lib/community/client';
+import { api, invalidateCommunity, toggleActivity, updateActivity, useCommunityActivity, useMemberSession } from '../../lib/community/client';
 import type { Reply, Thread } from '../../lib/community/types';
 import { CIRCLES } from '../../lib/data/community';
 import { subscribeCommunityChanges } from '../../lib/community/realtime';
 
 function useLive<T>(resource: string, initial: T) {
-  const [data, setData] = useState(initial);
+  const [snapshot, setSnapshot] = useState<{owner: string; value: T} | null>(null);
   const [error, setError] = useState('');
   const [version, setVersion] = useState(0);
   const session = useMemberSession();
+  const owner = `${resource}:${session.member?.id || "guest"}:${!!session.member?.moderator}`;
   useEffect(() => {
+    if (!session.ready) return;
     let active = true;
     let loading = false;
     let dirty = false;
-    const load = async () => { if (!active) return; if (loading) { dirty = true; return; } loading = true; try { const result = await api<T>(resource); if (active) { setData(result); setError(''); } } catch (error) { if (active) setError(error instanceof Error ? error.message : 'Unable to load conversations.'); } finally { loading = false; if (dirty) { dirty = false; void load(); } } };
+    const load = async () => { if (!active) return; if (loading) { dirty = true; return; } loading = true; try { const result = await api<T>(resource); if (active) { setSnapshot({owner, value: result}); setError(''); } } catch (error) { if (active) setError(error instanceof Error ? error.message : 'Unable to load conversations.'); } finally { loading = false; if (dirty) { dirty = false; void load(); } } };
     void load();
-    const unsubscribe = subscribeCommunityChanges(() => { void load(); });
+    const unsubscribe = subscribeCommunityChanges(() => { invalidateCommunity(resource); void load(); });
     return () => { active = false; unsubscribe(); };
-  }, [resource, version, session.member?.id, session.member?.moderator]);
-  return { data, error, reload: () => setVersion(value => value + 1) };
+  }, [resource, version, session.ready, owner]);
+  return { data: session.ready && snapshot?.owner === owner ? snapshot.value : initial, error, reload: () => { invalidateCommunity(resource); setVersion(value => value + 1); } };
 }
 function ContentControls({ id, kind, authorId, hidden, reload }: {id: string; kind: 'thread' | 'reply'; authorId: string; hidden: boolean; reload: () => void}) {
   const { member } = useMemberSession();

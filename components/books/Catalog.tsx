@@ -19,6 +19,7 @@ export default function Catalog({ books, bundles }: {
     const { wishlist, storageError } = useCart();
     const update = (key: string, value: string) => {
         const next = new URLSearchParams(params.toString());
+        if (key !== 'page') next.delete('page');
         if (!value || value === 'All' || value === 'featured')
             next.delete(key);
         else
@@ -31,6 +32,11 @@ export default function Catalog({ books, bundles }: {
         .filter(book => format === 'All' || book.formats.includes(format as Book['formats'][number]))
         .sort((a, b) => sort === 'price_asc' ? a.price - b.price : sort === 'price_desc' ? b.price - a.price : sort === 'title' ? a.title.localeCompare(b.title) : Number(!!b.featured) - Number(!!a.featured));
     const visibleBundles = category === 'Bundles' && !savedOnly ? bundles.filter(bundle => (bundle.title + bundle.description).toLowerCase().includes(query.toLowerCase().trim())) : [];
+    const pageCount = Math.max(1, Math.ceil((filtered.length + visibleBundles.length) / 12));
+    const page = Math.min(pageCount, Math.max(1, Math.floor(Number(params.get('page')) || 1)));
+    const start = (page - 1) * 12;
+    const pageBooks = filtered.slice(start, start + 12);
+    const pageBundles = visibleBundles.slice(Math.max(0,start-filtered.length), Math.max(0,start+12-filtered.length));
     const returnTo = '/books' + (params.size ? '?' + params.toString() : '');
     return <div className="storefront">
     <div className="studio-page-heading">
@@ -73,8 +79,8 @@ export default function Catalog({ books, bundles }: {
     </div>
     {storageError && <p className="studio-error" role="alert">{storageError}</p>}
     {savedOnly && <p className="studio-caption">Saved in this browser. No account or cloud synchronization is connected.</p>}
-    <div className="edition-grid">{filtered.map((book, index) => <BookCard key={book.id} book={book} returnTo={returnTo} priority={index === 0}/>)}</div>
-    {visibleBundles.map(bundle => <article className="studio-set-card" key={bundle.id}>
+    <div className="edition-grid">{pageBooks.map((book, index) => <BookCard key={book.id} book={book} returnTo={returnTo} priority={index === 0}/>)}</div>
+    {pageBundles.map(bundle => <article className="studio-set-card" key={bundle.id}>
         <span className="studio-kicker">A PAIR OF RELATED READS</span>
         <h2>{bundle.title}</h2>
         <p>{bundle.description}</p>
@@ -82,6 +88,7 @@ export default function Catalog({ books, bundles }: {
         <Link className="studio-button outline" href={`/bundles/${bundle.slug}`}>Explore the set <ArrowRight size={17}/>
         </Link>
         </article>)}
+    {pageCount > 1 && <nav className="studio-catalog-meta" aria-label="Catalog pages"><button className="studio-button outline" disabled={page === 1} onClick={() => update('page',String(page-1))}>Previous</button><span aria-live="polite">Page {page} of {pageCount}</span><button className="studio-button outline" disabled={page === pageCount} onClick={() => update('page',String(page+1))}>Next</button></nav>}
     {!filtered.length && !visibleBundles.length && <div className="studio-empty">
         <Search size={28} aria-hidden="true"/>
         <h2>{savedOnly ? 'Your next read can wait here.' : 'No books match just yet.'}</h2>

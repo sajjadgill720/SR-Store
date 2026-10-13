@@ -1,0 +1,66 @@
+[
+  {
+    "scenario": "initial storefront",
+    "httpRequests": 1,
+    "status": 200,
+    "dbCalls": 0,
+    "bytes": 97899,
+    "ms": 732
+  },
+  {
+    "scenario": "open catalog",
+    "httpRequests": 1,
+    "status": 200,
+    "dbCalls": 0,
+    "bytes": 41457,
+    "ms": 104
+  },
+  {
+    "scenario": "catalog API cold",
+    "httpRequests": 1,
+    "status": 200,
+    "dbCalls": 3,
+    "bytes": 11562,
+    "ms": 5049
+  },
+  {
+    "scenario": "catalog API revisit",
+    "httpRequests": 1,
+    "status": 200,
+    "dbCalls": 0,
+    "bytes": 11562,
+    "ms": 88
+  },
+  {
+    "scenario": "conditional catalog API",
+    "httpRequests": 1,
+    "status": 304,
+    "dbCalls": 0,
+    "bytes": 0,
+    "ms": 83
+  },
+  {
+    "scenario": "book detail",
+    "httpRequests": 1,
+    "status": 200,
+    "dbCalls": 0,
+    "bytes": 51150,
+    "ms": 378
+  },
+  {
+    "scenario": "back to catalog",
+    "httpRequests": 1,
+    "status": 200,
+    "dbCalls": 0,
+    "bytes": 41457,
+    "ms": 72
+  },
+  {
+    "scenario": "revisit detail",
+    "httpRequests": 1,
+    "status": 200,
+    "dbCalls": 0,
+    "bytes": 51150,
+    "ms": 162
+  }
+]
