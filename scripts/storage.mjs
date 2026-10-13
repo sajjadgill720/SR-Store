@@ -13,7 +13,8 @@ async function main() {
   if (existing.error) throw new Error('Could not inspect Storage buckets. Check server credentials.');
   const metadata = existing.data.find(item => item.id === bucket);
   if (!metadata && command === 'init') {
-    const created = await client.storage.createBucket(bucket, { public: false, allowedMimeTypes: ['application/pdf', 'application/epub+zip'], fileSizeLimit: 104857600 });
+    // Inherit the project's upload limit; a higher bucket limit is rejected by Supabase.
+    const created = await client.storage.createBucket(bucket, { public: false, allowedMimeTypes: ['application/pdf', 'application/epub+zip'] });
     if (created.error) throw new Error('Could not create the private ebook bucket.');
     console.log(`Created private bucket: ${bucket}`); return;
   }

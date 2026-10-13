@@ -93,7 +93,7 @@ test('Realtime shares one subscription, debounces events, falls back, reconnects
   const channel={on:(_type,filter,fn)=>{assert.equal(filter.event,'changed');event=fn;return channel;},subscribe:fn=>{subscriptions++;status=fn;return channel;}};
   const {subscribeCommunityChanges}=compiled('lib/community/realtime.ts',{
     process:{env:{NEXT_PUBLIC_SUPABASE_URL:'https://example.com',NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:'public'}},
-    require:()=>({createClient:()=>({channel:(topic,options)=>{assert.equal(topic,'knovera:community');assert.equal(options.config.private,true);return channel;},removeChannel:()=>{removed++;}})}),
+    require:()=>({browserAuth:()=>({channel:(topic,options)=>{assert.equal(topic,'knovera:community');assert.equal(options.config.private,true);return channel;},removeChannel:()=>{removed++;}})}),
     document:{visibilityState:'visible',addEventListener:(name,fn)=>handlers.set(name,fn),removeEventListener:name=>handlers.delete(name)},
     window:{addEventListener:(name,fn)=>handlers.set(name,fn),removeEventListener:name=>handlers.delete(name)},
     setInterval:fn=>{interval=fn;return 1;},clearInterval:()=>{interval=null;},
@@ -119,14 +119,21 @@ test('HTTP routes reject email-only downloads, cookie-free library and productio
     await adapter.transaction((await import('../scripts/database.mjs')).seed);
     const {db}=load('lib/db/store.ts');
     const access=load('lib/downloads/access.ts');
+    class AuthError extends Error {constructor(message,status=401){super(message);this.status=status;}}
+    const auth={AuthError,currentUser:async()=>null,requireAdmin:async()=>{throw new AuthError('Sign in required.');}};
+    const http=compiled('lib/auth/http.ts',{URL,require:id=>id==='next/server'?{NextResponse}:auth});
     const dependencies={
       'next/server':{NextResponse},
       '@/lib/db/store':{db},
       '@/lib/downloads/access':access,
+      '@/lib/auth/server':auth,
+      '@/lib/auth/http':http,
+      '@/lib/downloads/account':load('lib/downloads/account.ts'),
       '@/lib/downloads/storage':{signDownload:async()=>{signed++;return {downloadUrl:'https://example.com/signed'};}},
       '@/lib/payments/adapter':load('lib/payments/adapter.ts'),
       '@/lib/email/service.mjs':{contacts:()=>[],receipt:()=>{}},
       '../../../lib/db/store':{db},
+      '@/lib/catalog-cache':{getPublicCatalog:async()=>({books:await db.getBooks()}),invalidatePublicCatalog:()=>{}},
     };
     const route=file=>compiled(file,{process,URL,console,require:id=>{if(dependencies[id]) return dependencies[id];throw new Error(`Unexpected runtime dependency ${id}`);}});
     const downloads=route('app/api/downloads/route.ts');
@@ -135,7 +142,7 @@ test('HTTP routes reject email-only downloads, cookie-free library and productio
     const book=(await db.getBooks())[0];
     const order=await dependencies['@/lib/payments/adapter'].fulfillSimulatorOrder({customerEmail:'reader@example.com',items:[{bookId:book.id,quantity:1}],providerOrderId:'http'});
     const input={email:order.customerEmail,bookId:book.id,format:book.formats[0]};
-    const request=(data,headers={})=>new NextRequest('http://localhost/api/downloads',{method:'POST',headers:{'Content-Type':'application/json',...headers},body:JSON.stringify(data)});
+    const request=(data,headers={})=>new NextRequest('http://localhost/api/downloads',{method:'POST',headers:{'Content-Type':'application/json',host:'localhost',origin:'http://localhost',...headers},body:JSON.stringify(data)});
     assert.equal((await downloads.POST(request(input))).status,401);
     assert.equal(signed,0);
     assert.equal((await library.GET(new NextRequest('http://localhost/api/me/library?email=reader@example.com'))).status,401);
@@ -151,12 +158,12 @@ test('HTTP routes reject email-only downloads, cookie-free library and productio
     assert.equal((await downloads.POST(request(input,{cookie:cookieHeader}))).status,403);assert.equal(signed,1);
     process.env.NODE_ENV='production';
     const admin=route('app/api/admin/actions/route.ts');
-    assert.equal((await admin.GET()).status,403);
-    assert.equal((await admin.POST(request({}))).status,403);
+    assert.equal((await admin.GET()).status,401);
+    assert.equal((await admin.POST(request({}))).status,401);
     assert.equal((await route('app/api/checkouts/simulate/route.ts').POST(request({}))).status,403);
     const books=route('app/api/books/route.ts');
-    assert.equal((await books.POST(request({}))).status,403);
-    assert.equal((await books.DELETE(request({}))).status,403);
+    assert.equal((await books.POST(request({}))).status,401);
+    assert.equal((await books.DELETE(request({}))).status,401);
     assert.equal((await route('app/api/downloads/[token]/route.ts').GET()).status,410);
   } finally {if(previous===undefined) delete process.env.NODE_ENV;else process.env.NODE_ENV=previous;await engine.close();}
 });

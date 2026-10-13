@@ -1,13 +1,12 @@
 import { Suspense } from 'react';
-import { connection } from 'next/server';
 import { notFound } from 'next/navigation';
 import SampleReader from '../../../components/books/SampleReader';
-import { db } from '../../../lib/db/store';
+import { getPublicCatalog } from '@/lib/catalog-cache';
 async function Content({ params }: {
     params: Promise<{
         slug: string;
     }>;
-}) { const { slug } = await params; await connection(); const book = await db.getBookBySlug(slug); if (!book || !book.isPublished)
+}) { const { slug } = await params;  const book = (await getPublicCatalog()).books.find(book => book.slug === slug); if (!book || !book.isPublished)
     notFound(); return <SampleReader book={book}/>; }
 export default function Page({ params }: {
     params: Promise<{

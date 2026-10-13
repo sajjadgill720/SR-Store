@@ -1,13 +1,11 @@
 'use client';
-import { createClient } from '@supabase/supabase-js';
+import { browserAuth } from '../auth/browser';
 
 const listeners = new Set<() => void>();
 let stop: (() => void) | undefined;
 function realtimeClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
   try {
-    return url && key ? createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false } }) : null;
+    return browserAuth();
   } catch { return null; } // Incomplete development configuration keeps polling usable.
 }
 

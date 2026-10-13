@@ -1,12 +1,11 @@
 import { Suspense } from 'react';
-import { connection } from 'next/server';
 import { notFound } from 'next/navigation';
-import { db } from '../../../lib/db/store';
+import { getPublicCatalog } from '@/lib/catalog-cache';
 import BundleDetail from './BundleDetail';
 async function Content({params}:{params:Promise<{slug:string}>}) {
-  await connection();
+  
   const {slug}=await params;
-  const bundle=(await db.getBundles()).find(bundle=>bundle.slug===slug);
+  const bundle=(await getPublicCatalog()).bundles.find(bundle=>bundle.slug===slug);
   if(!bundle) notFound();
   return <BundleDetail bundle={bundle}/>;
 }

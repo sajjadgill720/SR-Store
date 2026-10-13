@@ -8,6 +8,8 @@ async function setup() {
   const engine=new PGlite();
   // Local stand-in for Supabase-managed Realtime objects, never run in production.
   await engine.exec(`CREATE ROLE anon; CREATE ROLE authenticated;
+    CREATE SCHEMA auth;
+    CREATE TABLE auth.users(id uuid PRIMARY KEY,email text,email_confirmed_at timestamptz);
     CREATE SCHEMA realtime;
     CREATE TABLE realtime.messages(payload jsonb,event text,topic text,private boolean,extension text DEFAULT 'broadcast');
     ALTER TABLE realtime.messages ENABLE ROW LEVEL SECURITY;

@@ -1,15 +1,19 @@
+import { getPublicCatalog, invalidatePublicCatalog } from '@/lib/catalog-cache';
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '../../../lib/db/store';
 import { Book } from '../../../lib/types';
+import { requireAdmin } from '@/lib/auth/server';
+import { sameOrigin, authFailure } from '@/lib/auth/http';
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const slug = searchParams.get('slug');
     const id = searchParams.get('id');
+    const { books } = await getPublicCatalog();
 
     if (slug) {
-      const book = await db.getBookBySlug(slug);
+      const book = books.find(book => book.slug === slug);
       if (!book || !book.isPublished) {
         return NextResponse.json({ error: 'Book not found' }, { status: 404 });
       }
@@ -17,22 +21,21 @@ export async function GET(request: NextRequest) {
     }
 
     if (id) {
-      const book = await db.getBookById(id);
+      const book = books.find(book => book.id === id);
       if (!book || !book.isPublished) {
         return NextResponse.json({ error: 'Book not found' }, { status: 404 });
       }
       return NextResponse.json({ book });
     }
 
-    const books = await db.getBooks();
-    return NextResponse.json({ books: books.filter(book => book.isPublished) });
+    return NextResponse.json({ books });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
 export async function POST(request: NextRequest) {
-  if (process.env.NODE_ENV === 'production') return NextResponse.json({ error: 'Admin authentication setup is required.' }, { status: 403 });
+  try { sameOrigin(request); await requireAdmin(); } catch (error) { return authFailure(error); }
   try {
     const body = await request.json();
 
@@ -126,6 +129,7 @@ export async function POST(request: NextRequest) {
     };
 
     const saved = await db.addBook(newBook);
+    invalidatePublicCatalog();
     return NextResponse.json({ success: true, book: saved }, { status: 201 });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -133,7 +137,7 @@ export async function POST(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
-  if (process.env.NODE_ENV === 'production') return NextResponse.json({ error: 'Admin authentication setup is required.' }, { status: 403 });
+  try { sameOrigin(request); await requireAdmin(); } catch (error) { return authFailure(error); }
   try {
     const { searchParams } = new URL(request.url);
     let id = searchParams.get('id');
@@ -156,6 +160,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Book not found' }, { status: 404 });
     }
 
+    invalidatePublicCatalog();
     return NextResponse.json({ success: true });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

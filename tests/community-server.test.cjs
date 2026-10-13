@@ -1,18 +1,17 @@
 /* eslint-disable @typescript-eslint/no-require-imports -- Node test runner. */
 const {test}=require('node:test');
 const assert=require('node:assert/strict');
-test('Postgres community authentication, privacy, conflicts and moderation', async () => {
+test('Supabase-linked community profiles, privacy, conflicts and moderation', async () => {
   const {setup}=require('./helpers/postgres.cjs');
   const {engine,adapter,load}=await setup();
   const server=load('lib/community/server.ts');
   try {
-  const alice = await server.authenticate('register', 'test-alice', 'Example-pass-2468', 'Alice');
-  const bob = await server.authenticate('register', 'test-bob', 'Example-pass-3579', 'Bob');
-  assert.equal((await server.sessionMember(alice.token)).id, alice.member.id);
-  assert.equal((await server.authenticate('login', 'test-alice', 'Example-pass-2468')).member.id, alice.member.id);
-  await assert.rejects(() => server.authenticate('login', 'test-alice', 'Wrong-password'), error => error.status === 401);
-  await assert.rejects(() => server.authenticate('register', 'test-alice', 'Example-pass-2468', 'Imposter'), error => error.status === 409);
-  assert.equal(await server.sessionMember('forged-token'), null);
+  const auth=load('lib/auth/store.ts');
+  const aliceUser={id:'11111111-1111-4111-8111-111111111111',user_metadata:{name:'Alice',role:'admin'}},bobUser={id:'22222222-2222-4222-8222-222222222222',user_metadata:{name:'Bob'}};
+  await adapter.query('INSERT INTO auth.users(id) VALUES($1),($2)',[aliceUser.id,bobUser.id]);
+  const alice={member:await auth.memberForUser(aliceUser)},bob={member:await auth.memberForUser(bobUser)};
+  assert.equal(alice.member.moderator,false,'User-editable metadata never grants a role');
+  assert.equal((await auth.memberForUser(aliceUser)).id,alice.member.id);
   let saved = await server.changeActivity(alice.member.id, { revision: 0, field: 'joined', id: 'the-focus-room', value: true });
   saved = await server.changeActivity(alice.member.id, { revision: saved.revision, field: 'notes', id: 'protecting-your-first-hour', value: 'Private reflection' });
   assert.equal((await server.getActivity(alice.member.id)).activity.notes['protecting-your-first-hour'], 'Private reflection');
@@ -35,8 +34,8 @@ test('Postgres community authentication, privacy, conflicts and moderation', asy
   await assert.rejects(() => server.moderate(alice.member, { kind: 'reply', id: reply.id, action: 'hide' }), error => error.status === 403);
   await server.moderate(alice.member, { kind: 'reply', id: reply.id, action: 'report', reason: 'Please review this reply.' });
   assert.equal((await server.reports()).length, 1);
-  process.env.COMMUNITY_MODERATOR_IDS = alice.member.id;
-  const moderator = await server.sessionMember(alice.token);
+  await adapter.query('INSERT INTO knovera.account_roles VALUES($1,$2)',[aliceUser.id,'moderator']);
+  const moderator = await auth.memberForUser(aliceUser);
   assert.equal(moderator.moderator, true);
   await server.moderate(moderator, { kind: 'reply', id: reply.id, action: 'dismiss' });
   assert.equal((await server.reports()).length, 0);
@@ -48,11 +47,8 @@ test('Postgres community authentication, privacy, conflicts and moderation', asy
   assert.equal((await server.reports()).length, 0);
   await server.moderate(moderator, { kind: 'reply', id: reply.id, action: 'restore' });
   assert.equal((await server.replies(thread.id))[0].body, 'I read before checking my phone.');
-  await server.logout(alice.token);
-  assert.equal(await server.sessionMember(alice.token), null);
   const hash = (await adapter.query('SELECT password FROM knovera.members WHERE id=$1',[alice.member.id])).rows[0].password;
-  assert.notEqual(hash, 'Example-pass-2468');
-  const session = (await adapter.query('SELECT token FROM knovera.sessions WHERE member=$1',[bob.member.id])).rows[0].token;
-  assert.notEqual(session, bob.token);
-  } finally { await engine.close(); delete process.env.COMMUNITY_MODERATOR_IDS; }
+  assert.equal(hash,null,'No new local password hashes are stored');
+  assert.equal((await adapter.query("SELECT to_regclass('knovera.sessions') AS sessions")).rows[0].sessions,null);
+  } finally { await engine.close(); }
 });

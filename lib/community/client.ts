@@ -3,6 +3,7 @@ import { useSyncExternalStore } from 'react';
 import { toggleActivity as localToggle, updateActivity as localUpdate, useCommunityActivity as useLocalActivity } from '../store/community';
 import { emptyActivity, type Activity, type Member } from './types';
 import { subscribeCommunityChanges } from './realtime';
+import { browserAuth } from '../auth/browser';
 
 interface State { member: Member | null; activity: Activity; revision: number; ready: boolean; error: string }
 const initial: State = { member: null, activity: emptyActivity(), revision: 0, ready: false, error: '' };
@@ -30,31 +31,34 @@ function subscribe(listener: () => void) {
   listeners.add(listener);
   if (listeners.size === 1) {
     void refreshSession();
-    stop = subscribeCommunityChanges(() => { void refreshSession(); });
+    const realtimeStop = subscribeCommunityChanges(() => { void refreshSession(); });
+    let authStop: (() => void) | undefined;
+    try {
+      const {data} = browserAuth().auth.onAuthStateChange(() => {
+        ++generation;
+        emit({ member:null,activity:emptyActivity(),revision:0,ready:false });
+        queueMicrotask(() => { void refreshSession(); });
+      });
+      authStop = () => data.subscription.unsubscribe();
+    } catch { /* The session request reports missing configuration. */ }
+    stop = () => { realtimeStop(); authStop?.(); };
   }
   return () => { listeners.delete(listener); if (!listeners.size) stop?.(); };
 }
 let stop: (() => void) | undefined;
 export function useMemberSession() { return useSyncExternalStore(subscribe, () => state, () => initial); }
 export function useCommunityActivity() { const session = useMemberSession(); const local = useLocalActivity(); return session.member ? session.activity : local; }
-export async function account(input: unknown) {
-  if (writing) throw new Error('Please wait for your current save to finish.');
-  writing = true; ++generation;
-  try {
-    const result = await api<{ member: Member | null; activity?: Activity; revision?: number }>('session', input);
-    emit({ member: result.member, activity: result.activity || emptyActivity(), revision: result.revision || 0, ready: true, error: '' });
-  } finally { writing = false; }
-}
 async function change(field: string, id: string, value: unknown, previousValue?: string | null): Promise<boolean> {
   if (writing) { emit({ error: 'Please wait for your current save to finish.' }); return false; }
-  writing = true; ++generation;
+  writing = true; const current = ++generation;
   try {
     const result = await api<{ activity: Activity; revision: number }>('activity', { field, id, value, revision: state.revision, ...(previousValue === undefined ? {} : { previousValue }) });
+    if (generation !== current) return false;
     emit({ ...result, error: '' }); return true;
   } catch (error) {
     emit({ error: error instanceof Error ? error.message : 'Unable to sync. Your change was not saved.' });
     return false;
-  } finally { writing = false; }
+  } finally { writing = false; if (generation !== current) void refreshSession(); }
 }
 export async function toggleActivity(field: 'joined' | 'saved' | 'completed', id: string) {
   if (!state.ready) return false;

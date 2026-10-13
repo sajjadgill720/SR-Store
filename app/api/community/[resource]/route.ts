@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticate, changeActivity, CommunityError, reports, createReply, createThread, discussionExists, getActivity, limit, logout, moderate, replies, sessionMember, threads, threadById } from '../../../../lib/community/server';
-const cookie = 'knovera_member';
+import { changeActivity, CommunityError, reports, createReply, createThread, discussionExists, getActivity, moderate, replies, threads, threadById } from '../../../../lib/community/server';
+import { currentUser, AuthError } from '../../../../lib/auth/server';
+import { memberForUser } from '../../../../lib/auth/store';
 type Context = { params: Promise<{resource: string}> };
 function json(value: unknown, status = 200) { return NextResponse.json(value, { status, headers: { 'Cache-Control': 'private, no-store' } }); }
 async function handle(req: NextRequest, ctx: Context) {
   try {
     const { resource } = await ctx.params;
-    const member = await sessionMember(req.cookies.get(cookie)?.value);
+    const user = await currentUser();
+    const member = user ? await memberForUser(user) : null;
     if (req.method === 'GET') {
       if (resource === 'session') return json({ member, ...(member ? await getActivity(member.id) : {}) });
       if (resource === 'threads') return json({ threads: await threads(req.nextUrl.searchParams.get('circle') || undefined, !!member?.moderator) });
@@ -36,18 +38,7 @@ async function handle(req: NextRequest, ctx: Context) {
     try { input = JSON.parse(raw); } catch { throw new CommunityError('Invalid JSON.'); }
     if (!input || typeof input !== 'object' || Array.isArray(input)) throw new CommunityError('Invalid request.');
     if (resource === 'session') {
-      if (input.action === 'logout') {
-        await logout(req.cookies.get(cookie)?.value);
-        const response = json({ member: null });
-        response.cookies.set(cookie, '', { maxAge: 0, path: '/' });
-        return response;
-      }
-      // The network address comes from the socket proxy only when explicitly configured by the host.
-      await limit('accounts:global', 100, 60_000);
-      const result = await authenticate(String(input.action), input.username, input.password, input.name);
-      const response = json({ member: result.member, ...(await getActivity(result.member.id)) });
-      response.cookies.set(cookie, result.token, { httpOnly: true, secure: req.nextUrl.protocol === 'https:', sameSite: 'lax', path: '/', maxAge: 30 * 86400 });
-      return response;
+      throw new CommunityError('Use the account sign-in page. Legacy username/password login has been retired.',410);
     }
     if (!member) throw new CommunityError('Sign in to participate or sync your reading space.', 401);
     if (resource === 'activity') return json(await changeActivity(member.id, input));
@@ -56,7 +47,7 @@ async function handle(req: NextRequest, ctx: Context) {
     if (resource === 'moderation') { await moderate(member, input); return json({ success: true }); }
     throw new CommunityError('Not found.', 404);
   } catch (error) {
-    if (error instanceof CommunityError) return json({ error: error.message }, error.status);
+    if (error instanceof CommunityError || error instanceof AuthError) return json({ error: error.message }, error.status);
     console.error('Community request failed', error);
     return json({ error: 'Unable to save or load community data. Please try again.' }, 500);
   }

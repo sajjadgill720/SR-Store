@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   headers() {
-    return ['/orders/:path*', '/checkout/:path*', '/account/library', '/api/orders/:path*', '/api/downloads/:path*'].map(source => ({
+    return ['/orders/:path*', '/checkout/:path*', '/account/:path*', '/auth/:path*', '/admin/:path*', '/api/auth/:path*', '/api/orders/:path*', '/api/downloads/:path*'].map(source => ({
       source,
       headers: [{ key: 'Referrer-Policy', value: 'no-referrer' }, { key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
     }));

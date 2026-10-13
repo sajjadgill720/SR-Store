@@ -1,4 +1,4 @@
-import { randomBytes, randomUUID, scryptSync, timingSafeEqual, createHash } from 'node:crypto';
+import { randomUUID } from 'node:crypto';
 import { query, transaction } from '../db/postgres.mjs';
 import { getCircle, getDiscussion } from '../data/community';
 import { emptyActivity, type Activity, type Member } from './types';
@@ -13,38 +13,6 @@ export async function limit(key: string, max: number, windowMs: number) {
   const {rows}=await query<{count:number}>('INSERT INTO knovera.limits VALUES($1,1,$2) ON CONFLICT(key) DO UPDATE SET count=CASE WHEN knovera.limits.expires<=$3 THEN 1 ELSE knovera.limits.count+1 END,expires=CASE WHEN knovera.limits.expires<=$3 THEN excluded.expires ELSE knovera.limits.expires END RETURNING count',[key,now+windowMs,now]);
   if (rows[0].count>max) throw new CommunityError('Too many attempts. Please try again later.',429);
 }
-function publicMember(row: Record<string,unknown>): Member {
-  const moderators=(process.env.COMMUNITY_MODERATOR_IDS || '').split(',').map(value=>value.trim());
-  return {id:String(row.id),username:String(row.username),name:String(row.name),moderator:moderators.includes(String(row.id))};
-}
-const digest=(token:string)=>createHash('sha256').update(token).digest('hex');
-export async function sessionMember(token?:string) {
-  if (!token) return null;
-  const {rows}=await query('SELECT m.id,m.username,m.name FROM knovera.sessions s JOIN knovera.members m ON s.member=m.id WHERE s.token=$1 AND s.expires>$2',[digest(token),Date.now()]);
-  return rows[0]?publicMember(rows[0]):null;
-}
-export async function authenticate(mode:string, usernameInput:unknown,passwordInput:unknown,nameInput?:unknown) {
-  const username=text(usernameInput,3,32,'Username').toLowerCase();
-  if (!/^[a-z0-9_-]+$/.test(username)) throw new CommunityError('Use letters, numbers, underscores, or hyphens for your username.');
-  const password=text(passwordInput,10,128,'Password');
-  await limit(`login:${username}`,20,15*60000);
-  let row=(await query('SELECT * FROM knovera.members WHERE username=$1',[username])).rows[0];
-  if (mode==='register') {
-    const name=text(nameInput,2,60,'Display name');
-    const salt=randomBytes(16).toString('hex');
-    const hash=scryptSync(password,salt,64).toString('hex');
-    const result=await query('INSERT INTO knovera.members VALUES($1,$2,$3,$4) ON CONFLICT(username) DO NOTHING RETURNING id,username,name',[randomUUID(),username,name,`${salt}:${hash}`]);
-    if (!result.rows[0]) throw new CommunityError('This username is already taken.',409);
-    row=result.rows[0];
-  } else if (mode==='login') {
-    const [salt,hash]=String(row?.password || `dummy:${'0'.repeat(128)}`).split(':');
-    if (!timingSafeEqual(scryptSync(password,salt,64),Buffer.from(hash,'hex')) || !row) throw new CommunityError('Username or password is incorrect.',401);
-  } else throw new CommunityError('Unknown account action.');
-  const token=randomBytes(32).toString('hex');
-  await query('INSERT INTO knovera.sessions VALUES($1,$2,$3)',[digest(token),row.id,Date.now()+30*86400000]);
-  return {member:publicMember(row),token};
-}
-export async function logout(token?:string) { if(token) await query('DELETE FROM knovera.sessions WHERE token=$1',[digest(token)]); }
 export async function getActivity(member:string) {
   const row=(await query<{value:Activity;revision:number}>('SELECT value,revision FROM knovera.activity WHERE member=$1',[member])).rows[0];
   return {activity:row?.value || emptyActivity(),revision:row?.revision || 0};

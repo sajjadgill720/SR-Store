@@ -1,10 +1,12 @@
+import { invalidatePublicCatalog } from '@/lib/catalog-cache';
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db/store';
 import { contacts } from '@/lib/email/service.mjs';
+import { requireAdmin } from '@/lib/auth/server';
+import { sameOrigin, authFailure, privateHeaders } from '@/lib/auth/http';
 
 export async function GET() {
-  // Until admin Auth is connected, production must never expose purchase bearer tokens.
-  if (process.env.NODE_ENV === 'production') return NextResponse.json({ error: 'Admin authentication setup is required.' }, { status: 403 });
+  try { await requireAdmin(); } catch (error) { return authFailure(error); }
   const storeData = await db.get();
   const subscribers = contacts();
 
@@ -30,13 +32,18 @@ export async function GET() {
     reviews: storeData.reviews,
     subscribers,
     auditLogs: storeData.auditLogs.slice(0, 20)
-  });
+  }, { headers:privateHeaders });
 }
 
 export async function POST(req: NextRequest) {
-  if (process.env.NODE_ENV === 'production') return NextResponse.json({ error: 'Admin authentication setup is required.' }, { status: 403 });
+  try { sameOrigin(req); await requireAdmin(); } catch (error) { return authFailure(error); }
   try {
     const { action, payload } = await req.json();
+
+    if (action === 'REFRESH_CATALOG') {
+      invalidatePublicCatalog();
+      return NextResponse.json({ success: true });
+    }
 
     if (action === 'DELETE_BOOK') {
       const { bookId } = payload;
@@ -44,6 +51,7 @@ export async function POST(req: NextRequest) {
       if (!success) {
         return NextResponse.json({ error: 'Book not found' }, { status: 404 });
       }
+      invalidatePublicCatalog();
       return NextResponse.json({ success: true });
     }
 

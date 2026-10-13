@@ -6,8 +6,9 @@ export default function RouteChrome() {
     const path = usePathname();
     useLayoutEffect(() => {
         document.body.setAttribute('data-reader', String(path.startsWith('/samples/')));
+        document.body.setAttribute('data-community', String(path.startsWith('/community')));
         document.body.setAttribute('data-market', String(path === '/'));
-        return () => { document.body.removeAttribute('data-reader'); document.body.removeAttribute('data-market'); };
+        return () => { document.body.removeAttribute('data-community'); document.body.removeAttribute('data-reader'); document.body.removeAttribute('data-market'); };
     }, [path]);
     return null;
 }

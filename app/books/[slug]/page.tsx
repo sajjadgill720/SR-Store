@@ -1,16 +1,15 @@
 import { Suspense } from 'react';
-import { connection } from 'next/server';
 import { notFound } from 'next/navigation';
 import BookDetail from '../../../components/books/BookDetail';
-import { db } from '../../../lib/db/store';
+import { getPublicCatalog } from '@/lib/catalog-cache';
 async function Content({ params }: {
     params: Promise<{
         slug: string;
     }>;
 }) {
     const { slug } = await params;
-    await connection();
-    const book = await db.getBookBySlug(slug);
+    
+    const book = (await getPublicCatalog()).books.find(book => book.slug === slug);
     if (!book || !book.isPublished)
         notFound();
     return <BookDetail book={book}/>;
