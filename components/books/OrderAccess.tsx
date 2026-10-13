@@ -40,7 +40,7 @@ export default function OrderAccess({ token }: {
     }, [token]);
     const download = async (bookId: string, format: string) => { if (!order)
         return; setDownloading(bookId + '-' + format); setDownloadError(''); try {
-        const response = await fetch('/api/downloads', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: order.customerEmail, bookId, format }) });
+        const response = await fetch('/api/downloads', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ orderToken: token, bookId, format }) });
         const data = await response.json();
         if (!response.ok)
             throw new Error(data.error || 'Could not prepare the download.');
@@ -77,7 +77,7 @@ export default function OrderAccess({ token }: {
     <Icon size={30} aria-hidden="true"/>
     <span className="studio-kicker">{test ? 'TEST ORDER' : 'ORDER STATUS'}</span>
     <h1>{test && status.accessible ? 'Your test order is ready.' : status.title}</h1>
-    <p>{status.description}</p>{test && <p className="studio-caption">No payment was collected. Downloads are demo files, not the published edition.</p>}<dl>
+    <p>{status.description}</p>{test && <p className="studio-caption">No payment was collected. Test downloads are available only in development after ebook files are configured.</p>}<dl>
     <dt>Order</dt>
     <dd>{order.orderNumber}</dd>
     <dt>Email</dt>
@@ -100,12 +100,12 @@ export default function OrderAccess({ token }: {
         <h3>{item.title}</h3>
         <p>{item.editionVersion}</p>
         </div>{status.accessible && <div className="studio-download-actions">{item.formats.map(format => <button key={format} disabled={!!downloading} className="studio-button outline" onClick={() => download(item.bookId, format)}>
-                <Download size={16}/>{downloading === item.bookId + '-' + format ? 'Preparing…' : `${test ? 'Demo ' : ''}${formatLabel(format)}`}</button>)}</div>}</article>)}{downloadError && <p className="studio-error" role="alert">{downloadError}</p>}<div className="studio-actions">
+                <Download size={16}/>{downloading === item.bookId + '-' + format ? 'Preparing…' : formatLabel(format)}</button>)}</div>}</article>)}{downloadError && <p className="studio-error" role="alert">{downloadError}</p>}<div className="studio-actions">
     <Link className="studio-button" href="/account/library">Open my library <ArrowRight size={17}/>
     </Link>
     <Link className="studio-button outline" href="/contact">Get help with this order</Link>
     </div>
-    <p className="studio-caption">Keep this page’s link to return to your order. Receipt email delivery is not connected in this preview.</p>
+    <p className="studio-caption">Keep this purchase link private. Download links expire after five minutes; return here to request another.</p>
     </section>
   </div>;
 }

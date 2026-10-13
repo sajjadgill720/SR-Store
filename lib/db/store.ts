@@ -2,7 +2,6 @@ import { randomUUID } from 'node:crypto';
 import { query, transaction } from './postgres.mjs';
 import type { Book, BundleOffer, Order, Entitlement, SupportTicket, Review } from '../types';
 
-export interface DownloadTokenRecord { token: string; customerEmail: string; bookId: string; format: string; fileName: string; expiresAt: number; used: boolean; }
 type DocumentRow<T> = { id: string; data: Omit<T, 'id'> };
 const document = <T>(row: DocumentRow<T>): T => ({ id: row.id, ...row.data }) as T;
 const withoutId = <T extends { id: string }>(value: T) => { const { id, ...data } = value; if (!id) throw new Error('Record ID required'); return data; };
@@ -60,10 +59,7 @@ export const db = {
   },
   async getEntitlements(email: string) { return (await query<Entitlement>('SELECT * FROM knovera.entitlements WHERE "customerEmail"=$1 AND status=$2',[email.trim().toLowerCase(),'active'])).rows; },
   async hasEntitlement(email: string, bookId: string) { return (await query('SELECT id FROM knovera.entitlements WHERE "customerEmail"=$1 AND "bookId"=$2 AND status=$3 LIMIT 1',[email.trim().toLowerCase(),bookId,'active'])).rows.length>0; },
-  async createDownloadToken(record: DownloadTokenRecord) {
-    await query('INSERT INTO knovera.download_tokens VALUES($1,$2,$3,$4,$5,$6,$7)',[record.token,record.customerEmail,record.bookId,record.format,record.fileName,record.expiresAt,record.used]);
-  },
-  async getDownloadToken(token: string) { const row=(await query<DownloadTokenRecord>('SELECT * FROM knovera.download_tokens WHERE token=$1 AND "expiresAt">$2',[token,Date.now()])).rows[0]; return row ? {...row,expiresAt:Number(row.expiresAt)} : undefined; },
+  async getOrderEntitlements(orderId: string) { return (await query<Entitlement>('SELECT * FROM knovera.entitlements WHERE "orderId"=$1 AND status=$2', [orderId, 'active'])).rows; },
   async addTicket(ticket: SupportTicket) { await query('INSERT INTO knovera.support_tickets VALUES($1,$2)',[ticket.id,withoutId(ticket)]); },
   async getTickets() { return (await query<DocumentRow<SupportTicket>>("SELECT * FROM knovera.support_tickets ORDER BY data->>'createdAt' DESC")).rows.map(document<SupportTicket>); },
   async updateTicketStatus(id: string, status: string, adminNotes?: string) { await query('UPDATE knovera.support_tickets SET data=data || $2::jsonb WHERE id=$1',[id,JSON.stringify({status,...(adminNotes!==undefined?{adminNotes}:{})})]); },

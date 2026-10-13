@@ -2,6 +2,7 @@
 import { useSyncExternalStore } from 'react';
 import { toggleActivity as localToggle, updateActivity as localUpdate, useCommunityActivity as useLocalActivity } from '../store/community';
 import { emptyActivity, type Activity, type Member } from './types';
+import { subscribeCommunityChanges } from './realtime';
 
 interface State { member: Member | null; activity: Activity; revision: number; ready: boolean; error: string }
 const initial: State = { member: null, activity: emptyActivity(), revision: 0, ready: false, error: '' };
@@ -29,11 +30,7 @@ function subscribe(listener: () => void) {
   listeners.add(listener);
   if (listeners.size === 1) {
     void refreshSession();
-    const timer = window.setInterval(() => { if (document.visibilityState === 'visible') void refreshSession(); }, 5000);
-    const refresh = () => { void refreshSession(); };
-    window.addEventListener('focus', refresh);
-    window.addEventListener('online', refresh);
-    stop = () => { window.clearInterval(timer); window.removeEventListener('focus', refresh); window.removeEventListener('online', refresh); };
+    stop = subscribeCommunityChanges(() => { void refreshSession(); });
   }
   return () => { listeners.delete(listener); if (!listeners.size) stop?.(); };
 }

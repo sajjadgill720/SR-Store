@@ -62,7 +62,7 @@ async function main() {
     else if(command==='seed') await seed(client);
     else if(command==='import-legacy') { if(!process.argv[3]) throw new Error('Supply the local backup directory'); await importLegacy(client,path.resolve(process.argv[3])); }
     else if(command==='check') { const result=await client.query('SELECT (SELECT count(*) FROM knovera.books) AS books,(SELECT count(*) FROM knovera.orders) AS orders,(SELECT count(*) FROM knovera.threads) AS posts,(SELECT count(*) FROM knovera.replies) AS replies'); console.table(result.rows); }
-    else for(const [table,field] of [['sessions','expires'],['limits','expires'],['download_tokens','"expiresAt"']]) await client.query(`DELETE FROM knovera.${table} WHERE ${field}<$1`,[Date.now()]);
+    else for(const [table,field] of [['sessions','expires'],['limits','expires']]) await client.query(`DELETE FROM knovera.${table} WHERE ${field}<$1`,[Date.now()]);
   });
   console.log(`Database ${command} completed.`);
 }

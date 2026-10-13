@@ -32,6 +32,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  if (process.env.NODE_ENV === 'production') return NextResponse.json({ error: 'Admin authentication setup is required.' }, { status: 403 });
   try {
     const body = await request.json();
 
@@ -132,6 +133,7 @@ export async function POST(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  if (process.env.NODE_ENV === 'production') return NextResponse.json({ error: 'Admin authentication setup is required.' }, { status: 403 });
   try {
     const { searchParams } = new URL(request.url);
     let id = searchParams.get('id');

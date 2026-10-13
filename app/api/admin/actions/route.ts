@@ -3,6 +3,8 @@ import { db } from '@/lib/db/store';
 import { contacts } from '@/lib/email/service.mjs';
 
 export async function GET() {
+  // Until admin Auth is connected, production must never expose purchase bearer tokens.
+  if (process.env.NODE_ENV === 'production') return NextResponse.json({ error: 'Admin authentication setup is required.' }, { status: 403 });
   const storeData = await db.get();
   const subscribers = contacts();
 
@@ -32,6 +34,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  if (process.env.NODE_ENV === 'production') return NextResponse.json({ error: 'Admin authentication setup is required.' }, { status: 403 });
   try {
     const { action, payload } = await req.json();
 

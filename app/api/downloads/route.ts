@@ -1,53 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db/store';
+import { AccessError, downloadAsset, PURCHASE_COOKIE } from '@/lib/downloads/access';
+import { signDownload } from '@/lib/downloads/storage';
 
 export async function POST(req: NextRequest) {
+  const headers = { 'Cache-Control': 'private, no-store' };
+  if (req.headers.get('origin') && req.headers.get('origin') !== new URL(req.url).origin)
+    return NextResponse.json({ error: 'Invalid request origin.' }, { status: 403, headers });
   try {
-    const { email, bookId, format } = await req.json();
-
-    if (!email || !bookId) {
-      return NextResponse.json({ error: 'Email and book ID are required' }, { status: 400 });
-    }
-
-    const normEmail = email.toLowerCase().trim();
-
-    // Check entitlement
-    const hasAccess = await db.hasEntitlement(normEmail, bookId);
-    if (!hasAccess) {
-      return NextResponse.json({ error: 'No active entitlement found for this title' }, { status: 403 });
-    }
-
-    const book = await db.getBookById(bookId);
-    if (!book) {
-      return NextResponse.json({ error: 'Book asset not found' }, { status: 404 });
-    }
-
-    const asset = book.currentEdition.assets.find((a) => a.format === format) || book.currentEdition.assets[0];
-
-    // Generate 5-minute signed token
-    const token = 'dl_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    const expiresAt = Date.now() + 5 * 60 * 1000; // 5 minutes
-
-    await db.createDownloadToken({
-      token,
-      customerEmail: normEmail,
-      bookId,
-      format: asset.format,
-      fileName: asset.fileName,
-      expiresAt,
-      used: false
-    });
-
-    await db.addAuditLog('DOWNLOAD_TOKEN_ISSUED', `Issued 5-minute download token for ${normEmail} - ${asset.fileName}`);
-
-    return NextResponse.json({
-      success: true,
-      downloadUrl: `/api/downloads/${token}`,
-      fileName: asset.fileName,
-      fileSize: asset.fileSize,
-      expiresInSeconds: 300
-    });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    const body = await req.json();
+    const asset = await downloadAsset(body?.orderToken ?? req.cookies.get(PURCHASE_COOKIE)?.value, body?.bookId, body?.format);
+    return NextResponse.json(await signDownload(asset), { headers });
+  } catch (error) {
+    const status = error instanceof AccessError ? error.status : error instanceof SyntaxError ? 400 : 503;
+    return NextResponse.json({ error: error instanceof AccessError ? error.message : status === 400 ? 'Invalid request.' : 'Downloads are temporarily unavailable. Please try again or contact support.' }, { status, headers });
   }
 }

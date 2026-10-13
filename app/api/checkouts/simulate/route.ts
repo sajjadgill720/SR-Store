@@ -3,6 +3,7 @@ import { fulfillSimulatorOrder } from '@/lib/payments/adapter';
 import { receipt } from '@/lib/email/service.mjs';
 
 export async function POST(req: NextRequest) {
+  if (process.env.NODE_ENV === 'production') return NextResponse.json({ error: 'Test checkout is disabled in production.' }, { status: 403 });
   try {
     const body = await req.json();
     const { customerEmail, customerName, items } = body;

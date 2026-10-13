@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { api, toggleActivity, updateActivity, useCommunityActivity, useMemberSession } from '../../lib/community/client';
 import type { Reply, Thread } from '../../lib/community/types';
 import { CIRCLES } from '../../lib/data/community';
+import { subscribeCommunityChanges } from '../../lib/community/realtime';
 
 function useLive<T>(resource: string, initial: T) {
   const [data, setData] = useState(initial);
@@ -13,12 +14,11 @@ function useLive<T>(resource: string, initial: T) {
   useEffect(() => {
     let active = true;
     let loading = false;
-    const load = async () => { if (loading) return; loading = true; try { const result = await api<T>(resource); if (active) { setData(result); setError(''); } } catch (error) { if (active) setError(error instanceof Error ? error.message : 'Unable to load conversations.'); } finally { loading = false; } };
+    let dirty = false;
+    const load = async () => { if (!active) return; if (loading) { dirty = true; return; } loading = true; try { const result = await api<T>(resource); if (active) { setData(result); setError(''); } } catch (error) { if (active) setError(error instanceof Error ? error.message : 'Unable to load conversations.'); } finally { loading = false; if (dirty) { dirty = false; void load(); } } };
     void load();
-    const timer = window.setInterval(() => { if (document.visibilityState === 'visible') void load(); }, 5000);
-    window.addEventListener('focus', load);
-    window.addEventListener('online', load);
-    return () => { active = false; window.clearInterval(timer); window.removeEventListener('focus', load); window.removeEventListener('online', load); };
+    const unsubscribe = subscribeCommunityChanges(() => { void load(); });
+    return () => { active = false; unsubscribe(); };
   }, [resource, version, session.member?.id, session.member?.moderator]);
   return { data, error, reload: () => setVersion(value => value + 1) };
 }

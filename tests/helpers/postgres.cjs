@@ -6,6 +6,16 @@ const ts=require('typescript');
 const {PGlite}=require('@electric-sql/pglite');
 async function setup() {
   const engine=new PGlite();
+  // Local stand-in for Supabase-managed Realtime objects, never run in production.
+  await engine.exec(`CREATE ROLE anon; CREATE ROLE authenticated;
+    CREATE SCHEMA realtime;
+    CREATE TABLE realtime.messages(payload jsonb,event text,topic text,private boolean,extension text DEFAULT 'broadcast');
+    ALTER TABLE realtime.messages ENABLE ROW LEVEL SECURITY;
+    GRANT USAGE ON SCHEMA realtime TO anon,authenticated;
+    GRANT SELECT,INSERT ON realtime.messages TO anon,authenticated;
+    CREATE FUNCTION realtime.topic() RETURNS text LANGUAGE sql AS $$ SELECT current_setting('realtime.topic',true) $$;
+    CREATE FUNCTION realtime.send(payload jsonb,event text,topic text,private boolean) RETURNS void LANGUAGE sql AS $$
+      INSERT INTO realtime.messages(payload,event,topic,private) VALUES($1,$2,$3,$4) $$;`);
   const executor=target=>({query:async(sql,values=[])=>{
     const result=values.length?await target.query(sql,values):(await target.exec(sql)).at(-1);
     return {...result,rows:result?.rows || [],rowCount:result?.affectedRows ?? result?.rows?.length ?? 0};

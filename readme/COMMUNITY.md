@@ -5,7 +5,7 @@ Implemented at `/community`, the three circle pages, and `/community/discussions
 ## Reader flow
 
 1. Create an account with a unique username, a display name, and a password of at least 10 characters. No real members or email service is required to test it.
-2. Sign in using the same account on another browser or device connected to the **same running deployment**. Circles, bookmarks, completed practices, and private journals are stored on the server and refreshed every five seconds while pages are visible, and on focus/reconnect. Refresh sync retrieves changes immediately.
+2. Sign in using the same account on another browser or device connected to the **same running deployment**. Posts, replies, moderation and private reading activity refresh on Supabase Realtime notifications. Each tab shares one subscription. If Realtime is unavailable or unconfigured, visible pages fall back to five-second polling; connected tabs reconcile once per minute and on focus/reconnect. Refresh sync also retrieves changes immediately.
 3. Publish a discussion from the community hub or a circle. Open it to bookmark it, keep a private journal, or reply. The original guided discussions also accept public replies.
 4. Reply to an existing reply to create a nested conversation. Public posts display the author's display name. Readers can remove their own content and report other content.
 5. Sign out to stop showing account journals. Guest activity uses the original `knovera_community_v1` browser storage key. Signing in does not automatically upload guest journals. The explicit Import button merges local activity and copies only reflections absent from the account.
