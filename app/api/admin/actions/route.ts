@@ -59,6 +59,8 @@ export async function POST(req: NextRequest) {
 
     if (action === 'REFUND_ORDER') {
       const { orderId } = payload;
+      const order=(await db.getOrders()).find(order=>order.id===orderId);
+      if(order?.provider==='lemon_squeezy') return NextResponse.json({error:'Issue the refund in your Lemon Squeezy dashboard. Its verified webhook will update this order and revoke access.'},{status:409});
       if (await db.refundOrder(orderId)) {
         return NextResponse.json({ success: true });
       }

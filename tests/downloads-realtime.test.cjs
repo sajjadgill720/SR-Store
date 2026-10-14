@@ -114,6 +114,8 @@ test('HTTP routes reject email-only downloads, cookie-free library and productio
   const {engine,adapter,load}=await setup();
   let signed=0;
   const previous=process.env.NODE_ENV;
+  const previousRateSecret=process.env.RATE_LIMIT_SECRET;
+  process.env.RATE_LIMIT_SECRET='http-route-tests';
   try {
     process.env.NODE_ENV='development';
     await adapter.transaction((await import('../scripts/database.mjs')).seed);
@@ -129,6 +131,7 @@ test('HTTP routes reject email-only downloads, cookie-free library and productio
       '@/lib/downloads/access':access,
       '@/lib/auth/server':auth,
       '@/lib/auth/http':http,
+      '@/lib/http-guard':load('lib/http-guard.ts'),
       '@/lib/downloads/account':load('lib/downloads/account.ts'),
       '@/lib/downloads/storage':{signDownload:async()=>{signed++;return {downloadUrl:'https://example.com/signed'};}},
       '@/lib/payments/adapter':load('lib/payments/adapter.ts'),
@@ -166,5 +169,5 @@ test('HTTP routes reject email-only downloads, cookie-free library and productio
     assert.equal((await books.POST(request({}))).status,401);
     assert.equal((await books.DELETE(request({}))).status,401);
     assert.equal((await route('app/api/downloads/[token]/route.ts').GET()).status,410);
-  } finally {if(previous===undefined) delete process.env.NODE_ENV;else process.env.NODE_ENV=previous;await engine.close();}
+  } finally {if(previous===undefined) delete process.env.NODE_ENV;else process.env.NODE_ENV=previous;if(previousRateSecret===undefined)delete process.env.RATE_LIMIT_SECRET;else process.env.RATE_LIMIT_SECRET=previousRateSecret;await engine.close();}
 });
