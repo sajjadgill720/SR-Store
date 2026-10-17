@@ -43,7 +43,7 @@ export default function ImpactStats() {
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#0369A1]/10 to-transparent"></div>
       
       <div className="max-w-7xl mx-auto px-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8" data-stagger="100">
           {stats.map((item) => {
             const Icon = item.icon;
             return (

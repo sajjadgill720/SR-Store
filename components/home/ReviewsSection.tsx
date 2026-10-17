@@ -44,7 +44,7 @@ export default async function ReviewsSection() {
 
         <p className="text-xs text-slate-500 mb-6">Demo content: these sample testimonials illustrate the reading experience and are not verified customer endorsements.</p>
         {/* Reviews Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5" data-stagger="120">
           {REVIEWS_DATA.filter(review => review.isApproved).map((review) => (
             <div
               key={review.id}
