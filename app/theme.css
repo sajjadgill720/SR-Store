@@ -72,23 +72,26 @@
 .admin-access-submit:hover {
   background: var(--color-accent-hover);
   border-color: var(--color-accent-hover);
-  color: #FFFFFF;
-  box-shadow: 0 4px 12px rgba(104, 43, 56, 0.22);
-  transform: translateY(-1px);
+  color: #FFFFFF !important;
+  box-shadow: 0 8px 24px rgba(104, 43, 56, 0.38), 0 3px 8px rgba(104, 43, 56, 0.24);
+  transform: translateY(-2px);
 }
 
 .studio-button.outline,
 .studio-hero .studio-button.outline {
   background: #FFFFFF;
-  color: var(--color-ink);
+  color: var(--color-ink) !important;
   border-color: var(--color-border);
-  box-shadow: 0 1px 3px rgba(36, 33, 31, 0.04);
+  box-shadow: 0 2px 5px rgba(36, 33, 31, 0.06);
 }
 
-.studio-button.outline:hover {
-  background: var(--bg-warm);
+.studio-button.outline:hover,
+.studio-hero .studio-button.outline:hover {
+  background: #FAF6EF;
   border-color: var(--color-accent);
-  color: var(--color-accent);
+  color: var(--color-accent) !important;
+  box-shadow: 0 8px 22px rgba(36, 33, 31, 0.16), 0 2px 6px rgba(104, 43, 56, 0.14);
+  transform: translateY(-2px);
 }
 
 .studio-header .studio-desktop-nav a:hover,
