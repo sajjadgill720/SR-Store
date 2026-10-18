@@ -1,66 +1,173 @@
-/* Shared brand palette. Product covers and semantic status colors remain distinct. */
+/* Knovera — Private Library Design Tokens
+   Warm ivory background: #F7F3EB
+   Deep charcoal text: #24211F
+   Burgundy accent: #682B38
+   Warm neutral surfaces: #EDE7DD
+   Secondary text: #5C5652 (contrast > 4.8:1 on #F7F3EB, WCAG AA/AAA compliant)
+*/
 :root {
-  --store-ink: #17263c;
-  --store-gold: #ffcb77;
-  --store-gold-hover: #ffc05c;
-  --store-green: #3e7564;
-  --store-sage: #edf5f1;
-  --store-canvas: #f1f3f6;
-  --studio-paper: var(--store-canvas);
-  --studio-tint: var(--store-sage);
-  --studio-ink: var(--store-ink);
-  --studio-accent: var(--store-green);
-  --studio-blue-wash: var(--store-sage);
-  --studio-sage-wash: var(--store-sage);
-  --studio-lilac-wash: #f8f1e5;
-  --bg-paper: var(--store-canvas);
-  --bg-cream: var(--store-sage);
-  --bg-warm: #f8f1e5;
-  --color-ink: var(--store-ink);
-  --color-accent: var(--store-green);
-  --color-accent-hover: #305e50;
-  --color-accent-light: #e2eee7;
-  --color-accent-soft: var(--store-sage);
-  --color-gold: var(--store-gold);
-  --color-border: #e4e7ed;
+  --bg-paper: #F7F3EB;
+  --bg-surface: #FFFFFF;
+  --bg-warm: #EDE7DD;
+  --bg-warm-tint: #F2EDE4;
+  --bg-cream: #F5EFEB;
+  --color-ink: #24211F;
+  --color-ink-muted: #5C5652;
+  --color-ink-light: #7A736E;
+  --color-accent: #682B38;
+  --color-accent-hover: #501F2B;
+  --color-accent-light: #F4EBEB;
+  --color-accent-border: #C8A8B0;
+  --color-border: #E3DDD3;
+  --color-border-subtle: #ECE7DE;
+
+  /* Legacy store variable mapping for backwards compatibility */
+  --store-ink: #24211F;
+  --store-gold: #682B38;
+  --store-gold-hover: #501F2B;
+  --store-green: #682B38;
+  --store-sage: #EDE7DD;
+  --store-canvas: #F7F3EB;
+  --store-muted: #5C5652;
+  --store-border: #E3DDD3;
+
+  /* Studio component tokens */
+  --studio-paper: #F7F3EB;
+  --studio-surface: #FFFFFF;
+  --studio-tint: #EDE7DD;
+  --studio-ink: #24211F;
+  --studio-muted: #5C5652;
+  --studio-accent: #682B38;
+  --studio-accent-hover: #501F2B;
+  --studio-line: #E3DDD3;
+  --studio-blue-wash: #EDE7DD;
+  --studio-sage-wash: #F2EDE4;
+  --studio-lilac-wash: #F5EFEB;
+  --studio-radius: 12px;
+  --studio-space: clamp(16px, 3.5vw, 36px);
 }
 
-::selection { background: #d9eee7; color: var(--store-ink); }
+::selection {
+  background: #E8D8DB;
+  color: #24211F;
+}
+
+/* Button & interactive styling */
 .studio-button,
 .studio-hero .studio-button:not(.outline),
 .studio-newsletter .studio-button,
 .admin-access-submit {
-  background: var(--store-gold);
-  border-color: #ecc071;
-  color: var(--store-ink);
-  box-shadow: 0 3px 8px #4330180c;
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #FFFFFF;
+  box-shadow: 0 2px 6px rgba(104, 43, 56, 0.16);
+  font-family: var(--font-sans), sans-serif;
+  letter-spacing: 0.01em;
+  transition: all 0.18s ease;
 }
+
 .studio-button:hover,
 .studio-hero .studio-button:not(.outline):hover,
 .studio-newsletter .studio-button:hover,
 .admin-access-submit:hover {
-  background: var(--store-gold-hover);
-  border-color: #ecc071;
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(104, 43, 56, 0.22);
+  transform: translateY(-1px);
 }
+
 .studio-button.outline,
 .studio-hero .studio-button.outline {
-  background: white;
-  color: var(--store-green);
-  border-color: #c6ddd0;
-  box-shadow: none;
+  background: #FFFFFF;
+  color: var(--color-ink);
+  border-color: var(--color-border);
+  box-shadow: 0 1px 3px rgba(36, 33, 31, 0.04);
 }
-.studio-button.outline:hover { background: var(--store-sage); }
-.studio-header .studio-desktop-nav a:hover,
-.studio-header .studio-icon-button:hover { background: #ffffff12; color: var(--store-gold); }
-.studio-header .studio-mobile-menu a[aria-current] { background: #ffffff12; color: var(--store-gold); }
-.studio-header-placeholder .studio-brand { color: white; }
-.studio-footer-invitation { background: var(--store-sage); border-color: #c6ddd0; }
-.studio-footer-invitation h2 { color: #193c36; }
-.studio-notice { background: var(--store-sage); border-color: #c6ddd0; }
 
-/* Reading preferences keep their paper/sepia/dark surfaces and contrast. */
-.reader-dark .studio-button { background: var(--store-gold); border-color: #ecc071; color: var(--store-ink); }
-.reader-dark .studio-button:hover { background: var(--store-gold-hover); }
-.reader-dark .studio-button.outline { background: transparent; color: #e8edf0; border-color: #697b88; }
-.reader-dark .studio-button.outline:hover { background: #2c4150; }
-.reader-dark .studio-icon-button:hover { background: #2c4150; color: #e8edf0; }
+.studio-button.outline:hover {
+  background: var(--bg-warm);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.studio-header .studio-desktop-nav a:hover,
+.studio-header .studio-icon-button:hover {
+  background: var(--bg-warm);
+  color: var(--color-accent);
+}
+
+.studio-header .studio-mobile-menu a[aria-current] {
+  background: var(--bg-warm);
+  color: var(--color-accent);
+}
+
+.studio-header-placeholder .studio-brand {
+  color: var(--color-ink);
+}
+
+.studio-footer-invitation {
+  background: var(--bg-warm);
+  border-color: var(--color-border);
+}
+
+.studio-footer-invitation h2 {
+  color: var(--color-ink);
+}
+
+.studio-notice {
+  background: var(--bg-warm);
+  border-color: var(--color-border);
+  color: var(--color-ink);
+}
+
+/* Reading preferences */
+.reader-paper {
+  background: #F7F3EB;
+  color: #24211F;
+}
+
+.reader-white {
+  background: #FFFFFF;
+  color: #24211F;
+}
+
+.reader-sepia {
+  background: #EFE6D5;
+  color: #382E24;
+}
+
+.reader-dark {
+  background: #1C1A19;
+  color: #E8E5DF;
+  --studio-ink: #E8E5DF;
+  --studio-muted: #A39D97;
+  --studio-accent: #E5A4B2;
+  --studio-line: #383431;
+}
+
+.reader-dark .studio-button {
+  background: #E5A4B2;
+  border-color: #E5A4B2;
+  color: #1C1A19;
+}
+
+.reader-dark .studio-button:hover {
+  background: #F0BDC8;
+}
+
+.reader-dark .studio-button.outline {
+  background: transparent;
+  color: #E8E5DF;
+  border-color: #4D4744;
+}
+
+.reader-dark .studio-button.outline:hover {
+  background: #2C2826;
+  border-color: #E5A4B2;
+}
+
+.reader-dark .studio-icon-button:hover {
+  background: #2C2826;
+  color: #E8E5DF;
+}
