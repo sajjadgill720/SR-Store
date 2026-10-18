@@ -56,7 +56,7 @@ export default function AdminDashboardPage() {
   const [newBookForm, setNewBookForm] = useState({
     title: '',
     subtitle: '',
-    author: 'S.R. Rehman',
+    author: 'Knovera Editions',
     category: 'Productivity',
     price: '19.99',
     originalPrice: '29.99',
@@ -148,7 +148,7 @@ export default function AdminDashboardPage() {
       setNewBookForm({
         title: '',
         subtitle: '',
-        author: 'S.R. Rehman',
+        author: 'Knovera Editions',
         category: 'Productivity',
         price: '19.99',
         originalPrice: '29.99',

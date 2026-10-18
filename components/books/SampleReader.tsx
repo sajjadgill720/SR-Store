@@ -270,7 +270,7 @@ export default function SampleReader({ book }: { book: Book }) {
 
               <div className="knovera-conclusion-guarantee">
                 <CheckCircle size={15} aria-hidden="true" />
-                <span>30-Day Money-Back Guarantee · Direct from Author S.R. Rehman</span>
+                <span>30-Day Money-Back Guarantee · DRM-Free Universal Edition</span>
               </div>
             </div>
           </section>

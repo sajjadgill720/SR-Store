@@ -26,7 +26,7 @@ const groups = [
   {
     title: 'Imprint & Integrity',
     links: [
-      ['About S.R. Rehman & Knovera', '/about'],
+      ['About Knovera Press', '/about'],
       ['Free reader resources', '/free-resources'],
       ['Reader community', '/community'],
       ['Delivery & refund policy', '/legal/refunds'],
@@ -42,10 +42,10 @@ export default function Footer() {
       <div className="studio-footer-inner">
         <section className="studio-footer-invitation">
           <div className="studio-footer-invitation-copy">
-            <span className="studio-kicker">AUTHOR DISPATCH</span>
-            <h2>Notes from the writing desk.</h2>
+            <span className="studio-kicker">EDITORIAL DISPATCH</span>
+            <h2>Notes from the press.</h2>
             <p>
-              Occasional dispatches from S.R. Rehman on cognitive focus, behavioral leverage,
+              Occasional dispatches on cognitive focus, architectural leverage,
               and systems design. Delivered directly to your inbox without algorithmic noise.
             </p>
           </div>
@@ -60,7 +60,7 @@ export default function Footer() {
               Knovera
             </Link>
             <p className="studio-footer-brand-desc">
-              The independent publishing imprint of S.R. Rehman. Thoughtful digital books designed
+              The independent publishing press of Knovera. Distinctive digital editions designed
               for lifelong reference, deep attention, and deliberate craft.
             </p>
             <div className="studio-footer-pill">
@@ -87,7 +87,7 @@ export default function Footer() {
         </div>
 
         <div className="studio-footer-bottom">
-          <span>© 2026 Knovera · Published independently by S.R. Rehman</span>
+          <span>© 2026 Knovera Press · Distinctive Digital Editions</span>
           <span>Typeset with care in Cormorant Garamond &amp; DM Sans</span>
         </div>
       </div>

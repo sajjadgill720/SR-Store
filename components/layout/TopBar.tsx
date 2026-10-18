@@ -7,7 +7,7 @@ export default function TopBar() {
       <div className="site-announcement-inner">
         <span className="site-announcement-message">
           <BookOpen size={13} aria-hidden="true" className="inline-block mr-1.5 opacity-80" />
-          Direct from author S.R. Rehman · DRM-free universal EPUB &amp; typeset PDF
+          Direct from Knovera Press · DRM-Free Universal EPUB &amp; Typeset PDF
         </span>
         <div className="site-announcement-links">
           <Link href="/help" className="site-announcement-link">

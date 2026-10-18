@@ -13,10 +13,10 @@ export default function AboutPage() {
         <div className="space-y-3 border-b border-[var(--color-border-soft)] pb-8">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[var(--bg-warm)] text-[var(--color-accent)] border border-[#DDD6C8] text-xs font-semibold tracking-wider uppercase">
             <Feather className="w-3.5 h-3.5" />
-            <span>The Author &amp; The Imprint</span>
+            <span>The Independent Digital Press</span>
           </div>
           <h1 className="font-serif text-3xl sm:text-5xl font-bold text-[var(--color-ink)] tracking-tight">
-            About Knovera &amp; S.R. Rehman
+            About Knovera Press
           </h1>
           <p className="text-base sm:text-lg text-[var(--color-ink-muted)] leading-relaxed font-serif italic pt-1">
             &ldquo;Thoughtful digital editions built around high cognitive leverage, deliberate systems, and unbroken depth.&rdquo;
@@ -32,7 +32,7 @@ export default function AboutPage() {
             In an era of relentless algorithmic content, AI-generated book summaries, and manufactured marketing urgency, <strong>Knovera</strong> is dedicated to a quieter, more enduring standard.
           </p>
           <p>
-            Knovera is the personal publishing imprint of <strong>S.R. Rehman</strong>—an engineer, researcher, and independent author. Every title in this catalog is conceived, field-tested, written, and typeset directly by the author. There are no ghostwriters, no arbitrary chapter padding to satisfy spine widths, and no corporate distributors imposing digital restrictions.
+            Knovera is an independent digital press. Every title in this catalog is conceived, field-tested, written, and typeset to exacting editorial standards. There are no ghostwriters, no arbitrary chapter padding to satisfy spine widths, and no corporate distributors imposing digital restrictions.
           </p>
           <p>
             Whether detailing the cognitive architecture of 90-minute focus sessions in <em>The Focused Mind</em>, environmental friction loops in <em>Atomic Architectures</em>, or high-leverage modular software in <em>The Solo Architect</em>, our books are engineered as definitive working references that readers keep on their digital shelves for decades.
@@ -126,7 +126,7 @@ export default function AboutPage() {
             <ArrowRight className="w-4 h-4" />
           </Link>
           <Link href="/contact" className="text-xs sm:text-sm text-[var(--color-ink-muted)] hover:text-[var(--color-accent)] transition-colors">
-            Have a question or reflection? Contact S.R. Rehman &rarr;
+            Have a question or reflection? Contact Knovera Press &rarr;
           </Link>
         </div>
 

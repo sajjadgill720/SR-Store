@@ -152,7 +152,7 @@ export default function BookDetail({ book }: { book: Book }) {
           {book.subtitle && <p className="knovera-product-subtitle">{book.subtitle}</p>}
 
           <p className="knovera-product-byline">
-            Written &amp; published by <strong>{book.author}</strong>
+            Distinctive Edition · <strong>Knovera Press</strong>
           </p>
 
           <p className="knovera-product-lead">{book.shortDescription}</p>
@@ -211,7 +211,7 @@ export default function BookDetail({ book }: { book: Book }) {
               </div>
               <div className="knovera-perk">
                 <Check size={14} className="knovera-perk-icon" aria-hidden="true" />
-                <span>30-day money-back guarantee directly from author</span>
+                <span>30-day money-back guarantee with immediate refund</span>
               </div>
             </div>
 
@@ -263,13 +263,13 @@ export default function BookDetail({ book }: { book: Book }) {
         <div className="knovera-editorial-main">
           {/* Author's Personal Note */}
           <div className="knovera-editorial-block knovera-author-note-card">
-            <span className="studio-kicker">PERSONAL PERSPECTIVE</span>
+            <span className="studio-kicker">EDITORIAL MONOGRAPH</span>
             <h2>{authorNote.heading}</h2>
             <div className="knovera-note-content">
               <p>{authorNote.text}</p>
             </div>
             <div className="knovera-note-signoff">
-              <span>— S.R. Rehman, Author &amp; Publisher</span>
+              <span>— Knovera Editorial Press</span>
             </div>
           </div>
 
@@ -390,7 +390,7 @@ export default function BookDetail({ book }: { book: Book }) {
               <dt>Rights &amp; DRM</dt>
               <dd>DRM-Free Universal License</dd>
               <dt>Publisher</dt>
-              <dd>Knovera Imprint (S.R. Rehman)</dd>
+              <dd>Knovera Press</dd>
             </dl>
             {book.currentEdition.releaseNotes && (
               <p className="knovera-release-notes">
@@ -401,14 +401,14 @@ export default function BookDetail({ book }: { book: Book }) {
 
           {/* Direct Support & Reassurance */}
           <div className="knovera-sidebar-card knovera-support-card">
-            <span className="studio-kicker">PERSONAL SUPPORT</span>
+            <span className="studio-kicker">READER SUPPORT</span>
             <h4>Need assistance?</h4>
             <p>
-              Have a question about Kindle transfer, tablet reading, or companion materials? You can
-              contact S.R. Rehman directly.
+              Have a question about Kindle transfer, tablet reading, or companion materials? We are
+              here to assist you directly.
             </p>
             <Link href="/contact" className="knovera-support-link">
-              Contact author support &rarr;
+              Contact reader support &rarr;
             </Link>
           </div>
         </aside>

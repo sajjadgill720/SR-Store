@@ -38,12 +38,12 @@ function Navigation() {
   return (
     <header className="studio-header">
       <div className="studio-header-inner">
-        <Link href="/" className="studio-brand" aria-label="Knovera — Independent editions by S.R. Rehman">
+        <Link href="/" className="studio-brand" aria-label="Knovera — Distinctive Digital Editions">
           <span className="studio-brand-mark">
             <BookOpen size={20} aria-hidden="true" className="studio-brand-icon" />
             <span className="studio-brand-name">Knovera</span>
           </span>
-          <small className="studio-brand-sub">Independent Editions · S.R. Rehman</small>
+          <small className="studio-brand-sub">Independent Digital Press</small>
         </Link>
 
         <nav className="studio-desktop-nav" aria-label="Main navigation">

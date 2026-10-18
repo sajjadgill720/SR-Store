@@ -32,11 +32,11 @@ export default function Marketplace({ books }: { books: Book[] }) {
       <section className="knovera-hero" aria-labelledby="hero-heading">
         <div className="knovera-hero-container">
           <div className="knovera-hero-grid">
-            {/* Left: Author & Imprint Framing */}
+            {/* Left: Press & Imprint Framing */}
             <div className="knovera-hero-content">
               <div className="knovera-kicker-badge">
                 <span className="knovera-kicker-dot" aria-hidden="true" />
-                <span>INDEPENDENT DIGITAL EDITIONS · S.R. REHMAN</span>
+                <span>DISTINCTIVE DIGITAL EDITIONS · KNOVERA PRESS</span>
               </div>
 
               <h1 id="hero-heading" className="knovera-hero-title">
@@ -44,8 +44,8 @@ export default function Marketplace({ books }: { books: Book[] }) {
               </h1>
 
               <p className="knovera-hero-lead">
-                An intimate collection of carefully researched, independently published ebooks by author
-                and engineer S.R. Rehman. Designed to be referenced for years.
+                An intimate collection of carefully researched, meticulously typeset digital editions
+                engineered for deep synthesis, deliberate practice, and enduring leverage. Built to be referenced for years.
               </p>
 
               {/* Quick Trust Highlights right under lead for immediate confidence */}
@@ -271,59 +271,6 @@ export default function Marketplace({ books }: { books: Book[] }) {
         </div>
       </section>
 
-      {/* 3. AUTHOR PERSPECTIVE: The Voice Behind the Imprint */}
-      <section className="knovera-author-section" aria-labelledby="author-heading">
-        <div className="knovera-container">
-          <div className="knovera-author-wrapper">
-            <div className="knovera-author-letterhead">
-              <span className="studio-kicker">FROM THE AUTHOR’S DESK</span>
-              <h2 id="author-heading" className="knovera-author-heading">
-                A Note on Independent Publishing
-              </h2>
-            </div>
-
-            <div className="knovera-author-body">
-              <p className="knovera-author-quote">
-                &ldquo;Modern web publishing is too often engineered for algorithm compliance, manufactured
-                urgency, and superficial takeaways. I write books for people who still value deep synthesis,
-                unhurried contemplation, and tools they can return to for a decade.&rdquo;
-              </p>
-
-              <div className="knovera-author-text">
-                <p>
-                  Every book published on Knovera is written, researched, typeset, and supported directly
-                  by myself. By maintaining complete independence from traditional corporate distribution,
-                  I can promise three commitments to every reader:
-                </p>
-                <ul className="knovera-author-commitments">
-                  <li>
-                    <strong>Zero digital handcuffs:</strong> Every purchase delivers DRM-free universal
-                    files that you own permanently on your own hard drive and e-readers.
-                  </li>
-                  <li>
-                    <strong>Continuous evolution:</strong> As frameworks are refined in active practice,
-                    revised editions and companion worksheets are automatically updated in your library.
-                  </li>
-                  <li>
-                    <strong>Substantive density:</strong> No ghostwritten chapters, no padding to satisfy
-                    arbitrary spine-width standards. Just distilled leverage from beginning to end.
-                  </li>
-                </ul>
-              </div>
-
-              <div className="knovera-author-signoff">
-                <div className="knovera-author-identity">
-                  <strong>S.R. Rehman</strong>
-                  <span>Author, Engineer, and Founder of Knovera</span>
-                </div>
-                <Link href="/about" className="knovera-author-link">
-                  Read more about the imprint &rarr;
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* 4. THE KNOVERA READING EXPERIENCE / TRUST DETAILS */}
       <section className="knovera-pillars-section" aria-labelledby="pillars-heading">
