@@ -433,3 +433,13 @@ button:active { transform: translateY(1px); }
 }
 @media (min-width: 360px) and (max-width: 639px) { .book-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (hover: none) { .card-hover:hover { transform: none; } }
+@keyframes cta-pulse {
+  0%, 100% {
+    box-shadow: 0 0 6px #E8AAB6;
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 14px #E8AAB6, 0 0 22px rgba(232, 170, 182, 0.5);
+    transform: scale(1.2);
+  }
+}

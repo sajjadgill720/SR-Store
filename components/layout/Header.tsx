@@ -7,6 +7,7 @@ import { useCart } from '../../lib/store/cart';
 
 const links = [
   { href: '/books', label: 'Books' },
+  { href: '/community', label: 'Reader Community' },
   { href: '/about', label: 'About' },
   { href: '/account/library', label: 'My Library' },
 ];
@@ -60,6 +61,21 @@ function Navigation() {
         </nav>
 
         <div className="studio-header-actions">
+          <Link
+            href="/access"
+            className="studio-header-link hidden lg:inline-flex"
+            aria-label="Find past purchases"
+          >
+            Find purchases
+          </Link>
+          <Link
+            href="/help"
+            className="studio-header-link hidden lg:inline-flex"
+            aria-label="Device and reading guidance"
+          >
+            Help &amp; Guidance
+          </Link>
+
           <Link
             href="/cart"
             className="studio-cart-link"

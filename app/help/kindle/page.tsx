@@ -21,7 +21,7 @@ export default function KindleHelpPage() {
         
         <div>
           <span className="text-xs font-bold text-[var(--store-green)] uppercase tracking-widest block mb-1">
-            OFFICIAL AMAZON INTEGRATION
+            E-READER &amp; DEVICE GUIDANCE
           </span>
           <h1 className="font-serif text-2xl sm:text-4xl font-bold text-[var(--store-ink)] mb-3">
             How to Read Your Purchased EPUB on Amazon Kindle

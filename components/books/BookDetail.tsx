@@ -142,7 +142,7 @@ export default function BookDetail({ book }: { book: Book }) {
               <Download size={13} aria-hidden="true" /> DRM-Free
             </span>
             <span className="knovera-spec-pill">
-              <Smartphone size={13} aria-hidden="true" /> Kindle / iPad Ready
+              <Smartphone size={13} aria-hidden="true" /> Kindle &amp; e-Reader Ready
             </span>
           </div>
         </div>
@@ -378,7 +378,7 @@ export default function BookDetail({ book }: { book: Book }) {
               <div className="sp-craft-card">
                 <span className="sp-craft-index">03 · DUAL FORMATS</span>
                 <h4 className="sp-craft-title">{book.material?.formats || 'Reflowable EPUB 3 + 300 DPI Archival PDF'}</h4>
-                <p className="sp-craft-desc">Native integration for Kindle, Apple Books, Kobo, reMarkable, and tablet readers.</p>
+                <p className="sp-craft-desc">Universal compatibility for Kindle (via Send-to-Kindle), Apple Books, Kobo, reMarkable, and tablet readers.</p>
               </div>
               <div className="sp-craft-card">
                 <span className="sp-craft-index">04 · PRESERVATION</span>

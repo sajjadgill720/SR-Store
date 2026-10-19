@@ -7,7 +7,6 @@ import './theme.css';
 import './storefront.css';
 import './refinement.css';
 import { CartProvider } from '../lib/store/cart';
-import TopBar from '../components/layout/TopBar';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import AddToCartModal from '../components/books/AddToCartModal';
@@ -46,7 +45,6 @@ export default function RootLayout({
         <a href="#main-content" className="skip-link">Skip to content</a>
         <CartProvider>
           <Suspense fallback={null}><RouteChrome /></Suspense>
-          <TopBar />
           <Header />
           <main id="main-content" className="flex-1" tabIndex={-1}>
             {children}
