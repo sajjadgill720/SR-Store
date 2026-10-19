@@ -138,15 +138,10 @@ export default function Marketplace({ books }: { books: Book[] }) {
                     </div>
 
                     <div className="knovera-featured-details">
-                      <span className="knovera-genre-tag">{featured.category}</span>
                       <h2 className="knovera-featured-title">
                         <Link href={`/books/${featured.slug}`}>{featured.title}</Link>
                       </h2>
-                      {featured.subtitle && (
-                        <p className="knovera-featured-subtitle">{featured.subtitle}</p>
-                      )}
-
-                      <p className="knovera-featured-desc">{featured.shortDescription}</p>
+                      <p className="knovera-featured-desc">{featured.subtitle || featured.shortDescription}</p>
 
                       <div className="knovera-featured-meta">
                         <div className="knovera-price-group">

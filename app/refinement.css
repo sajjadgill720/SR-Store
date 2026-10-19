@@ -1,7 +1,9 @@
 /* ==========================================================================
-   Knovera Editorial Architecture — Elite & Premium Design System
-   Loaded after legacy styles. Curated luxury palette: Ivory, Velvet Burgundy,
-   Midnight Obsidian, Champagne Gold, and Rich Editorial Garamond.
+   Knovera Editorial Architecture — Elite & Balanced Design System
+   Loaded after legacy styles. Curated luxury palette with tonal depth:
+   - Dark spectrum: Deep Espresso Obsidian (#20171A), Velvet Burgundy (#682B38)
+   - Light spectrum: Warm Parchment (#FAF6EE), Porcelain White (#FFFFFF), Warm Sand (#EFE8DD)
+   Balanced, human typography — zero hyper-zoomed headings.
    ========================================================================== */
 
 :root {
@@ -11,12 +13,61 @@
 
 /* Base smoothing */
 body {
-  background-color: var(--bg-paper);
+  background-color: #FAF7F2;
   color: var(--color-ink);
 }
 
 /* --------------------------------------------------------------------------
-   1. GLOBAL REFINEMENTS & HEADER
+   1. TOP ANNOUNCEMENT BAR (Rich Dark Accent Shade)
+   -------------------------------------------------------------------------- */
+.site-announcement {
+  background: #20171A;
+  color: rgba(247, 243, 235, 0.88);
+  font-family: var(--font-sans), sans-serif;
+  font-size: 11.5px;
+  padding: 8px var(--studio-space, 24px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.site-announcement-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.site-announcement-message {
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: #F0E8DE;
+}
+
+.site-announcement-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.site-announcement-link {
+  color: #E2AAB4;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.18s ease;
+}
+
+.site-announcement-link:hover {
+  color: #FFFFFF;
+}
+
+.site-announcement-separator {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+/* --------------------------------------------------------------------------
+   2. HEADER & NAVIGATION (Luminous Porcelain Light Shade)
    -------------------------------------------------------------------------- */
 .knovera-container,
 .knovera-hero-container {
@@ -24,86 +75,107 @@ body {
 }
 
 .studio-header {
-  background: rgba(247, 243, 235, 0.94);
+  background: rgba(253, 251, 247, 0.94);
   backdrop-filter: blur(24px) saturate(140%);
-  border-bottom: 1px solid var(--refine-line);
-  box-shadow: 0 4px 20px -10px rgba(36, 33, 31, 0.05);
+  border-bottom: 1px solid rgba(36, 33, 31, 0.08);
+  box-shadow: 0 4px 16px -8px rgba(36, 33, 31, 0.04);
 }
 
 .studio-header-inner {
-  min-height: 76px;
-  max-width: 1280px;
+  min-height: 70px;
+  max-width: 1240px;
 }
 
 .studio-brand-name {
   font-family: var(--font-editorial), Georgia, serif;
-  font-size: 30px;
+  font-size: 26px;
   font-weight: 700;
-  letter-spacing: -0.035em;
-  color: var(--color-ink);
+  letter-spacing: -0.03em;
+  color: #24211F;
+}
+
+.studio-brand-sub {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  margin-top: -2px;
 }
 
 .studio-nav-link {
   font-size: 13.5px;
   font-weight: 500;
   letter-spacing: -0.01em;
-  transition: color 0.18s ease;
+  color: #4A4440;
+  padding: 6px 12px;
+  border-radius: 999px;
+  transition: all 0.18s ease;
 }
 
 .studio-nav-link:hover {
   color: var(--color-accent);
+  background: rgba(104, 43, 56, 0.05);
 }
 
 .studio-cart-link {
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid var(--refine-line);
+  background: #F4EFE8;
+  border: 1px solid rgba(36, 33, 31, 0.1);
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #24211F;
   transition: all 0.2s ease;
 }
 
 .studio-cart-link:hover {
   background: #FFFFFF;
   border-color: var(--color-accent);
+  color: var(--color-accent);
   box-shadow: 0 4px 12px rgba(104, 43, 56, 0.12);
 }
 
 /* --------------------------------------------------------------------------
-   2. BUTTONS & INTERACTION DESIGN
+   3. BUTTONS
    -------------------------------------------------------------------------- */
 .studio-button {
   border-radius: 999px;
-  min-height: 48px;
+  min-height: 44px;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 13.5px;
   letter-spacing: -0.01em;
-  padding: 12px 26px;
+  padding: 10px 22px;
   background: var(--color-accent);
   color: #FFFFFF;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 6px 18px -3px rgba(104, 43, 56, 0.35);
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 14px -2px rgba(104, 43, 56, 0.3);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .studio-button:hover {
   background: var(--color-accent-hover);
   color: #FFFFFF !important;
   transform: translateY(-2px);
-  box-shadow: 0 10px 28px -3px rgba(104, 43, 56, 0.5);
+  box-shadow: 0 8px 22px -2px rgba(104, 43, 56, 0.45);
 }
 
 .studio-button.outline {
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.85);
   border: 1px solid rgba(36, 33, 31, 0.16);
   color: var(--color-ink);
-  box-shadow: 0 2px 8px -2px rgba(36, 33, 31, 0.05);
-  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 6px rgba(36, 33, 31, 0.04);
 }
 
 .studio-button.outline:hover {
   background: #FFFFFF;
   border-color: var(--color-accent);
   color: var(--color-accent) !important;
-  box-shadow: 0 8px 20px -4px rgba(36, 33, 31, 0.12);
+  box-shadow: 0 6px 16px -3px rgba(36, 33, 31, 0.1);
   transform: translateY(-2px);
 }
 
@@ -117,53 +189,54 @@ textarea:focus-visible {
 }
 
 /* --------------------------------------------------------------------------
-   3. HERO SECTION: Prestigious Editorial Stage
+   4. HERO SECTION: Elegant, Proportioned & Warm Linen Canvas
    -------------------------------------------------------------------------- */
 .knovera-hero {
-  padding: clamp(52px, 8vw, 108px) 24px 72px;
+  padding: clamp(36px, 4.5vw, 64px) 24px 56px;
   background:
-    radial-gradient(ellipse 70% 50% at 88% 22%, rgba(209, 219, 246, 0.35), transparent 60%),
-    radial-gradient(ellipse 60% 45% at 10% 75%, rgba(247, 220, 210, 0.32), transparent 55%),
-    var(--bg-paper);
+    radial-gradient(ellipse 65% 55% at 85% 15%, rgba(228, 216, 202, 0.55), transparent 60%),
+    linear-gradient(180deg, #FAF6EE 0%, #F2EBE0 100%);
+  border-bottom: 1px solid var(--refine-line);
 }
 
 .knovera-hero-grid {
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(40px, 6vw, 84px);
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: clamp(32px, 4vw, 64px);
   align-items: center;
 }
 
 .knovera-hero-eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 22px;
+  gap: 10px;
+  margin-bottom: 14px;
 }
 
 .knovera-eyebrow-rule {
   display: inline-block;
-  width: 28px;
+  width: 22px;
   height: 1.5px;
   background: var(--color-accent);
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 .knovera-eyebrow-text {
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--color-accent);
 }
 
+/* Balanced, Human-Scaled Headline — No More Hyper-Zoomed Text */
 .knovera-hero-title {
   font-family: var(--font-editorial), Georgia, serif;
-  font-size: clamp(46px, 5.2vw, 76px);
+  font-size: clamp(34px, 3.2vw, 46px);
   font-weight: 600;
-  line-height: 1.05;
-  letter-spacing: -0.025em;
-  max-width: 660px;
-  margin: 0 0 20px;
+  line-height: 1.14;
+  letter-spacing: -0.02em;
+  max-width: 520px;
+  margin: 0 0 16px;
   text-wrap: balance;
   color: var(--color-ink);
 }
@@ -176,28 +249,36 @@ textarea:focus-visible {
 }
 
 .knovera-hero-lead {
-  font-size: 17.5px;
-  line-height: 1.7;
+  font-size: 15.5px;
+  line-height: 1.65;
   max-width: 440px;
   color: var(--color-ink-muted);
+  margin: 0 0 24px;
+}
+
+.knovera-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .knovera-hero-specs {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px 24px;
-  margin: 32px 0 0;
-  padding-top: 24px;
-  border-top: 1px solid var(--refine-line);
+  gap: 12px 20px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(36, 33, 31, 0.08);
 }
 
 .knovera-spec-item {
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 500;
   color: var(--color-ink-muted);
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
 }
 
 .knovera-spec-item svg {
@@ -205,52 +286,40 @@ textarea:focus-visible {
   opacity: 0.85;
 }
 
-.knovera-hero-actions {
-  gap: 14px;
-  flex-wrap: wrap;
-  display: flex;
-  align-items: center;
-  margin-top: 28px;
-}
-
 /* --------------------------------------------------------------------------
-   4. FEATURED BOOK SHOWCASE: Sculpted Gallery Pedestal
+   5. FEATURED SPOTLIGHT CARD (Contrasting Crisp Porcelain White Surface)
    -------------------------------------------------------------------------- */
 .knovera-featured-box,
 .knovera-home .knovera-featured-box {
-  background:
-    radial-gradient(ellipse at 15% 15%, #FFFFFF 0%, transparent 65%),
-    linear-gradient(145deg, #FFFFFF 0%, #FAF5ED 55%, #EFE6DA 100%);
-  border: 1px solid rgba(104, 43, 56, 0.16);
-  border-radius: 26px;
-  padding: 32px;
+  background: #FFFFFF;
+  border: 1px solid rgba(104, 43, 56, 0.12);
+  border-radius: 20px;
+  padding: 24px 26px 20px;
   box-shadow:
-    0 30px 80px -30px rgba(45, 31, 28, 0.22),
-    0 2px 6px rgba(0, 0, 0, 0.03),
-    inset 0 1px 0 #FFFFFF;
+    0 20px 48px -16px rgba(45, 31, 28, 0.14),
+    0 2px 6px rgba(0, 0, 0, 0.02);
   transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .knovera-featured-box:hover {
   box-shadow:
-    0 36px 90px -25px rgba(45, 31, 28, 0.28),
-    inset 0 1px 0 #FFFFFF;
-  border-color: rgba(104, 43, 56, 0.24);
+    0 28px 60px -16px rgba(45, 31, 28, 0.2),
+    0 2px 6px rgba(0, 0, 0, 0.02);
+  border-color: rgba(104, 43, 56, 0.22);
 }
 
 .knovera-spotlight-eyebrow {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 10.5px;
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   color: var(--color-accent);
   text-transform: uppercase;
-  margin-bottom: 20px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--refine-line);
-  width: 100%;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(36, 33, 31, 0.06);
 }
 
 .knovera-spotlight-dot {
@@ -262,52 +331,141 @@ textarea:focus-visible {
   font-weight: 500;
 }
 
+.knovera-featured-layout {
+  grid-template-columns: minmax(110px, 0.65fr) minmax(0, 1fr);
+  gap: 22px;
+  align-items: center;
+  min-height: auto;
+}
+
+.knovera-featured-cover-wrap {
+  max-width: 140px;
+  margin: 0 auto;
+  filter: drop-shadow(0 14px 22px rgba(45, 31, 28, 0.18));
+  transition: transform 0.3s ease;
+}
+
+.knovera-featured-box:hover .knovera-featured-cover-wrap {
+  transform: translateY(-3px) scale(1.02);
+}
+
+.knovera-featured-title {
+  font-family: var(--font-editorial), Georgia, serif;
+  font-size: clamp(20px, 1.8vw, 24px);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  margin: 0 0 8px;
+  color: var(--color-ink);
+}
+
+.knovera-featured-title a {
+  color: var(--color-ink);
+  transition: color 0.18s ease;
+}
+
+.knovera-featured-title a:hover {
+  color: var(--color-accent);
+}
+
+.knovera-featured-desc {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--color-ink-muted);
+  margin: 0 0 14px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.knovera-featured-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(36, 33, 31, 0.06);
+}
+
+.knovera-price-group {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.knovera-price-main {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.knovera-price-original {
+  font-size: 12px;
+  color: var(--color-ink-muted);
+  text-decoration: line-through;
+}
+
+.knovera-format-badge {
+  font-size: 11.5px;
+  color: var(--color-ink-muted);
+}
+
+.knovera-featured-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.knovera-featured-buttons .studio-button {
+  font-size: 12px;
+  min-height: 38px;
+  padding: 8px 16px;
+}
+
 .knovera-hero-edition-tabs {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-  gap: 8px;
-  border-top: 1px solid var(--refine-line);
-  padding-top: 20px;
-  margin-top: 26px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  border-top: 1px solid rgba(36, 33, 31, 0.06);
+  padding-top: 14px;
+  margin-top: 16px;
 }
 
 .knovera-hero-tab-btn {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 3px;
-  padding: 10px 14px;
-  border: 1px solid var(--refine-line);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.6);
+  gap: 2px;
+  padding: 8px 10px;
+  border: 1px solid rgba(36, 33, 31, 0.08);
+  border-radius: 10px;
+  background: #F8F5EE;
   cursor: pointer;
   text-align: left;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
 }
 
 .knovera-hero-tab-btn:hover {
   background: #FFFFFF;
   border-color: var(--color-accent-border);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(104, 43, 56, 0.08);
+  box-shadow: 0 2px 8px rgba(104, 43, 56, 0.08);
 }
 
 .knovera-hero-tab-btn.active {
   background: #FFFFFF;
   border-color: var(--color-accent);
-  box-shadow: 0 4px 16px -2px rgba(104, 43, 56, 0.18), inset 0 0 0 1px var(--color-accent);
+  box-shadow: 0 2px 10px -2px rgba(104, 43, 56, 0.16), inset 0 0 0 1px var(--color-accent);
 }
 
 .knovera-hero-tab-btn .tab-idx {
-  font-size: 10px;
+  font-size: 9.5px;
   font-weight: 700;
   color: var(--color-accent);
   letter-spacing: 0.1em;
 }
 
 .knovera-hero-tab-btn .tab-name {
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 600;
   color: var(--color-ink);
   white-space: nowrap;
@@ -316,250 +474,110 @@ textarea:focus-visible {
   max-width: 100%;
 }
 
-.knovera-featured-layout {
-  grid-template-columns: minmax(130px, 0.8fr) minmax(0, 1fr);
-  gap: 28px;
-  align-items: center;
-}
-
-.knovera-featured-title {
-  font-family: var(--font-editorial), Georgia, serif;
-  font-size: 32px;
-  font-weight: 600;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  color: var(--color-ink);
-}
-
-.knovera-featured-title a:hover {
-  color: var(--color-accent);
-}
-
-.knovera-featured-desc {
-  font-size: 14px;
-  line-height: 1.7;
-  color: var(--color-ink-muted);
-}
-
-.knovera-featured-cta {
-  width: 100%;
-  justify-content: center;
-}
-
-.knovera-featured-buttons .studio-button {
-  font-size: 13px;
-  padding: 13px 20px;
-}
-
-.rotating-showcase {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-}
-
-.rotating-showcase .knovera-featured-layout {
-  min-height: 420px;
-}
-
-.rotating-showcase .knovera-featured-cover-wrap {
-  perspective: 900px;
-  background: transparent;
-  border: 0;
-  box-shadow: none;
-  animation: showcase-arrive 650ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
-}
-
-.rotating-showcase .knovera-cover-link {
-  animation: none;
-  transform: rotate(-4deg) rotateY(-9deg);
-  transform-style: preserve-3d;
-}
-
-.rotating-showcase[data-playing="true"] .knovera-cover-link {
-  animation: showcase-turn 7s ease-in-out infinite;
-}
-
-.rotating-showcase:hover .knovera-cover-link,
-.rotating-showcase:focus-within .knovera-cover-link {
-  animation-play-state: paused;
-}
-
-.rotating-showcase .edition-cover {
-  box-shadow:
-    14px 22px 34px -16px rgba(67, 43, 53, 0.42),
-    0 2px 6px rgba(0, 0, 0, 0.08);
-}
-
-.showcase-controls {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border-top: 1px solid var(--refine-line);
-  padding-top: 22px;
-  margin-top: 26px;
-}
-
-.showcase-position {
-  flex-shrink: 0;
-  font-size: 12px;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  color: var(--color-accent);
-}
-
-.showcase-position > span {
-  color: var(--color-ink-muted);
-}
-
-.showcase-track {
-  display: flex;
-  gap: 6px;
-  flex: 1;
-  min-width: 0;
-  margin: 0 16px;
-  overflow: hidden;
-}
-
-.showcase-track > span {
-  height: 3px;
-  flex: 1;
-  min-width: 2px;
-  max-width: 42px;
-  border-radius: 4px;
-  background: rgba(104, 43, 56, 0.12);
-  transition: background-color 0.25s ease;
-}
-
-.showcase-track > span[data-active="true"] {
-  background: var(--color-accent);
-}
-
-.showcase-control {
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: 44px;
-  height: 44px;
-  border: 1px solid var(--refine-line);
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.75);
-  color: var(--color-ink);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  backdrop-filter: blur(8px);
-}
-
-.showcase-control:hover {
-  background: #FFFFFF;
-  border-color: var(--color-accent-border);
-  color: var(--color-accent);
-  box-shadow: 0 4px 12px rgba(104, 43, 56, 0.12);
-}
-
 /* --------------------------------------------------------------------------
-   5. THE COLLECTION: Bespoke Collector Book Cards
+   6. THE COLLECTION SECTION (Soft Linen Canvas with Crisp White Cards)
    -------------------------------------------------------------------------- */
 .knovera-collection-section {
-  padding-top: 80px;
-  padding-bottom: 80px;
-  border-top: 1px solid var(--refine-line);
+  padding-top: 72px;
+  padding-bottom: 72px;
+  background: #FAF7F2;
 }
 
 .knovera-section-title {
   font-family: var(--font-editorial), Georgia, serif;
-  font-size: clamp(32px, 3.4vw, 46px);
+  font-size: clamp(30px, 3vw, 42px);
   font-weight: 600;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.02em;
   line-height: 1.15;
   color: var(--color-ink);
   text-wrap: balance;
 }
 
 .knovera-section-header {
-  margin-bottom: 40px;
+  margin-bottom: 36px;
 }
 
 .knovera-books-grid {
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
-  gap: 28px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 24px;
 }
 
 .knovera-book-card {
   background: #FFFFFF;
   border: 1px solid rgba(36, 33, 31, 0.08);
-  border-radius: 20px;
-  box-shadow: 0 4px 18px -4px rgba(36, 33, 31, 0.05);
+  border-radius: 18px;
+  box-shadow: 0 4px 16px -4px rgba(36, 33, 31, 0.04);
   overflow: hidden;
   transition:
-    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.35s ease;
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s ease;
 }
 
 .knovera-book-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-5px);
   box-shadow:
-    0 24px 50px -16px rgba(36, 33, 31, 0.16),
+    0 20px 44px -14px rgba(36, 33, 31, 0.14),
     0 0 0 1px rgba(104, 43, 56, 0.12);
   border-color: rgba(104, 43, 56, 0.16);
 }
 
 .knovera-home .knovera-card-cover-container {
   background: radial-gradient(circle at 50% 35%, #FFFFFF 0%, #EDE7DD 100%);
-  border-bottom: 1px solid var(--refine-line);
+  border-bottom: 1px solid rgba(36, 33, 31, 0.08);
   position: relative;
-  padding: 34px 22px 24px;
+  padding: 30px 20px 22px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .knovera-book-card:hover .edition-cover {
-  transform: translateY(-5px) scale(1.03);
-  filter: drop-shadow(0 16px 22px rgba(36, 33, 31, 0.22));
+  transform: translateY(-4px) scale(1.025);
+  filter: drop-shadow(0 14px 20px rgba(36, 33, 31, 0.2));
 }
 
 .knovera-card-edition-chip {
   position: absolute;
-  top: 14px;
-  left: 14px;
+  top: 12px;
+  left: 12px;
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(36, 33, 31, 0.08);
   border-radius: 999px;
-  padding: 3px 10px;
-  font-size: 10px;
+  padding: 3px 9px;
+  font-size: 9.5px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   color: var(--color-ink-muted);
   backdrop-filter: blur(8px);
 }
 
 .knovera-card-badge {
   position: absolute;
-  bottom: 12px;
-  left: 14px;
+  bottom: 10px;
+  left: 12px;
   background: var(--color-accent);
   color: #FFFFFF;
   border-radius: 999px;
-  padding: 3px 10px;
-  font-size: 9.5px;
+  padding: 3px 9px;
+  font-size: 9px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   box-shadow: 0 4px 10px rgba(104, 43, 56, 0.25);
 }
 
 .knovera-card-body {
-  padding: 26px;
+  padding: 22px;
 }
 
 .knovera-card-title {
   font-family: var(--font-editorial), Georgia, serif;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 600;
   line-height: 1.25;
   letter-spacing: -0.015em;
-  margin: 10px 0;
+  margin: 8px 0;
 }
 
 .knovera-card-title a {
@@ -572,8 +590,8 @@ textarea:focus-visible {
 }
 
 .knovera-card-desc {
-  font-size: 14px;
-  line-height: 1.65;
+  font-size: 13.5px;
+  line-height: 1.6;
   color: var(--color-ink-muted);
 }
 
@@ -581,50 +599,50 @@ textarea:focus-visible {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-top: 1px solid var(--refine-line);
-  padding-top: 18px;
-  margin-top: 20px;
+  border-top: 1px solid rgba(36, 33, 31, 0.08);
+  padding-top: 16px;
+  margin-top: 18px;
 }
 
 .knovera-card-price {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 700;
   color: var(--color-ink);
   letter-spacing: -0.01em;
 }
 
 .knovera-btn-sm {
-  min-height: 38px;
-  padding: 8px 16px;
-  font-size: 12.5px;
+  min-height: 36px;
+  padding: 7px 14px;
+  font-size: 12px;
 }
 
 /* --------------------------------------------------------------------------
-   6. DUAL EDITION BOX SET BANNER: Collector Package
+   7. DUAL EDITION BOX SET BANNER (Rich Warm Parchment Shade)
    -------------------------------------------------------------------------- */
 .knovera-bundle-banner {
-  background: linear-gradient(135deg, #FFFFFF 0%, #FDF9F3 50%, #ECE4D4 100%);
+  background: linear-gradient(135deg, #FFFFFF 0%, #FAF4EA 50%, #EFE5D4 100%);
   border: 1px solid rgba(104, 43, 56, 0.18);
-  border-left: 6px solid #682B38;
-  border-radius: 22px;
-  padding: 38px clamp(24px, 4vw, 44px);
-  margin-top: 48px;
+  border-left: 5px solid #682B38;
+  border-radius: 20px;
+  padding: 34px clamp(22px, 3.5vw, 40px);
+  margin-top: 44px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 32px;
+  gap: 28px;
   box-shadow:
-    0 16px 40px -12px rgba(104, 43, 56, 0.12),
+    0 14px 36px -10px rgba(104, 43, 56, 0.1),
     inset 0 1px 0 #FFFFFF;
   transition:
-    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .knovera-bundle-banner:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
   box-shadow:
-    0 24px 55px -12px rgba(104, 43, 56, 0.2),
+    0 20px 48px -10px rgba(104, 43, 56, 0.18),
     inset 0 1px 0 #FFFFFF;
 }
 
@@ -632,82 +650,81 @@ textarea:focus-visible {
   display: inline-block;
   background: #682B38;
   color: #FFFFFF;
-  font-size: 10.5px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.12em;
-  padding: 4px 12px;
+  padding: 4px 10px;
   border-radius: 999px;
-  margin-bottom: 12px;
-  box-shadow: 0 4px 12px rgba(104, 43, 56, 0.25);
+  margin-bottom: 10px;
 }
 
 .knovera-bundle-title {
   font-family: var(--font-editorial), Georgia, serif;
-  font-size: clamp(24px, 2.6vw, 32px);
+  font-size: clamp(22px, 2.4vw, 28px);
   font-weight: 600;
   letter-spacing: -0.02em;
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   color: var(--color-ink);
 }
 
 .knovera-bundle-desc {
-  font-size: 14.5px;
-  line-height: 1.7;
+  font-size: 14px;
+  line-height: 1.65;
   color: var(--color-ink-muted);
-  max-width: 620px;
+  max-width: 580px;
 }
 
 .knovera-bundle-meta {
   display: flex;
   align-items: baseline;
-  gap: 12px;
-  margin-top: 14px;
+  gap: 10px;
+  margin-top: 12px;
 }
 
 .knovera-bundle-price {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
   color: var(--color-accent);
 }
 
 .knovera-bundle-compare {
-  font-size: 13px;
+  font-size: 12.5px;
   color: var(--color-ink-muted);
   text-decoration: line-through;
 }
 
 /* --------------------------------------------------------------------------
-   7. EVERYDAY READERS: Curated Club Perspectives
+   8. EVERYDAY READERS: Curated Stone Shade Canvas
    -------------------------------------------------------------------------- */
 .knovera-home .sp-praise-block {
-  background: #F4EFE7;
-  border-block: 1px solid var(--refine-line);
-  padding: 80px 0;
+  background: #EDE6DC;
+  border-block: 1px solid rgba(36, 33, 31, 0.08);
+  padding: 72px 0;
 }
 
 .reader-profile-note {
-  font-size: 12.5px;
+  font-size: 12px;
   color: var(--color-ink-muted);
-  margin: -16px 0 32px;
+  margin: -14px 0 28px;
 }
 
 .knovera-home .reader-profile {
-  padding: 32px;
+  padding: 28px;
   border: 1px solid rgba(36, 33, 31, 0.08);
-  border-radius: 20px;
+  border-radius: 18px;
   background: #FFFFFF;
-  box-shadow: 0 4px 16px -4px rgba(36, 33, 31, 0.04);
+  box-shadow: 0 4px 14px -4px rgba(36, 33, 31, 0.04);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .knovera-home .reader-profile:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 18px 36px -16px rgba(36, 33, 31, 0.12);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 32px -14px rgba(36, 33, 31, 0.1);
 }
 
 .reader-profile-top {
   display: flex;
-  gap: 14px;
+  gap: 12px;
   align-items: center;
 }
 
@@ -715,45 +732,46 @@ textarea:focus-visible {
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: rgba(104, 43, 56, 0.08);
   color: var(--color-accent);
   font-weight: 700;
-  font-size: 16px;
-  border: 1px solid rgba(104, 43, 56, 0.15);
+  font-size: 15px;
+  border: 1px solid rgba(104, 43, 56, 0.14);
 }
 
 .reader-profile-title {
   font-family: var(--font-editorial), Georgia, serif;
-  font-size: 24px;
+  font-size: 21px;
   font-weight: 600;
   letter-spacing: -0.015em;
-  margin: 24px 0 10px;
+  margin: 20px 0 8px;
   color: var(--color-ink);
 }
 
 .reader-profile-copy {
-  font-size: 15px;
-  line-height: 1.75;
+  font-size: 14.5px;
+  line-height: 1.7;
   color: var(--color-ink-muted);
   margin: 0;
-  max-width: 48ch;
+  max-width: 46ch;
 }
 
 /* --------------------------------------------------------------------------
-   8. REASSURANCE PILLARS: Architectural Trust Grid
+   9. REASSURANCE PILLARS
    -------------------------------------------------------------------------- */
 .knovera-pillars-section {
-  padding-top: 80px;
-  padding-bottom: 80px;
+  padding-top: 72px;
+  padding-bottom: 72px;
+  background: #FAF7F2;
 }
 
 .knovera-pillars-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: 18px;
   border: none;
   border-radius: 0;
 }
@@ -761,47 +779,46 @@ textarea:focus-visible {
 .knovera-pillar-card {
   background: #FFFFFF;
   border: 1px solid rgba(36, 33, 31, 0.08);
-  border-radius: 18px;
-  padding: 34px 26px;
-  box-shadow: 0 4px 16px -4px rgba(36, 33, 31, 0.04);
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  border-radius: 16px;
+  padding: 30px 22px;
+  box-shadow: 0 4px 14px -4px rgba(36, 33, 31, 0.04);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .knovera-pillar-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 18px 36px -12px rgba(36, 33, 31, 0.1);
-  border-color: rgba(104, 43, 56, 0.2);
+  transform: translateY(-3px);
+  box-shadow: 0 14px 28px -10px rgba(36, 33, 31, 0.08);
 }
 
 .knovera-pillar-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
   background: rgba(104, 43, 56, 0.08);
   color: var(--color-accent);
   display: grid;
   place-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
   border: 1px solid rgba(104, 43, 56, 0.12);
 }
 
 .knovera-pillar-title {
   font-family: var(--font-editorial), Georgia, serif;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 600;
   color: var(--color-ink);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   letter-spacing: -0.01em;
 }
 
 .knovera-pillar-desc {
-  font-size: 14px;
-  line-height: 1.7;
+  font-size: 13.5px;
+  line-height: 1.65;
   color: var(--color-ink-muted);
 }
 
 /* ==========================================================================
-   9. THE ULTIMATE ELITE CTA: Knovera Private Dispatch
+   10. THE SHOWSTOPPER CTA (Deep Obsidian Velvet Dark Portion)
    ========================================================================== */
 .studio-footer-invitation {
   position: relative;
@@ -810,17 +827,17 @@ textarea:focus-visible {
   background:
     radial-gradient(ellipse 70% 60% at 85% -10%, rgba(162, 66, 86, 0.44), transparent 70%),
     radial-gradient(ellipse 55% 55% at 15% 110%, rgba(104, 43, 56, 0.4), transparent 70%),
-    linear-gradient(145deg, #161113 0%, #201519 50%, #151012 100%);
+    linear-gradient(145deg, #181215 0%, #22151B 50%, #161113 100%);
   border: 1px solid rgba(230, 195, 205, 0.22);
-  border-radius: 26px;
-  padding: clamp(40px, 5.5vw, 68px) clamp(28px, 5vw, 64px);
+  border-radius: 24px;
+  padding: clamp(36px, 5vw, 60px) clamp(26px, 4.5vw, 56px);
   display: grid;
   grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-  gap: clamp(32px, 5vw, 60px);
+  gap: clamp(28px, 4vw, 52px);
   align-items: center;
-  margin-bottom: 64px;
+  margin-bottom: 56px;
   box-shadow:
-    0 32px 85px -20px rgba(18, 12, 15, 0.55),
+    0 28px 75px -20px rgba(18, 12, 15, 0.55),
     0 1px 0 rgba(255, 255, 255, 0.12) inset;
 }
 
@@ -835,20 +852,20 @@ textarea:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 700;
   letter-spacing: 0.16em;
   color: #E8AAB6;
   text-transform: uppercase;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .studio-kicker-pulse-dot {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: #E8AAB6;
-  box-shadow: 0 0 10px #E8AAB6;
+  box-shadow: 0 0 8px #E8AAB6;
   animation: cta-pulse 2s infinite ease-in-out;
 }
 
@@ -858,26 +875,26 @@ textarea:focus-visible {
     transform: scale(1);
   }
   50% {
-    box-shadow: 0 0 14px #E8AAB6, 0 0 24px rgba(232, 170, 182, 0.5);
+    box-shadow: 0 0 14px #E8AAB6, 0 0 22px rgba(232, 170, 182, 0.5);
     transform: scale(1.2);
   }
 }
 
 .studio-footer-invitation-copy h2 {
   font-family: var(--font-editorial), Georgia, serif;
-  font-size: clamp(34px, 3.8vw, 50px);
+  font-size: clamp(30px, 3.4vw, 44px);
   font-weight: 600;
-  line-height: 1.1;
+  line-height: 1.12;
   letter-spacing: -0.02em;
   color: #FFFFFF;
   text-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
-  margin: 0 0 16px;
+  margin: 0 0 14px;
 }
 
 .studio-footer-invitation-copy p {
   color: rgba(247, 243, 235, 0.82);
-  font-size: 15.5px;
-  line-height: 1.75;
+  font-size: 15px;
+  line-height: 1.7;
   max-width: 48ch;
   margin: 0;
 }
@@ -885,21 +902,21 @@ textarea:focus-visible {
 .studio-footer-perks {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 28px;
+  gap: 8px;
+  margin-top: 24px;
 }
 
 .studio-footer-perk-item {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  font-size: 12px;
+  gap: 6px;
+  font-size: 11.5px;
   font-weight: 500;
   color: #F0E8DD;
   background: rgba(255, 255, 255, 0.07);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 999px;
-  padding: 6px 14px;
+  padding: 5px 12px;
   backdrop-filter: blur(10px);
 }
 
@@ -910,14 +927,14 @@ textarea:focus-visible {
 }
 
 .studio-newsletter-header {
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .studio-newsletter-label {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  font-size: 11.5px;
+  gap: 6px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.12em;
   color: #E8AAB6;
@@ -930,7 +947,7 @@ textarea:focus-visible {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 999px;
-  padding: 6px 6px 6px 18px;
+  padding: 5px 5px 5px 16px;
   backdrop-filter: blur(20px);
   box-shadow:
     inset 0 2px 6px rgba(0, 0, 0, 0.35),
@@ -950,7 +967,7 @@ textarea:focus-visible {
 .studio-newsletter-input-wrap {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   flex: 1;
   min-width: 0;
 }
@@ -965,10 +982,10 @@ textarea:focus-visible {
   background: transparent;
   border: none;
   outline: none;
-  font-size: 15px;
+  font-size: 14.5px;
   color: #FFFFFF;
   font-family: var(--font-sans), sans-serif;
-  padding: 8px 0;
+  padding: 6px 0;
 }
 
 .studio-newsletter-input::placeholder {
@@ -980,18 +997,18 @@ textarea:focus-visible {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 7px;
   background: linear-gradient(135deg, #A84157 0%, #762637 100%);
   color: #FFFFFF;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 13.5px;
   letter-spacing: 0.01em;
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 999px;
-  padding: 13px 26px;
+  padding: 11px 22px;
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 6px 20px -3px rgba(168, 65, 87, 0.6);
+  box-shadow: 0 4px 18px -2px rgba(168, 65, 87, 0.6);
   flex-shrink: 0;
   white-space: nowrap;
 }
@@ -999,7 +1016,7 @@ textarea:focus-visible {
 .studio-newsletter-submit:hover:not(:disabled) {
   transform: translateY(-1px) scale(1.02);
   background: linear-gradient(135deg, #BD4B64 0%, #892D40 100%);
-  box-shadow: 0 10px 28px -3px rgba(168, 65, 87, 0.85);
+  box-shadow: 0 8px 24px -2px rgba(168, 65, 87, 0.85);
 }
 
 .studio-newsletter-submit:disabled {
@@ -1008,38 +1025,35 @@ textarea:focus-visible {
 }
 
 .studio-newsletter-footer {
-  margin-top: 12px;
+  margin-top: 10px;
 }
 
 .studio-newsletter .studio-caption {
-  font-size: 12.5px;
+  font-size: 12px;
   color: rgba(247, 243, 235, 0.65);
   line-height: 1.6;
 }
 
 .studio-newsletter .studio-error {
   color: #F87171;
-  font-size: 13px;
-  margin-top: 10px;
+  font-size: 12.5px;
+  margin-top: 8px;
 }
 
 /* --------------------------------------------------------------------------
-   10. RESPONSIVE BREAKPOINTS
+   11. RESPONSIVE BREAKPOINTS
    -------------------------------------------------------------------------- */
 @media (max-width: 1000px) {
   .knovera-hero-grid {
     grid-template-columns: 1fr;
-    max-width: 720px;
+    max-width: 680px;
     margin: auto;
   }
   .knovera-hero-title {
-    max-width: 640px;
+    max-width: 600px;
   }
   .knovera-featured-box {
     width: 100%;
-  }
-  .knovera-hero-lead {
-    max-width: 520px;
   }
   .knovera-pillars-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1060,13 +1074,13 @@ textarea:focus-visible {
 @media (max-width: 900px) {
   .studio-footer-invitation {
     grid-template-columns: 1fr;
-    gap: 36px;
-    padding: 36px 24px;
+    gap: 32px;
+    padding: 32px 20px;
   }
   .studio-newsletter-capsule {
     flex-direction: column;
-    border-radius: 20px;
-    padding: 14px 16px;
+    border-radius: 18px;
+    padding: 12px 14px;
     align-items: stretch;
   }
   .studio-newsletter-submit {
@@ -1083,45 +1097,53 @@ textarea:focus-visible {
 }
 
 @media (max-width: 600px) {
+  .site-announcement {
+    display: none;
+  }
   .studio-header-inner {
-    min-height: 64px;
+    min-height: 60px;
   }
   .knovera-hero {
-    padding: 44px 20px;
+    padding: 32px 16px 44px;
   }
   .knovera-hero-title {
-    font-size: clamp(38px, 10vw, 50px);
+    font-size: clamp(30px, 8vw, 38px);
   }
   .knovera-hero-lead {
-    font-size: 16px;
+    font-size: 15px;
   }
   .knovera-featured-box {
-    padding: 22px;
-    border-radius: 20px;
+    padding: 18px;
+    border-radius: 16px;
   }
   .knovera-featured-layout {
     grid-template-columns: 1fr;
+    text-align: center;
   }
   .knovera-featured-cover-wrap {
-    max-width: 200px;
-    margin: 16px auto 28px;
+    max-width: 130px;
+    margin: 10px auto 18px;
   }
   .knovera-featured-title {
-    font-size: 28px;
+    font-size: 21px;
+  }
+  .knovera-featured-buttons {
+    flex-direction: column;
+  }
+  .knovera-featured-buttons .studio-button {
+    width: 100%;
+    justify-content: center;
   }
   .knovera-pillars-grid {
     grid-template-columns: 1fr;
   }
   .knovera-collection-section,
   .knovera-pillars-section {
-    padding-top: 52px;
-    padding-bottom: 52px;
+    padding-top: 48px;
+    padding-bottom: 48px;
   }
-  .rotating-showcase .knovera-featured-layout {
-    min-height: 0;
-  }
-  .showcase-track {
-    margin-inline: 5px;
+  .knovera-hero-edition-tabs {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -1138,14 +1160,6 @@ textarea:focus-visible {
   .reader-profile:hover {
     transform: none;
   }
-  .rotating-showcase .knovera-featured-cover-wrap,
-  .rotating-showcase[data-playing="true"] .knovera-cover-link {
-    animation: none;
-  }
-  .rotating-showcase .knovera-cover-link {
-    transform: none;
-  }
-  .knovera-kicker-dot,
   .studio-kicker-pulse-dot {
     animation: none;
   }
