@@ -52,36 +52,75 @@ function Navigation() {
   }, [menuOpen]);
 
   return (
-    <header className="print-running-head studio-header hairline-bottom">
-      {/* 1. TOP RUNNING HEAD RULE */}
+    <header className="print-running-head studio-header">
       <div className="running-head-bar">
         <div className="running-head-inner">
-          <Link href="/" className="running-head-left" aria-label="Knovera Press — Home">
-            <span className="running-head-brand">KNOVERA PRESS</span>
-            <span className="running-head-meta hidden sm:inline">· EST. 2026</span>
+          <Link href="/" className="running-head-brand-link" aria-label="KNOVERA — Home">
+            <span className="running-head-brand">KNOVERA</span>
           </Link>
 
-          <div className="running-head-center">
-            <span className="running-head-section">{section}</span>
-          </div>
+          {/* Desktop Single-Tier Navigation matching reference design */}
+          <nav className="running-head-nav hidden md:flex" aria-label="Primary navigation">
+            <Link
+              href="/books"
+              className={`running-head-link ${active('/books') ? 'is-active' : ''}`}
+              aria-current={active('/books') ? 'page' : undefined}
+            >
+              <span className="running-head-numeral">i.</span>
+              <span className="running-head-title">Ebooks</span>
+            </Link>
+
+            <Link
+              href="/community"
+              className={`running-head-link ${active('/community') ? 'is-active' : ''}`}
+              aria-current={active('/community') ? 'page' : undefined}
+            >
+              <span className="running-head-numeral">ii.</span>
+              <span className="running-head-title">Reader Community</span>
+            </Link>
+
+            <Link
+              href="/about"
+              className={`running-head-link ${active('/about') || active('/colophon') ? 'is-active' : ''}`}
+              aria-current={active('/about') || active('/colophon') ? 'page' : undefined}
+            >
+              <span className="running-head-numeral">iii.</span>
+              <span className="running-head-title">Colophon</span>
+            </Link>
+
+            <Link
+              href="/account/library"
+              className={`running-head-link ${active('/account/library') ? 'is-active' : ''}`}
+              aria-current={active('/account/library') ? 'page' : undefined}
+            >
+              <span className="running-head-numeral">iv.</span>
+              <span className="running-head-title">Library</span>
+            </Link>
+
+            <Link
+              href="/newsletter"
+              className={`running-head-link ${active('/newsletter') ? 'is-active' : ''}`}
+              aria-current={active('/newsletter') ? 'page' : undefined}
+            >
+              <span className="running-head-numeral">v.</span>
+              <span className="running-head-title">Dispatch</span>
+            </Link>
+          </nav>
 
           <div className="running-head-right">
-            <span className="running-head-folio" aria-label={`Folio page number ${folio}`}>{folio}</span>
-            <span className="running-head-divider" aria-hidden="true">·</span>
             <Link
               href="/cart"
-              className="running-head-cart"
-              aria-label={`Order slip with ${cartCount} ${cartCount === 1 ? 'edition' : 'editions'}`}
+              className="running-head-cart-link"
+              aria-label={`Cart with ${cartCount} ${cartCount === 1 ? 'item' : 'items'}`}
             >
-              <span>[ Cart</span>
-              <span className="running-head-cart-num">{cartCount.toString().padStart(2, '0')}</span>
-              <span>]</span>
+              <ShoppingBag size={15} aria-hidden="true" className="running-head-cart-icon" />
+              <span>Cart ({cartCount})</span>
             </Link>
 
             <button
               ref={trigger}
-              className="running-head-trigger sm:hidden"
-              aria-label={menuOpen ? 'Close index menu' : 'Open table of contents'}
+              className="running-head-trigger md:hidden"
+              aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
               aria-controls="print-mobile-toc"
               aria-expanded={menuOpen}
               onClick={() => setMenuOpen(!menuOpen)}
@@ -92,40 +131,19 @@ function Navigation() {
         </div>
       </div>
 
-      {/* 2. TABLE OF CONTENTS BAR (Desktop dot-leader navigation) */}
-      <nav className="running-head-toc hidden sm:block" aria-label="Table of Contents navigation">
-        <div className="running-head-toc-inner">
-          {tableOfContents.map((item, idx) => (
-            <div key={item.href} className="running-head-toc-item">
-              <Link
-                href={item.href}
-                className={`running-head-toc-link ${active(item.href) ? 'is-active' : ''}`}
-                aria-current={active(item.href) ? 'page' : undefined}
-              >
-                <span className="running-head-roman">{item.roman}.</span>
-                <span className="running-head-label">{item.label}</span>
-              </Link>
-              {idx < tableOfContents.length - 1 && (
-                <span className="running-head-leader" aria-hidden="true">············</span>
-              )}
-            </div>
-          ))}
-          <div className="running-head-toc-spacer" />
-          <div className="running-head-toc-utility">
-            <Link href="/access" className="running-head-util-link">Access</Link>
-            <span className="running-head-util-divider">/</span>
-            <Link href="/help" className="running-head-util-link">Help</Link>
-          </div>
-        </div>
-      </nav>
-
-      {/* 3. MOBILE FOLIO DRAWER */}
+      {/* MOBILE DRAWER */}
       {menuOpen && (
-        <nav id="print-mobile-toc" className="print-mobile-drawer hairline-top" aria-label="Mobile Table of Contents">
+        <nav id="print-mobile-toc" className="print-mobile-drawer hairline-top" aria-label="Mobile navigation">
           <div className="print-mobile-drawer-inner">
-            <span className="print-mobile-eyebrow">TABLE OF CONTENTS</span>
+            <span className="print-mobile-eyebrow">SECTIONS</span>
             <ol className="print-mobile-list">
-              {tableOfContents.map(item => (
+              {[
+                { roman: 'i.', href: '/books', label: 'Ebooks' },
+                { roman: 'ii.', href: '/community', label: 'Reader Community' },
+                { roman: 'iii.', href: '/about', label: 'Colophon' },
+                { roman: 'iv.', href: '/account/library', label: 'Library' },
+                { roman: 'v.', href: '/newsletter', label: 'Dispatch' },
+              ].map(item => (
                 <li key={item.href} className="print-mobile-item">
                   <Link
                     href={item.href}
@@ -133,7 +151,7 @@ function Navigation() {
                     onClick={() => setMenuOpen(false)}
                     aria-current={active(item.href) ? 'page' : undefined}
                   >
-                    <span className="print-mobile-roman">{item.roman}.</span>
+                    <span className="print-mobile-roman">{item.roman}</span>
                     <span className="print-mobile-label">{item.label}</span>
                     <span className="print-mobile-dots" aria-hidden="true">························</span>
                   </Link>

@@ -56,150 +56,134 @@ export default function Marketplace({ books }: { books: Book[] }) {
 
   return (
     <div className="knovera-home">
-      {/* 1. HERO SHOWCASE: Distinctive, editorial, no oversized empty hero */}
-      <section className="knovera-hero" aria-labelledby="hero-heading">
-        <div className="knovera-hero-container">
-          <div className="knovera-hero-grid">
-            {/* Left: Press & Imprint Framing */}
-            <div className="knovera-hero-content">
-              <h1 id="hero-heading" className="knovera-hero-title">
-                Books engineered for
-                <br />
-                <em>unbroken focus</em> &amp; leverage.
+      {/* 1. HERO SECTION MATCHING REFERENCE DESIGN */}
+      <section className="hero-pic-section" aria-labelledby="hero-pic-heading">
+        <div className="hero-pic-container">
+          <div className="hero-pic-grid">
+            {/* Left: Headline, Description & CTAs */}
+            <div className="hero-pic-left">
+              <span className="hero-pic-kicker">EBOOKS · GUIDES · TEMPLATES</span>
+
+              <h1 id="hero-pic-heading" className="hero-pic-headline">
+                Read it tonight.<br />
+                <span className="hero-pic-headline-italic">Keep it for good.</span>
               </h1>
 
-              <p className="knovera-hero-lead">
-                Definitive digital reference editions on cognitive architecture, systems design,
-                and high-leverage craft. Archival typesetting, completely DRM-free, and designed for decades of reference.
+              <p className="hero-pic-lead">
+                Ebooks and working files on cognitive focus, architectural leverage and systems design.
+                Paid for once, delivered to your inbox, readable on any device.
               </p>
 
-              <div className="knovera-hero-actions">
-                <a href="#collection" className="studio-button knovera-hero-cta">
-                  <span>Explore the Collection</span>
-                  <ArrowRight size={16} aria-hidden="true" />
-                </a>
-                {featured && featured.sampleExcerpt.trim() && (
-                  <Link
-                    href={`/samples/${featured.slug}`}
-                    className="studio-button outline knovera-hero-sample-btn"
-                  >
-                    <BookOpen size={16} aria-hidden="true" />
-                    <span>Read Free Sample</span>
-                  </Link>
-                )}
+              <div className="hero-pic-actions">
+                <Link href="/books" className="hero-pic-cta-primary">
+                  <span>Browse the catalogue</span>
+                  <span className="hero-pic-cta-arrow" aria-hidden="true">→</span>
+                </Link>
+
+                <Link href="/samples/the-focused-mind" className="hero-pic-sample-link">
+                  Read a free sample
+                </Link>
               </div>
 
-              {/* Quick Trust Highlights right under actions for immediate confidence */}
-              <div className="knovera-hero-specs" aria-label="Format specifications">
-                <div className="knovera-spec-item">
-                  <Download size={14} aria-hidden="true" />
-                  <span>DRM-Free EPUB &amp; Typeset PDF</span>
-                </div>
-                <div className="knovera-spec-item">
-                  <Smartphone size={14} aria-hidden="true" />
-                  <span>Kindle &amp; Apple Books Ready</span>
-                </div>
-                <div className="knovera-spec-item">
-                  <ShieldCheck size={14} aria-hidden="true" />
-                  <span>Lifetime Revisions Included</span>
-                </div>
+              {/* Formats specification line with dashed rule */}
+              <div className="hero-pic-formats" aria-label="Available formats">
+                <span className="hero-pic-formats-lead">Available as</span>
+                <span className="hero-pic-formats-dash" aria-hidden="true" />
+                <span className="hero-pic-formats-tags">Kindle · EPUB · PDF</span>
               </div>
             </div>
 
-            {/* Right: Featured Book Spotlight with visible price and zero fold delay */}
-            {featured && (
-              <div id="featured-book" className="knovera-featured-box rotating-showcase" ref={showcase} role="region" aria-roledescription="carousel" aria-label="Discover books" data-playing={autoRotate}>
-                <div className="knovera-featured-card">
-                  <div className="knovera-spotlight-eyebrow">
-                    <span className="knovera-spotlight-label">FEATURED TITLE</span>
-                    <span className="knovera-spotlight-dot" aria-hidden="true">·</span>
-                    <span className="knovera-spotlight-cat">{featured.category}</span>
+            {/* Right: 3D Fanned 3-Book Stack & Instant Delivery Stamp */}
+            <div className="hero-pic-right">
+              <div className="hero-pic-fan-wrap" role="region" aria-label="Featured publications">
+                {/* Book 1: Back Left (Sand/oatmeal cover) */}
+                <Link
+                  href="/books/the-focused-mind"
+                  className="hero-pic-book hero-pic-book-sand"
+                  aria-label="Cognitive Focus by Knovera Press"
+                >
+                  <div className="hero-pic-book-texture" />
+                  <div className="hero-pic-book-content">
+                    <span className="hero-pic-book-press">KNOVERA PRESS</span>
+                    <div className="hero-pic-book-sand-title-wrap">
+                      <span className="hero-pic-book-sand-title">Cognitive</span>
+                      <span className="hero-pic-book-sand-title">Focus</span>
+                    </div>
+                    <div className="hero-pic-book-sand-rule" />
                   </div>
+                </Link>
 
-                  <div className="knovera-featured-layout" role="group" aria-roledescription="slide" aria-label={`${selectedIndex + 1} of ${books.length}: ${featured.title}`}>
-                    <div className="knovera-featured-cover-wrap" key={featured.id}>
-                      <Link
-                        href={`/books/${featured.slug}`}
-                        aria-label={`View details for ${featured.title}`}
-                        className="knovera-cover-link"
-                      >
-                        <BookCover
-                          src={featured.coverImage}
-                          title={featured.title}
-                          priority={true}
-                          size="feature"
-                        />
-                      </Link>
+                {/* Book 2: Back Right (Umber cover) */}
+                <Link
+                  href="/books"
+                  className="hero-pic-book hero-pic-book-umber"
+                  aria-label="Knovera Press Publications"
+                >
+                  <div className="hero-pic-book-texture" />
+                  <div className="hero-pic-book-content">
+                    <span className="hero-pic-book-press">KNOVERA PRESS</span>
+                  </div>
+                </Link>
+
+                {/* Book 3: Front Center (Dark charcoal buckram with amber ribbon) */}
+                <Link
+                  href="/books/atomic-architectures"
+                  className="hero-pic-book hero-pic-book-front"
+                  aria-label="Architectural Leverage by Knovera Press"
+                >
+                  <div className="hero-pic-book-texture" />
+                  {/* Amber Notched Ribbon Bookmark */}
+                  <div className="hero-pic-ribbon" aria-hidden="true" />
+
+                  <div className="hero-pic-book-content hero-pic-front-content">
+                    <div className="hero-pic-front-header">
+                      <span className="hero-pic-front-press">KNOVERA PRESS</span>
                     </div>
 
-                    <div className="knovera-featured-details">
-                      <h2 className="knovera-featured-title">
-                        <Link href={`/books/${featured.slug}`}>{featured.title}</Link>
+                    <div className="hero-pic-front-title-block">
+                      <h2 className="hero-pic-front-title">
+                        Architectural<br />
+                        <span className="hero-pic-front-title-italic">Leverage</span>
                       </h2>
-                      <p className="knovera-featured-desc">{featured.subtitle || featured.shortDescription}</p>
+                      <div className="hero-pic-front-rule" />
+                    </div>
 
-                      <div className="knovera-featured-meta">
-                        <div className="knovera-price-group">
-                          <span className="knovera-price-main">
-                            {money(featured.price)}
-                            <small> USD</small>
-                          </span>
-                          {featured.originalPrice && (
-                            <span className="knovera-price-original">
-                              {money(featured.originalPrice)}
-                            </span>
-                          )}
-                        </div>
-                        <span className="knovera-format-badge">
-                          {formatsLabel(featured.formats)}{featured.pageCount ? ` · ${featured.pageCount} pages` : ''}
-                        </span>
-                      </div>
-
-                      <div className="knovera-featured-buttons">
-                        <Link
-                          href={`/books/${featured.slug}`}
-                          className="studio-button knovera-featured-cta"
-                          aria-label={`View Edition and Purchase ${featured.title} for ${money(featured.price)}`}
-                        >
-                          <span>View edition</span><ArrowRight size={16} aria-hidden="true" />
-                        </Link>
-                        {featured.sampleExcerpt.trim() && (
-                          <Link
-                            href={`/samples/${featured.slug}`}
-                            className="studio-button outline knovera-action-sample"
-                          >
-                            <BookOpen size={16} aria-hidden="true" />
-                            Read Free Sample Excerpt
-                          </Link>
-                        )}
-                      </div>
+                    <div className="hero-pic-front-footer">
+                      <span className="hero-pic-front-author">02 · [AUTHOR]</span>
                     </div>
                   </div>
+                </Link>
+
+                {/* Circular Postmark Stamp overlapping bottom-left corner of front book */}
+                <div className="hero-pic-stamp" aria-hidden="true">
+                  <svg viewBox="0 0 160 160" className="hero-pic-stamp-svg">
+                    <defs>
+                      <path
+                        id="hero-stamp-path-circle"
+                        d="M 80, 80 m -56, 0 a 56,56 0 1,1 112,0 a 56,56 0 1,1 -112,0"
+                      />
+                    </defs>
+                    <circle cx="80" cy="80" r="70" fill="none" stroke="currentColor" strokeWidth="1.4" strokeDasharray="4 2.5" opacity="0.85" />
+                    <circle cx="80" cy="80" r="64" fill="none" stroke="currentColor" strokeWidth="0.8" opacity="0.65" />
+                    <circle cx="80" cy="80" r="45" fill="none" stroke="currentColor" strokeWidth="0.8" opacity="0.5" />
+                    <text fill="currentColor" className="hero-pic-stamp-curved-text">
+                      <textPath href="#hero-stamp-path-circle" startOffset="50%" textAnchor="middle">
+                        • INSTANT DELIVERY • KINDLE • EPUB • PDF •
+                      </textPath>
+                    </text>
+                    <text x="80" y="75" textAnchor="middle" fill="currentColor" className="hero-pic-stamp-title">
+                      Digital
+                    </text>
+                    <text x="80" y="93" textAnchor="middle" fill="currentColor" className="hero-pic-stamp-sub">
+                      editions
+                    </text>
+                  </svg>
                 </div>
-                {canRotate && (
-                  <div className="knovera-hero-edition-tabs" role="tablist" aria-label="Select spotlight volume">
-                    {books.map((book, idx) => (
-                      <button
-                        key={book.id}
-                        type="button"
-                        role="tab"
-                        aria-selected={book.id === featured.id}
-                        className={`knovera-hero-tab-btn ${book.id === featured.id ? 'active' : ''}`}
-                        onClick={() => {
-                          setPlaying(false);
-                          setSelectedId(book.id);
-                        }}
-                      >
-                        <span className="tab-idx">{String(idx + 1).padStart(2, '0')}</span>
-                        <span className="tab-name">{book.title.split(':')[0]}</span>
-                      </button>
-                    ))}
-                  </div>
-                )}
               </div>
-            )}
+            </div>
           </div>
         </div>
+        <div className="hero-pic-bottom-rule" aria-hidden="true" />
       </section>
 
       {/* 2. THE COMPLETE COLLECTION */}
