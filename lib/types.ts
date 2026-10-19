@@ -53,6 +53,22 @@ export interface Book {
   isPublished: boolean;
   isInStock: boolean;
   featured?: boolean;
+  praiseList?: {
+    quote: string;
+    author: string;
+    role: string;
+  }[];
+  material?: {
+    typography: string;
+    typesetting: string;
+    formats: string;
+    preservation: string;
+  };
+  palette?: {
+    accent: string;
+    ambient: string;
+    surface: string;
+  };
 }
 
 export interface BundleOffer {

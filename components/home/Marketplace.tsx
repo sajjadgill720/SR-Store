@@ -130,9 +130,30 @@ export default function Marketplace({ books }: { books: Book[] }) {
                       <div className="knovera-featured-buttons">
                         <Link
                           href={`/books/${featured.slug}`}
-                          className="studio-button knovera-action-main"
+                          className="sp-buy-button"
+                          aria-label={`View Edition and Purchase ${featured.title} for ${money(featured.price)}`}
                         >
-                          View Edition &amp; Contents
+                          <div className="sp-buy-hover-bar" aria-hidden="true" />
+                          <div className="sp-buy-content">
+                            <div className="sp-buy-title">
+                              <span className="sp-buy-label">Order Digital Master Edition</span>
+                              <span className="sp-buy-sublabel">Reflowable EPUB + Typeset PDF</span>
+                            </div>
+                            <div className="sp-buy-pricing">
+                              {money(featured.price)}
+                              <small>USD</small>
+                            </div>
+                          </div>
+                          <div className="sp-buy-icon-chamber" aria-hidden="true">
+                            <div className="sp-buy-arrow-pair">
+                              <svg className="sp-buy-arrow-1" viewBox="0 0 9 9">
+                                <path d="M1.27308 8.6948L6.64773 3.31482L6.63707 7.34714H8.38423V0.305237H1.34766L1.337 2.04174H5.37464L0 7.42171L1.27308 8.6948Z"/>
+                              </svg>
+                              <svg className="sp-buy-arrow-2" viewBox="0 0 9 9">
+                                <path d="M1.27308 8.6948L6.64773 3.31482L6.63707 7.34714H8.38423V0.305237H1.34766L1.337 2.04174H5.37464L0 7.42171L1.27308 8.6948Z"/>
+                              </svg>
+                            </div>
+                          </div>
                         </Link>
                         {featured.sampleExcerpt.trim() && (
                           <Link
@@ -140,7 +161,7 @@ export default function Marketplace({ books }: { books: Book[] }) {
                             className="studio-button outline knovera-action-sample"
                           >
                             <BookOpen size={16} aria-hidden="true" />
-                            Read Sample (Free)
+                            Read Free Sample Excerpt
                           </Link>
                         )}
                       </div>
@@ -271,6 +292,67 @@ export default function Marketplace({ books }: { books: Book[] }) {
         </div>
       </section>
 
+      {/* 3. EDITORIAL PRAISE & CRITICAL RECEPTION (Stripe Press Signature) */}
+      <section className="sp-praise-block" aria-labelledby="praise-heading">
+        <div className="knovera-container">
+          <div className="sp-section-kicker">
+            <span className="sp-dash" aria-hidden="true" />
+            <span className="sp-kicker-text">PRAISE &amp; CRITICAL ACCLAIM</span>
+          </div>
+          <div className="knovera-section-header">
+            <div>
+              <h2 id="praise-heading" className="knovera-section-title">
+                Endorsements from practitioners &amp; builders.
+              </h2>
+            </div>
+            <p className="knovera-section-sub">
+              Ideas tested in production environments, research laboratories, and daily craft.
+            </p>
+          </div>
+
+          <div className="sp-praise-grid">
+            <div className="sp-praise-card">
+              <blockquote className="sp-praise-quote">
+                &ldquo;The Focused Mind is the single clearest blueprint for knowledge workers drowning in digital noise. It replaced our team&rsquo;s chaotic sprint habits with genuine, unhurried depth.&rdquo;
+              </blockquote>
+              <div className="sp-praise-author">
+                <span className="sp-praise-name">Dr. Helena Vance</span>
+                <span className="sp-praise-role">Director of Cognitive Systems, Applied Research Lab</span>
+              </div>
+            </div>
+
+            <div className="sp-praise-card">
+              <blockquote className="sp-praise-quote">
+                &ldquo;Finally, a book on habit formation that discards the exhausted moralizing about willpower and treats daily behavior as a rigorous engineering challenge.&rdquo;
+              </blockquote>
+              <div className="sp-praise-author">
+                <span className="sp-praise-name">Marcus Thorne</span>
+                <span className="sp-praise-role">Founding Partner, Vantage Ventures</span>
+              </div>
+            </div>
+
+            <div className="sp-praise-card">
+              <blockquote className="sp-praise-quote">
+                &ldquo;The Solo Architect captures the exact spirit of modern individual leverage. It is a devastatingly pragmatic antidote to enterprise microservice bloat.&rdquo;
+              </blockquote>
+              <div className="sp-praise-author">
+                <span className="sp-praise-name">Karthik Subramanian</span>
+                <span className="sp-praise-role">Staff Infrastructure Architect &amp; Open Source Maintainer</span>
+              </div>
+            </div>
+
+            <div className="sp-praise-card">
+              <blockquote className="sp-praise-quote">
+                &ldquo;A peaceful, beautiful oasis in a world of frantic tablet apps. Our seven-year-old spent entire rainy afternoons immersed in the logic mazes.&rdquo;
+              </blockquote>
+              <div className="sp-praise-author">
+                <span className="sp-praise-name">Sarah Lindqvist</span>
+                <span className="sp-praise-role">Montessori Educator &amp; Parent</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* 4. THE KNOVERA READING EXPERIENCE / TRUST DETAILS */}
       <section className="knovera-pillars-section" aria-labelledby="pillars-heading">

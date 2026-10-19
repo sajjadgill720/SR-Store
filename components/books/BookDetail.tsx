@@ -106,8 +106,15 @@ export default function BookDetail({ book }: { book: Book }) {
   const isBundleEligible =
     book.slug === 'the-focused-mind' || book.slug === 'atomic-architectures';
 
+  const paletteStyle = book.palette
+    ? ({
+        '--studio-accent': book.palette.accent,
+        '--studio-accent-hover': book.palette.accent,
+      } as React.CSSProperties)
+    : undefined;
+
   return (
-    <div className="knovera-detail-page">
+    <div className="knovera-detail-page" style={paletteStyle}>
       {/* Back Link */}
       <div className="knovera-detail-nav">
         <Link className="studio-back" href={back}>
@@ -177,23 +184,43 @@ export default function BookDetail({ book }: { book: Book }) {
             <div className="knovera-purchase-buttons">
               <button
                 disabled={!available}
-                className="studio-button knovera-buy-button"
+                className="sp-buy-button knovera-buy-button"
                 onClick={() => addToCart(book, formatsLabel(book.formats))}
+                aria-label={`Add ${book.title} to Cart for ${money(book.price)}`}
               >
-                <ShoppingBag size={18} aria-hidden="true" />
-                <span>
-                  {available
-                    ? book.productType === 'printable'
-                      ? 'Add Printable Edition to Cart'
-                      : 'Add Digital Edition to Cart'
-                    : 'Currently Unavailable'}
-                </span>
+                <div className="sp-buy-hover-bar" aria-hidden="true" />
+                <div className="sp-buy-content">
+                  <div className="sp-buy-title">
+                    <span className="sp-buy-label">
+                      {available
+                        ? book.productType === 'printable'
+                          ? 'Add Printable Edition to Bag'
+                          : 'Add Digital Master Edition'
+                        : 'Currently Unavailable'}
+                    </span>
+                    <span className="sp-buy-sublabel">Instant DRM-free delivery · Reflowable EPUB &amp; PDF</span>
+                  </div>
+                  <div className="sp-buy-pricing">
+                    {money(book.price)}
+                    <small>USD</small>
+                  </div>
+                </div>
+                <div className="sp-buy-icon-chamber" aria-hidden="true">
+                  <div className="sp-buy-arrow-pair">
+                    <svg className="sp-buy-arrow-1" viewBox="0 0 9 9">
+                      <path d="M1.27308 8.6948L6.64773 3.31482L6.63707 7.34714H8.38423V0.305237H1.34766L1.337 2.04174H5.37464L0 7.42171L1.27308 8.6948Z"/>
+                    </svg>
+                    <svg className="sp-buy-arrow-2" viewBox="0 0 9 9">
+                      <path d="M1.27308 8.6948L6.64773 3.31482L6.63707 7.34714H8.38423V0.305237H1.34766L1.337 2.04174H5.37464L0 7.42171L1.27308 8.6948Z"/>
+                    </svg>
+                  </div>
+                </div>
               </button>
 
               {book.sampleExcerpt.trim() && (
                 <Link className="studio-button outline knovera-sample-button" href={samplePath}>
                   <BookOpen size={16} aria-hidden="true" />
-                  <span>Read Free Sample</span>
+                  <span>Read Free Sample Excerpt</span>
                 </Link>
               )}
             </div>
@@ -273,10 +300,36 @@ export default function BookDetail({ book }: { book: Book }) {
             </div>
           </div>
 
+          {/* Stripe Press Style Praise & Endorsements */}
+          {book.praiseList && book.praiseList.length > 0 && (
+            <div className="knovera-editorial-block sp-praise-block">
+              <div className="sp-section-kicker">
+                <span className="sp-dash" aria-hidden="true" />
+                <span className="sp-kicker-text">PRAISE &amp; ENDORSEMENTS</span>
+              </div>
+              <div className="sp-praise-grid">
+                {book.praiseList.map((praise, i) => (
+                  <div key={i} className="sp-praise-card">
+                    <blockquote className="sp-praise-quote">
+                      &ldquo;{praise.quote}&rdquo;
+                    </blockquote>
+                    <div className="sp-praise-author">
+                      <span className="sp-praise-name">{praise.author}</span>
+                      <span className="sp-praise-role">{praise.role}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Full description */}
           <div className="knovera-editorial-block">
-            <span className="studio-kicker">ABOUT THIS EDITION</span>
-            <h2>The Framework &amp; Philosophy</h2>
+            <div className="sp-section-kicker">
+              <span className="sp-dash" aria-hidden="true" />
+              <span className="sp-kicker-text">THE FRAMEWORK &amp; PHILOSOPHY</span>
+            </div>
+            <h2>About this edition</h2>
             <div className="knovera-prose">
               <p>{book.fullDescription}</p>
             </div>
@@ -305,28 +358,50 @@ export default function BookDetail({ book }: { book: Book }) {
             </ul>
           </div>
 
-          {/* Sample Pages Excerpt Feature */}
+          {/* Stripe Press Craftsmanship & Edition Architecture */}
+          <div className="knovera-editorial-block sp-craft-block">
+            <div className="sp-section-kicker">
+              <span className="sp-dash" aria-hidden="true" />
+              <span className="sp-kicker-text">CRAFTSMANSHIP &amp; EDITION ARCHITECTURE</span>
+            </div>
+            <div className="sp-craft-grid">
+              <div className="sp-craft-card">
+                <span className="sp-craft-index">01 · TYPOGRAPHY</span>
+                <h4 className="sp-craft-title">{book.material?.typography || 'Monotype Fournier & Spectral Serif'}</h4>
+                <p className="sp-craft-desc">Editorial display serif headlines balanced with high-legibility proportional reading scales.</p>
+              </div>
+              <div className="sp-craft-card">
+                <span className="sp-craft-index">02 · TYPESETTING</span>
+                <h4 className="sp-craft-title">{book.material?.typesetting || 'Proportional 12/16pt reading body'}</h4>
+                <p className="sp-craft-desc">Generous margin callouts, chapter ornaments, vector charts, and distraction-free leading.</p>
+              </div>
+              <div className="sp-craft-card">
+                <span className="sp-craft-index">03 · DUAL FORMATS</span>
+                <h4 className="sp-craft-title">{book.material?.formats || 'Reflowable EPUB 3 + 300 DPI Archival PDF'}</h4>
+                <p className="sp-craft-desc">Native integration for Kindle, Apple Books, Kobo, reMarkable, and tablet readers.</p>
+              </div>
+              <div className="sp-craft-card">
+                <span className="sp-craft-index">04 · PRESERVATION</span>
+                <h4 className="sp-craft-title">{book.material?.preservation || '100% DRM-Free Universal Lifetime License'}</h4>
+                <p className="sp-craft-desc">Universal file ownership with lifetime updates and errata revisions added to your private library.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Stripe Press Companion Reader Monograph (Zine) */}
           {book.sampleExcerpt.trim() && (
-            <div className="knovera-editorial-block knovera-sample-card">
-              <div className="knovera-sample-header">
-                <div>
-                  <span className="studio-kicker">SAMPLE EXCERPT</span>
-                  <h2>A taste of the opening chapter</h2>
-                </div>
-                <Link href={samplePath} className="studio-button outline knovera-sample-open-btn">
-                  Open in Reader &rarr;
-                </Link>
+            <div className="sp-monograph-card">
+              <div className="sp-monograph-content">
+                <span className="sp-monograph-pill">COMPANION READER MONOGRAPH</span>
+                <h3 className="sp-monograph-title">Preview Opening Chapters &amp; Exercises</h3>
+                <p className="sp-monograph-desc">
+                  Read an unhurried, free excerpt from the opening chapter directly in your browser with adjustable typography. No registration or credit card required.
+                </p>
               </div>
-              <blockquote className="knovera-sample-blockquote">
-                {book.sampleExcerpt.split(/\n\s*\n/).slice(0, 3).map((para, i) => (
-                  <p key={i}>{para}</p>
-                ))}
-              </blockquote>
-              <div className="knovera-sample-footer">
-                <Link href={samplePath} className="knovera-sample-full-link">
-                  Read complete free sample excerpt (no email required) &rarr;
-                </Link>
-              </div>
+              <Link href={samplePath} className="studio-button outline knovera-sample-open-btn">
+                <BookOpen size={16} aria-hidden="true" />
+                <span>Open Field Reader &rarr;</span>
+              </Link>
             </div>
           )}
 

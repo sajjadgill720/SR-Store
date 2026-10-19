@@ -70,7 +70,30 @@
       "reviewCount": 142,
       "isPublished": true,
       "isInStock": true,
-      "featured": true
+      "featured": true,
+      "palette": {
+        "accent": "#722F37",
+        "ambient": "#FAF5F0",
+        "surface": "#FDFBF7"
+      },
+      "material": {
+        "typography": "Monotype Fournier & Spectral Serif / Inter Display",
+        "typesetting": "Proportional 12/16pt grid with generous margin notes and vector callouts",
+        "formats": "Reflowable EPUB 3 + 300 DPI Archival PDF",
+        "preservation": "100% DRM-Free Universal Lifetime License"
+      },
+      "praiseList": [
+        {
+          "quote": "The Focused Mind is the single clearest blueprint for knowledge workers drowning in digital noise. It replaced our team's chaotic sprint habits with genuine, unhurried depth.",
+          "author": "Dr. Helena Vance",
+          "role": "Director of Cognitive Systems, Applied Research Lab"
+        },
+        {
+          "quote": "Rigorous, uncompromising, and deeply humane. If you build software or write for a living, you cannot afford to ignore this operating model.",
+          "author": "Julian Sterling",
+          "role": "Principal Systems Engineer & Author of Modular Craft"
+        }
+      ]
     },
     {
       "id": "book-habit-systems",
@@ -140,7 +163,30 @@
       "reviewCount": 98,
       "isPublished": true,
       "isInStock": true,
-      "featured": true
+      "featured": true,
+      "palette": {
+        "accent": "#1F4E3D",
+        "ambient": "#F2F7F4",
+        "surface": "#F8FAF8"
+      },
+      "material": {
+        "typography": "Crimson Pro & Modernist Sans",
+        "typesetting": "Precision tabular scorecards, friction loop diagrams, vector habit matrices",
+        "formats": "Reflowable EPUB 3 + Print-ready Interactive PDF",
+        "preservation": "100% DRM-Free Universal Lifetime License"
+      },
+      "praiseList": [
+        {
+          "quote": "Finally, a book on habit formation that discards the exhausted moralizing about willpower and treats daily behavior as a rigorous engineering challenge.",
+          "author": "Marcus Thorne",
+          "role": "Founding Partner, Vantage Ventures"
+        },
+        {
+          "quote": "A masterclass in environmental design. I redesigned our physical studio and daily engineering routines based on Chapter 2, with compounding results.",
+          "author": "Elena Rostova",
+          "role": "VP Product & Design, Craftworks"
+        }
+      ]
     },
     {
       "id": "book-kids-printable-pack",
@@ -209,7 +255,30 @@
       "reviewCount": 64,
       "isPublished": true,
       "isInStock": true,
-      "featured": false
+      "featured": false,
+      "palette": {
+        "accent": "#935116",
+        "ambient": "#FAF5ED",
+        "surface": "#FFFDF9"
+      },
+      "material": {
+        "typography": "Freight Text & Rounded Grotesk",
+        "typesetting": "Crisp 300 DPI vector line art, calibrated 0.5-inch safety gutters for household printers",
+        "formats": "Print-Ready Vector PDF (US Letter & International A4)",
+        "preservation": "Unlimited Household Printing License"
+      },
+      "praiseList": [
+        {
+          "quote": "A peaceful, beautiful oasis in a world of frantic tablet apps. Our seven-year-old spent entire rainy afternoons immersed in the logic mazes.",
+          "author": "Sarah Lindqvist",
+          "role": "Montessori Educator & Parent"
+        },
+        {
+          "quote": "The calibration between mindfulness finger-traces and genuine STEM curiosity is rare and masterfully done.",
+          "author": "Dr. Arthur Pendelton",
+          "role": "Childhood Development Researcher"
+        }
+      ]
     },
     {
       "id": "book-solo-architect",
@@ -279,7 +348,30 @@
       "reviewCount": 38,
       "isPublished": true,
       "isInStock": true,
-      "featured": true
+      "featured": true,
+      "palette": {
+        "accent": "#1B3B5A",
+        "ambient": "#F0F4F8",
+        "surface": "#F7FAFC"
+      },
+      "material": {
+        "typography": "Newsreader Serif & JetBrains Mono",
+        "typesetting": "High-density technical schematics, syntax-highlighted code blocks, architecture blueprints",
+        "formats": "Reflowable EPUB 3 + Technical Master PDF",
+        "preservation": "100% DRM-Free Universal Lifetime License"
+      },
+      "praiseList": [
+        {
+          "quote": "The Solo Architect captures the exact spirit of modern individual leverage. It is a devastatingly pragmatic antidote to enterprise microservice bloat.",
+          "author": "Karthik Subramanian",
+          "role": "Staff Infrastructure Architect & Open Source Maintainer"
+        },
+        {
+          "quote": "Reading this book is like pair-programming with a seasoned principal engineer who has already made and fixed every scaling mistake.",
+          "author": "Sophie Renard",
+          "role": "Founder, Distributed Monolith Labs"
+        }
+      ]
     }
   ],
   "bundles": [
