@@ -193,6 +193,7 @@ export default function Marketplace({ books }: { books: Book[] }) {
           <div className="knovera-books-grid">
             {books.map((book, index) => {
               const saved = isWishlisted(book.id);
+              const editionNum = String(index + 1).padStart(2, '0');
               return (
                 <article key={book.id} className="knovera-book-card">
                   <div className="knovera-card-cover-container">
@@ -221,6 +222,7 @@ export default function Marketplace({ books }: { books: Book[] }) {
                         aria-hidden="true"
                       />
                     </button>
+                    <span className="knovera-card-edition-chip">EDITION {editionNum}</span>
                     {book.badge && <span className="knovera-card-badge">{book.badge}</span>}
                   </div>
 

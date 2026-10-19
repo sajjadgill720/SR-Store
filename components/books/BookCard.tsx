@@ -18,9 +18,10 @@ export default function BookCard({ book, returnTo, priority = false }: {
     <Link href={detail} aria-label={`View ${book.title}`}>
     <BookCover src={book.coverImage} title={book.title} priority={priority}/>
     </Link>
-      <button className="studio-icon-button edition-save" aria-label={`${saved ? 'Remove' : 'Save'} ${book.title}${saved ? ' from saved books' : ' for later'}`} aria-pressed={saved} onClick={() => toggleWishlist(book.id)}>
-    <Bookmark size={18} aria-hidden="true" fill={saved ? 'currentColor' : 'none'}/>
+      <button className="edition-save" aria-label={`${saved ? 'Remove' : 'Save'} ${book.title}${saved ? ' from saved books' : ' for later'}`} aria-pressed={saved} onClick={() => toggleWishlist(book.id)}>
+    <Bookmark size={17} aria-hidden="true" fill={saved ? 'currentColor' : 'none'}/>
     </button>
+    {book.badge && <span className="knovera-card-edition-chip">{book.badge}</span>}
     </div>
     <div className="edition-card-copy">
     <span className="studio-kicker">{book.category}</span>
