@@ -14,10 +14,9 @@
   grid-template-columns: repeat(auto-fit,minmax(min(100%,280px),1fr));
 }
 .knovera-home .knovera-card-cover-container {
-  background: linear-gradient(145deg,#f4edf4,#e7edf8); border-bottom: 1px solid var(--refine-line);
+  background: radial-gradient(circle at 50% 35%, #FFFFFF 0%, #EDE7DD 100%);
+  border-bottom: 1px solid var(--refine-line);
 }
-.knovera-home .knovera-book-card:nth-child(3n+2) .knovera-card-cover-container { background: linear-gradient(145deg,#edf3ee,#e1ece9); }
-.knovera-home .knovera-book-card:nth-child(3n) .knovera-card-cover-container { background: linear-gradient(145deg,#fcf1e5,#f1e3e0); }
 .knovera-home .knovera-collection-section { border-top: 1px solid var(--refine-line); }
 .knovera-home .sp-praise-block { background: #f1f0f5; border-block: 1px solid var(--refine-line); padding: 72px 0; }
 .reader-profile-note { font-size: 12px; color: var(--color-ink-muted); margin: -12px 0 28px; }
