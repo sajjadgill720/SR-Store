@@ -62,11 +62,6 @@ export default function Marketplace({ books }: { books: Book[] }) {
           <div className="knovera-hero-grid">
             {/* Left: Press & Imprint Framing */}
             <div className="knovera-hero-content">
-              <div className="knovera-hero-eyebrow">
-                <span className="knovera-eyebrow-rule" aria-hidden="true" />
-                <span className="knovera-eyebrow-text">INDEPENDENT PUBLISHING PRESS · EDITION ARCHITECTURE</span>
-              </div>
-
               <h1 id="hero-heading" className="knovera-hero-title">
                 Books engineered for
                 <br />
