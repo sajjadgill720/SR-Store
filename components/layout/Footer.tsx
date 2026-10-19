@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Newsletter from './Newsletter';
+import { Sparkles, ShieldCheck, Mail } from 'lucide-react';
 
 const groups = [
   {
@@ -40,14 +41,32 @@ export default function Footer() {
   return (
     <footer className="studio-footer" role="contentinfo">
       <div className="studio-footer-inner">
-        <section className="studio-footer-invitation">
+        <section className="studio-footer-invitation" aria-labelledby="cta-invitation-heading">
+          <div className="studio-footer-invitation-glow" aria-hidden="true" />
           <div className="studio-footer-invitation-copy">
-            <span className="studio-kicker">EDITORIAL DISPATCH</span>
-            <h2>Notes from the press.</h2>
+            <div className="studio-footer-invitation-kicker">
+              <span className="studio-kicker-pulse-dot" aria-hidden="true" />
+              <span>EDITORIAL DISPATCH · PRIVATE ACCESS</span>
+            </div>
+            <h2 id="cta-invitation-heading">Notes from the press.</h2>
             <p>
               Occasional dispatches on cognitive focus, architectural leverage,
               and systems design. Delivered directly to your inbox without algorithmic noise.
             </p>
+            <div className="studio-footer-perks">
+              <span className="studio-footer-perk-item">
+                <Sparkles size={13} aria-hidden="true" />
+                4,200+ thoughtful readers
+              </span>
+              <span className="studio-footer-perk-item">
+                <ShieldCheck size={13} aria-hidden="true" />
+                Zero marketing spam
+              </span>
+              <span className="studio-footer-perk-item">
+                <Mail size={13} aria-hidden="true" />
+                2 private dispatches / month
+              </span>
+            </div>
           </div>
           <div className="studio-footer-invitation-form">
             <Newsletter />
