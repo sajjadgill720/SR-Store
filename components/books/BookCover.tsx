@@ -3,14 +3,16 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { BookOpen } from 'lucide-react';
 import { coverSource } from '../../lib/catalog';
-export default function BookCover({ src, title, priority = false, size = 'card' }: {
+export default function BookCover({ src, title, priority = false, size = 'card', isSaved = false }: {
     src: string;
     title: string;
     priority?: boolean;
-    size?: 'card' | 'feature' | 'small';
+    size?: 'card' | 'feature' | 'small' | 'detail';
+    isSaved?: boolean;
 }) {
     const [failed, setFailed] = useState(false);
     return <div className={`edition-cover edition-cover-${size}`}>
+    {isSaved && <span className="book-cover-ribbon" title="Saved in collection" aria-hidden="true" />}
     {failed ? <div className="edition-cover-fallback">
         <BookOpen aria-hidden="true"/>
         <span>{title}</span>

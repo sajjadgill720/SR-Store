@@ -5,12 +5,26 @@ import { usePathname } from 'next/navigation';
 import { ShoppingBag, Menu, X, BookOpen } from 'lucide-react';
 import { useCart } from '../../lib/store/cart';
 
-const links = [
-  { href: '/books', label: 'Books' },
-  { href: '/community', label: 'Reader Community' },
-  { href: '/about', label: 'About' },
-  { href: '/account/library', label: 'My Library' },
+const tableOfContents = [
+  { roman: 'I', href: '/books', label: 'Catalogue' },
+  { roman: 'II', href: '/community', label: 'Community' },
+  { roman: 'III', href: '/about', label: 'Colophon' },
+  { roman: 'IV', href: '/account/library', label: 'Library' },
 ];
+
+function getPageMetadata(pathname: string) {
+  if (pathname === '/') return { section: 'Frontispiece & Imprint', folio: 'p. 001' };
+  if (pathname === '/books') return { section: 'The Catalogue', folio: 'p. 014' };
+  if (pathname.startsWith('/books/')) return { section: 'Volume Detail', folio: 'p. 042' };
+  if (pathname.startsWith('/community')) return { section: "The Reader's Circle", folio: 'p. 068' };
+  if (pathname === '/cart') return { section: 'The Order Ledger', folio: 'p. 088' };
+  if (pathname === '/checkout') return { section: 'Acquisition & License', folio: 'p. 092' };
+  if (pathname.startsWith('/account')) return { section: 'Personal Library', folio: 'p. 104' };
+  if (pathname === '/about') return { section: 'Imprint History', folio: 'p. 118' };
+  if (pathname.startsWith('/help')) return { section: 'Reading Guidance', folio: 'p. 132' };
+  if (pathname.startsWith('/access')) return { section: 'Purchase Retrieval', folio: 'p. 140' };
+  return { section: 'Knovera Press', folio: 'p. 050' };
+}
 
 function Navigation() {
   const path = usePathname();
@@ -18,6 +32,7 @@ function Navigation() {
   const trigger = useRef<HTMLButtonElement>(null);
   const { cartCount } = useCart();
   const active = (href: string) => path === href || (href !== '/' && path.startsWith(href + '/'));
+  const { section, folio } = getPageMetadata(path);
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -37,97 +52,102 @@ function Navigation() {
   }, [menuOpen]);
 
   return (
-    <header className="studio-header">
-      <div className="studio-header-inner">
-        <Link href="/" className="studio-brand" aria-label="Knovera — Distinctive Digital Editions">
-          <span className="studio-brand-mark">
-            <BookOpen size={20} aria-hidden="true" className="studio-brand-icon" />
-            <span className="studio-brand-name">Knovera</span>
-          </span>
-          <small className="studio-brand-sub">Independent Digital Press</small>
-        </Link>
+    <header className="print-running-head studio-header hairline-bottom">
+      {/* 1. TOP RUNNING HEAD RULE */}
+      <div className="running-head-bar">
+        <div className="running-head-inner">
+          <Link href="/" className="running-head-left" aria-label="Knovera Press — Home">
+            <span className="running-head-brand">KNOVERA PRESS</span>
+            <span className="running-head-meta hidden sm:inline">· EST. 2026</span>
+          </Link>
 
-        <nav className="studio-desktop-nav" aria-label="Main navigation">
-          {links.map(link => (
+          <div className="running-head-center">
+            <span className="running-head-section">{section}</span>
+          </div>
+
+          <div className="running-head-right">
+            <span className="running-head-folio" aria-label={`Folio page number ${folio}`}>{folio}</span>
+            <span className="running-head-divider" aria-hidden="true">·</span>
             <Link
-              key={link.href}
-              href={link.href}
-              className="studio-nav-link"
-              aria-current={active(link.href) ? 'page' : undefined}
+              href="/cart"
+              className="running-head-cart"
+              aria-label={`Order slip with ${cartCount} ${cartCount === 1 ? 'edition' : 'editions'}`}
             >
-              {link.label}
+              <span>[ Cart</span>
+              <span className="running-head-cart-num">{cartCount.toString().padStart(2, '0')}</span>
+              <span>]</span>
             </Link>
-          ))}
-        </nav>
 
-        <div className="studio-header-actions">
-          <Link
-            href="/access"
-            className="studio-header-link hidden lg:inline-flex"
-            aria-label="Find past purchases"
-          >
-            Find purchases
-          </Link>
-          <Link
-            href="/help"
-            className="studio-header-link hidden lg:inline-flex"
-            aria-label="Device and reading guidance"
-          >
-            Help &amp; Guidance
-          </Link>
-
-          <Link
-            href="/cart"
-            className="studio-cart-link"
-            aria-label={`Shopping cart with ${cartCount} ${cartCount === 1 ? 'item' : 'items'}`}
-          >
-            <ShoppingBag size={18} aria-hidden="true" />
-            <span className="studio-cart-text">Cart</span>
-            {cartCount > 0 && <span className="studio-cart-badge">{cartCount}</span>}
-          </Link>
-
-          <button
-            ref={trigger}
-            className="studio-icon-button studio-menu-trigger sm:hidden"
-            aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
-            aria-controls="studio-mobile-menu"
-            aria-expanded={menuOpen}
-            onClick={() => setMenuOpen(!menuOpen)}
-          >
-            {menuOpen ? <X size={22} aria-hidden="true" /> : <Menu size={22} aria-hidden="true" />}
-          </button>
+            <button
+              ref={trigger}
+              className="running-head-trigger sm:hidden"
+              aria-label={menuOpen ? 'Close index menu' : 'Open table of contents'}
+              aria-controls="print-mobile-toc"
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen(!menuOpen)}
+            >
+              {menuOpen ? <X size={18} aria-hidden="true" /> : <Menu size={18} aria-hidden="true" />}
+            </button>
+          </div>
         </div>
       </div>
 
-      {menuOpen && (
-        <nav id="studio-mobile-menu" className="studio-mobile-menu" aria-label="Mobile main navigation">
-          <div className="studio-mobile-menu-inner">
-            {links.map(link => (
+      {/* 2. TABLE OF CONTENTS BAR (Desktop dot-leader navigation) */}
+      <nav className="running-head-toc hidden sm:block" aria-label="Table of Contents navigation">
+        <div className="running-head-toc-inner">
+          {tableOfContents.map((item, idx) => (
+            <div key={item.href} className="running-head-toc-item">
               <Link
-                key={link.href}
-                href={link.href}
-                className="studio-mobile-link"
-                onClick={() => setMenuOpen(false)}
-                aria-current={active(link.href) ? 'page' : undefined}
+                href={item.href}
+                className={`running-head-toc-link ${active(item.href) ? 'is-active' : ''}`}
+                aria-current={active(item.href) ? 'page' : undefined}
               >
-                {link.label}
+                <span className="running-head-roman">{item.roman}.</span>
+                <span className="running-head-label">{item.label}</span>
               </Link>
-            ))}
-            <div className="studio-mobile-divider" />
-            <Link
-              href="/access"
-              className="studio-mobile-sublink"
-              onClick={() => setMenuOpen(false)}
-            >
-              Recover a purchase
-            </Link>
-            <Link
-              href="/help"
-              className="studio-mobile-sublink"
-              onClick={() => setMenuOpen(false)}
-            >
-              Reading & device guidance
-            </Link>
+              {idx < tableOfContents.length - 1 && (
+                <span className="running-head-leader" aria-hidden="true">············</span>
+              )}
+            </div>
+          ))}
+          <div className="running-head-toc-spacer" />
+          <div className="running-head-toc-utility">
+            <Link href="/access" className="running-head-util-link">Access</Link>
+            <span className="running-head-util-divider">/</span>
+            <Link href="/help" className="running-head-util-link">Help</Link>
+          </div>
+        </div>
+      </nav>
+
+      {/* 3. MOBILE FOLIO DRAWER */}
+      {menuOpen && (
+        <nav id="print-mobile-toc" className="print-mobile-drawer hairline-top" aria-label="Mobile Table of Contents">
+          <div className="print-mobile-drawer-inner">
+            <span className="print-mobile-eyebrow">TABLE OF CONTENTS</span>
+            <ol className="print-mobile-list">
+              {tableOfContents.map(item => (
+                <li key={item.href} className="print-mobile-item">
+                  <Link
+                    href={item.href}
+                    className={`print-mobile-link ${active(item.href) ? 'is-active' : ''}`}
+                    onClick={() => setMenuOpen(false)}
+                    aria-current={active(item.href) ? 'page' : undefined}
+                  >
+                    <span className="print-mobile-roman">{item.roman}.</span>
+                    <span className="print-mobile-label">{item.label}</span>
+                    <span className="print-mobile-dots" aria-hidden="true">························</span>
+                  </Link>
+                </li>
+              ))}
+            </ol>
+            <div className="print-mobile-secondary">
+              <Link href="/access" className="print-mobile-sublink" onClick={() => setMenuOpen(false)}>
+                Find previous orders
+              </Link>
+              <Link href="/help" className="print-mobile-sublink" onClick={() => setMenuOpen(false)}>
+                Device &amp; Kindle reading guide
+              </Link>
+            </div>
           </div>
         </nav>
       )}

@@ -1,49 +1,69 @@
-/* Knovera — Private Library Design Tokens
-   Warm ivory background: #F7F3EB
-   Deep charcoal text: #24211F
-   Burgundy accent: #682B38
-   Warm neutral surfaces: #EDE7DD
-   Secondary text: #5C5652 (contrast > 4.8:1 on #F7F3EB, WCAG AA/AAA compliant)
+/* Knovera Press — Master Print Tokens (CONCEPT: Typeset & Printed, Not Templated)
+   Paper: #F1ECE3 (page), #F7F3EB (card), #FCFAF6 (raised), #E4DCCE (hairline rule)
+   Ink: #1A1815 (primary text/buttons), #5F594F (muted metadata/marginalia), #8A7B66 (faint dot leaders)
+   Accent: #E8A317 (amber focus ring, bookmark ribbon notch, single fleuron)
+   Cloth: #3A342C (deep buckram), #8A7B66 (umber), #D9CFBD (sand linen), #F2ECE0 (archival cream)
 */
 :root {
-  --bg-paper: #F7F3EB;
-  --bg-surface: #FFFFFF;
-  --bg-warm: #EDE7DD;
-  --bg-warm-tint: #F2EDE4;
-  --bg-cream: #F5EFEB;
-  --color-ink: #24211F;
-  --color-ink-muted: #5C5652;
-  --color-ink-light: #7A736E;
-  --color-accent: #682B38;
-  --color-accent-hover: #501F2B;
-  --color-accent-light: #F4EBEB;
-  --color-accent-border: #C8A8B0;
-  --color-border: #E3DDD3;
-  --color-border-subtle: #ECE7DE;
+  /* Locked Print Palette */
+  --paper-page: #F1ECE3;
+  --paper-card: #F7F3EB;
+  --paper-raised: #FCFAF6;
+  --paper-rule: #E4DCCE;
+
+  --ink-primary: #1A1815;
+  --ink-muted: #5F594F;
+  --ink-faint: #8A7B66;
+
+  --amber-mark: #E8A317;
+
+  --cloth-deep: #3A342C;
+  --cloth-umber: #8A7B66;
+  --cloth-sand: #D9CFBD;
+  --cloth-cream: #F2ECE0;
+
+  /* Mapped Core Variables */
+  --bg-paper: var(--paper-page);
+  --bg-surface: var(--paper-raised);
+  --bg-warm: var(--paper-card);
+  --bg-warm-tint: var(--paper-card);
+  --bg-cream: var(--paper-card);
+
+  --color-ink: var(--ink-primary);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-light: var(--ink-faint);
+
+  --color-accent: var(--ink-primary);
+  --color-accent-hover: #2E2922;
+  --color-accent-light: var(--paper-card);
+  --color-accent-border: var(--paper-rule);
+
+  --color-border: var(--paper-rule);
+  --color-border-subtle: var(--paper-rule);
 
   /* Legacy store variable mapping for backwards compatibility */
-  --store-ink: #24211F;
-  --store-gold: #682B38;
-  --store-gold-hover: #501F2B;
-  --store-green: #682B38;
-  --store-sage: #EDE7DD;
-  --store-canvas: #F7F3EB;
-  --store-muted: #5C5652;
-  --store-border: #E3DDD3;
+  --store-ink: var(--ink-primary);
+  --store-gold: var(--amber-mark);
+  --store-gold-hover: #D49010;
+  --store-green: var(--ink-primary);
+  --store-sage: var(--paper-card);
+  --store-canvas: var(--paper-page);
+  --store-muted: var(--ink-muted);
+  --store-border: var(--paper-rule);
 
   /* Studio component tokens */
-  --studio-paper: #F7F3EB;
-  --studio-surface: #FFFFFF;
-  --studio-tint: #EDE7DD;
-  --studio-ink: #24211F;
-  --studio-muted: #5C5652;
-  --studio-accent: #682B38;
-  --studio-accent-hover: #501F2B;
-  --studio-line: #E3DDD3;
-  --studio-blue-wash: #EDE7DD;
-  --studio-sage-wash: #F2EDE4;
-  --studio-lilac-wash: #F5EFEB;
-  --studio-radius: 12px;
+  --studio-paper: var(--paper-page);
+  --studio-surface: var(--paper-raised);
+  --studio-tint: var(--paper-card);
+  --studio-ink: var(--ink-primary);
+  --studio-muted: var(--ink-muted);
+  --studio-accent: var(--ink-primary);
+  --studio-accent-hover: #2E2922;
+  --studio-line: var(--paper-rule);
+  --studio-blue-wash: var(--paper-card);
+  --studio-sage-wash: var(--paper-card);
+  --studio-lilac-wash: var(--paper-card);
+  --studio-radius: 2px;
   --studio-space: clamp(16px, 3.5vw, 36px);
 }
 

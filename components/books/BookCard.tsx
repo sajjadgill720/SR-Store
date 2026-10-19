@@ -16,7 +16,7 @@ export default function BookCard({ book, returnTo, priority = false }: {
     return <article className="edition-card">
     <div className="edition-card-art">
     <Link href={detail} aria-label={`View ${book.title}`}>
-    <BookCover src={book.coverImage} title={book.title} priority={priority}/>
+    <BookCover src={book.coverImage} title={book.title} priority={priority} isSaved={saved}/>
     </Link>
       <button className="edition-save" aria-label={`${saved ? 'Remove' : 'Save'} ${book.title}${saved ? ' from saved books' : ' for later'}`} aria-pressed={saved} onClick={() => toggleWishlist(book.id)}>
     <Bookmark size={17} aria-hidden="true" fill={saved ? 'currentColor' : 'none'}/>

@@ -11,11 +11,10 @@ import {
   Download,
   Smartphone,
   ShieldCheck,
-  RefreshCw,
   ChevronDown,
   Check,
   HelpCircle,
-  Sparkles,
+  ArrowRight,
 } from 'lucide-react';
 import type { Book } from '../../lib/types';
 import { formatsLabel, money } from '../../lib/catalog';
@@ -88,7 +87,6 @@ export default function BookDetail({ book }: { book: Book }) {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // Show sticky bar when the main purchase panel is scrolled out of view above
         setShowStickyBar(!entry.isIntersecting && entry.boundingClientRect.top < 0);
       },
       { threshold: 0.1 }
@@ -106,189 +104,270 @@ export default function BookDetail({ book }: { book: Book }) {
   const isBundleEligible =
     book.slug === 'the-focused-mind' || book.slug === 'atomic-architectures';
 
-  const paletteStyle = book.palette
-    ? ({
-        '--studio-accent': book.palette.accent,
-        '--studio-accent-hover': book.palette.accent,
-      } as React.CSSProperties)
-    : undefined;
+  // Compute drop cap letter and remaining description text
+  const descText = book.fullDescription || book.shortDescription || '';
+  const firstLetter = descText.charAt(0);
+  const restOfText = descText.slice(1);
 
   return (
-    <div className="knovera-detail-page" style={paletteStyle}>
-      {/* Back Link */}
-      <div className="knovera-detail-nav">
-        <Link className="studio-back" href={back}>
-          <ArrowLeft size={16} aria-hidden="true" />
-          <span>Back to collection</span>
+    <div className="knovera-detail-page">
+      {/* Running Nav Breadcrumb */}
+      <div className="book-spread-nav">
+        <Link className="book-nav-back" href={back}>
+          <ArrowLeft size={14} aria-hidden="true" className="shrink-0" />
+          <span>Return to Catalogue</span>
         </Link>
+        <div className="book-nav-folio" aria-hidden="true">
+          <span>FOLIO § {book.isbn ? book.isbn.slice(-4) : '0042'}</span>
+          <span className="book-nav-bullet">·</span>
+          <span>{book.category.toUpperCase()}</span>
+        </div>
       </div>
 
-      {/* Main Book Hero Layout */}
-      <section className="knovera-product-hero" aria-labelledby="book-title">
-        <div className="knovera-product-cover-column">
-          <div className="knovera-cover-frame">
-            <BookCover src={book.coverImage} title={book.title} priority size="feature" />
-          </div>
-
-          {book.sampleExcerpt.trim() && (
-            <Link className="knovera-cover-sample-cta" href={samplePath}>
-              <BookOpen size={16} aria-hidden="true" />
-              <span>Read free sample excerpt &rarr;</span>
-            </Link>
-          )}
-
-          <div className="knovera-cover-spec-pills">
-            <span className="knovera-spec-pill">
-              <Download size={13} aria-hidden="true" /> DRM-Free
-            </span>
-            <span className="knovera-spec-pill">
-              <Smartphone size={13} aria-hidden="true" /> Kindle &amp; e-Reader Ready
-            </span>
-          </div>
-        </div>
-
-        <div className="knovera-product-info-column">
-          <div className="knovera-product-kicker">
-            <span>{book.category.toUpperCase()}</span>
-            <span className="knovera-bullet" aria-hidden="true">·</span>
-            <span>{book.productType === 'printable' ? 'DIGITAL PRINTABLE' : 'DIGITAL MASTER EDITION'}</span>
-          </div>
-
-          <h1 id="book-title" className="knovera-product-title">{book.title}</h1>
-
-          {book.subtitle && <p className="knovera-product-subtitle">{book.subtitle}</p>}
-
-          <p className="knovera-product-byline">
-            Distinctive Edition · <strong>Knovera Press</strong>
-          </p>
-
-          <p className="knovera-product-lead">{book.shortDescription}</p>
-
-          {/* Purchase Panel */}
-          <div ref={purchasePanelRef} className="knovera-purchase-card">
-            <div className="knovera-purchase-price-row">
-              <div className="knovera-price-display">
-                <span className="knovera-current-price">{money(book.price)}</span>
-                <span className="knovera-currency">USD</span>
-                {book.originalPrice && (
-                  <span className="knovera-original-price">{money(book.originalPrice)}</span>
-                )}
-              </div>
-              <span className="knovera-formats-tag">{formatsLabel(book.formats)}</span>
+      {/* DOUBLE-PAGE SPREAD CONTAINER */}
+      <article className="book-open-spread" aria-labelledby="book-title">
+        {/* LEFT PAGE: THE PLATE */}
+        <section className="book-spread-left" aria-label="Frontispiece Plate">
+          <div className="book-plate-wrapper">
+            <div className="book-plate-frame">
+              <BookCover
+                src={book.coverImage}
+                title={book.title}
+                priority
+                size="feature"
+                isSaved={saved}
+              />
             </div>
 
-            <p className="knovera-purchase-clarity">
-              Instant digital delivery · DRM-free files · No shipping or physical packaging
-            </p>
+            {/* Bibliographic Imprint Statement under Frontispiece */}
+            <div className="book-plate-imprint">
+              <div className="imprint-header">
+                <span className="imprint-press">KNOVERA PRESS · SAN FRANCISCO</span>
+                <span className="imprint-version">{book.currentEdition.version}</span>
+              </div>
+              <p className="imprint-statement">
+                Archival digital impression typeset in Cormorant Garamond and DM Sans.
+                Released without digital rights management restrictions (DRM-Free).
+              </p>
+              <div className="imprint-specs-row">
+                <span>
+                  <Download size={12} aria-hidden="true" className="shrink-0" /> {formatsLabel(book.formats)}
+                </span>
+                <span>
+                  <Smartphone size={12} aria-hidden="true" className="shrink-0" /> Universal Reader
+                </span>
+                <span>
+                  <ShieldCheck size={12} aria-hidden="true" className="shrink-0" /> Lifetime Updates
+                </span>
+              </div>
+            </div>
 
-            <div className="knovera-purchase-buttons">
-              <button
-                disabled={!available}
-                className="sp-buy-button knovera-buy-button"
-                onClick={() => addToCart(book, formatsLabel(book.formats))}
-                aria-label={`Add ${book.title} to Cart for ${money(book.price)}`}
-              >
-                <div className="sp-buy-hover-bar" aria-hidden="true" />
-                <div className="sp-buy-content">
-                  <div className="sp-buy-title">
-                    <span className="sp-buy-label">
-                      {available
-                        ? book.productType === 'printable'
-                          ? 'Add Printable Edition to Bag'
-                          : 'Add Digital Master Edition'
-                        : 'Currently Unavailable'}
-                    </span>
-                    <span className="sp-buy-sublabel">Instant DRM-free delivery · Reflowable EPUB &amp; PDF</span>
-                  </div>
-                  <div className="sp-buy-pricing">
-                    {money(book.price)}
-                    <small>USD</small>
-                  </div>
-                </div>
-                <div className="sp-buy-icon-chamber" aria-hidden="true">
-                  <div className="sp-buy-arrow-pair">
-                    <svg className="sp-buy-arrow-1" viewBox="0 0 9 9">
-                      <path d="M1.27308 8.6948L6.64773 3.31482L6.63707 7.34714H8.38423V0.305237H1.34766L1.337 2.04174H5.37464L0 7.42171L1.27308 8.6948Z"/>
-                    </svg>
-                    <svg className="sp-buy-arrow-2" viewBox="0 0 9 9">
-                      <path d="M1.27308 8.6948L6.64773 3.31482L6.63707 7.34714H8.38423V0.305237H1.34766L1.337 2.04174H5.37464L0 7.42171L1.27308 8.6948Z"/>
-                    </svg>
-                  </div>
-                </div>
-              </button>
+            {book.sampleExcerpt.trim() && (
+              <Link className="book-sample-plate-btn" href={samplePath}>
+                <BookOpen size={15} aria-hidden="true" className="shrink-0" />
+                <span>Examine Opening Sample Chapter &rarr;</span>
+              </Link>
+            )}
+          </div>
+        </section>
 
-              {book.sampleExcerpt.trim() && (
-                <Link className="studio-button outline knovera-sample-button" href={samplePath}>
-                  <BookOpen size={16} aria-hidden="true" />
-                  <span>Read Free Sample Excerpt</span>
+        {/* CENTRAL SPREAD GUTTER / FOLD */}
+        <div className="book-spread-gutter" aria-hidden="true">
+          <div className="gutter-stitch-line" />
+        </div>
+
+        {/* RIGHT PAGE: THE TYPESET TEXT & ORDER SLIP */}
+        <section className="book-spread-right" aria-label="Book Information and Acquisition">
+          <div className="book-typeset-content">
+            <div className="book-typeset-kicker">
+              <span>{book.category.toUpperCase()}</span>
+              <span className="kicker-sep">/</span>
+              <span>{book.productType === 'printable' ? 'PRINTABLE WORKBOOK' : 'FIRST DIGITAL IMPRINT'}</span>
+            </div>
+
+            <h1 id="book-title" className="book-typeset-title">
+              {book.title}
+            </h1>
+
+            {book.subtitle && (
+              <p className="book-typeset-subtitle">{book.subtitle}</p>
+            )}
+
+            <div className="book-typeset-byline">
+              <span className="byline-author">By {book.author}</span>
+              <span className="byline-bullet">❦</span>
+              <span className="byline-imprint">Knovera Press Standard Edition</span>
+            </div>
+
+            <div className="hairline-divider" aria-hidden="true" />
+
+            {/* Opening Text with Traditional 3-Line Drop Cap */}
+            <div className="book-dropcap-prose">
+              <span className="typeset-dropcap">{firstLetter}</span>
+              <p className="dropcap-lead-paragraph">{restOfText}</p>
+            </div>
+
+            {/* Marginalia Note in Right Margin */}
+            <aside className="book-marginal-note" aria-label="Marginal Commentary">
+              <span className="marginal-anchor" aria-hidden="true">¹</span>
+              <p className="marginal-text">
+                <em>On intentional craft:</em> A book is not a feed to consume in haste,
+                but an intellectual room in which to linger until thought clears.
+              </p>
+            </aside>
+
+            {/* ACQUISITION ORDER SLIP */}
+            <div ref={purchasePanelRef} className="book-order-slip">
+              <div className="order-slip-perforation" aria-hidden="true" />
+              
+              <div className="order-slip-head">
+                <div className="order-slip-kicker">
+                  <span>DISPATCH REQUISITION NO. {book.id.toUpperCase().slice(-6)}</span>
+                  <span className="slip-fleuron">✦</span>
+                </div>
+                <div className="order-slip-pricing">
+                  <span className="order-slip-amount">{money(book.price)}</span>
+                  <span className="order-slip-cur">USD</span>
+                  {book.originalPrice && (
+                    <span className="order-slip-strike">{money(book.originalPrice)}</span>
+                  )}
+                </div>
+              </div>
+
+              <div className="order-slip-meta">
+                <span className="order-slip-format-tag">{formatsLabel(book.formats)}</span>
+                <span className="order-slip-delivery">Immediate Digital Delivery · DRM-Free</span>
+              </div>
+
+              <div className="order-slip-actions">
+                <button
+                  disabled={!available}
+                  className="book-acquisition-btn"
+                  onClick={() => addToCart(book, formatsLabel(book.formats))}
+                  aria-label={`Acquire ${book.title} for ${money(book.price)}`}
+                >
+                  <span className="btn-main-label">
+                    {available
+                      ? book.productType === 'printable'
+                        ? 'Acquire Printable Edition'
+                        : 'Acquire Digital Master Edition'
+                      : 'Currently Out of Print'}
+                  </span>
+                  <span className="btn-price-tag">
+                    {money(book.price)} <small>USD</small>
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  className="book-ribbon-save-btn"
+                  aria-pressed={saved}
+                  onClick={() => toggleWishlist(book.id)}
+                  aria-label={saved ? 'Remove bookmark' : 'Insert bookmark ribbon'}
+                >
+                  <Bookmark
+                    size={16}
+                    fill={saved ? 'currentColor' : 'none'}
+                    aria-hidden="true"
+                    className="shrink-0"
+                  />
+                  <span>{saved ? 'Bookmarked in Collection' : 'Insert Bookmark Ribbon'}</span>
+                </button>
+              </div>
+
+              {storageError && <p className="studio-error" role="alert">{storageError}</p>}
+
+              <ul className="order-slip-guarantees">
+                <li>
+                  <span className="guarantee-dot">·</span>
+                  <span>Instant download links provided upon confirmation &amp; dispatched by email receipt</span>
+                </li>
+                <li>
+                  <span className="guarantee-dot">·</span>
+                  <span>Perpetual DRM-free license with complimentary future errata revisions</span>
+                </li>
+                <li>
+                  <span className="guarantee-dot">·</span>
+                  <span>Universal file formats: open in Kindle, Apple Books, Kobo, or standard PDF viewer</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Paired Two-Volume Slipcase Callout */}
+            {isBundleEligible && (
+              <div className="book-paired-slipcase">
+                <div className="paired-slipcase-info">
+                  <span className="studio-kicker">TWO-VOLUME BOXED SET</span>
+                  <h4>The Complete Mastery &amp; Productivity Pair</h4>
+                  <p>
+                    Acquire both <em>The Focused Mind</em> and <em>Atomic Architectures</em> together for $29.99 (Save 22%).
+                  </p>
+                </div>
+                <Link
+                  href="/bundles/the-complete-mastery-bundle"
+                  className="studio-button outline paired-slipcase-btn"
+                >
+                  Examine Boxed Set <ArrowRight size={14} className="shrink-0" />
                 </Link>
-              )}
-            </div>
-
-            {storageError && <p className="studio-error" role="alert">{storageError}</p>}
-
-            <div className="knovera-purchase-perks">
-              <div className="knovera-perk">
-                <Check size={14} className="knovera-perk-icon" aria-hidden="true" />
-                <span>Instant download link + email access receipt</span>
               </div>
-              <div className="knovera-perk">
-                <Check size={14} className="knovera-perk-icon" aria-hidden="true" />
-                <span>Lifetime free updates as new revisions publish</span>
-              </div>
-              <div className="knovera-perk">
-                <Check size={14} className="knovera-perk-icon" aria-hidden="true" />
-                <span>Secure checkout and purchase-verified downloads</span>
-              </div>
-            </div>
+            )}
 
-            <div className="knovera-purchase-actions-row">
-              <button
-                type="button"
-                className="knovera-save-btn"
-                aria-pressed={saved}
-                onClick={() => toggleWishlist(book.id)}
-              >
-                <Bookmark
-                  size={15}
-                  fill={saved ? 'currentColor' : 'none'}
-                  aria-hidden="true"
-                />
-                <span>{saved ? 'Saved in this browser' : 'Save for later'}</span>
-              </button>
-              <Link href="/help" className="knovera-help-link">
-                <HelpCircle size={15} aria-hidden="true" />
-                <span>Reading on your device</span>
-              </Link>
+            {/* THE COLOPHON (Signature Bibliographic Definition List) */}
+            <div className="book-colophon-block">
+              <div className="colophon-title-bar">
+                <span className="colophon-kicker">BIBLIOGRAPHIC COLOPHON</span>
+                <span className="colophon-anchor">P. {book.pageCount || 240}</span>
+              </div>
+              <dl className="colophon-dl">
+                <div className="colophon-row">
+                  <dt>Typefaces</dt>
+                  <span className="dot-leader-fill" aria-hidden="true" />
+                  <dd>Cormorant Garamond &amp; DM Sans</dd>
+                </div>
+                <div className="colophon-row">
+                  <dt>Format</dt>
+                  <span className="dot-leader-fill" aria-hidden="true" />
+                  <dd>Reflowable EPUB 3 &amp; 300 DPI Archival PDF</dd>
+                </div>
+                <div className="colophon-row">
+                  <dt>Edition Statement</dt>
+                  <span className="dot-leader-fill" aria-hidden="true" />
+                  <dd>{book.currentEdition.version} ({book.currentEdition.releaseDate})</dd>
+                </div>
+                <div className="colophon-row">
+                  <dt>Preservation</dt>
+                  <span className="dot-leader-fill" aria-hidden="true" />
+                  <dd>100% DRM-Free Universal Lifetime License</dd>
+                </div>
+                {book.pageCount && (
+                  <div className="colophon-row">
+                    <dt>Typeset Length</dt>
+                    <span className="dot-leader-fill" aria-hidden="true" />
+                    <dd>{book.pageCount} Pages</dd>
+                  </div>
+                )}
+                {book.isbn && (
+                  <div className="colophon-row">
+                    <dt>Catalog Identifier</dt>
+                    <span className="dot-leader-fill" aria-hidden="true" />
+                    <dd>{book.isbn}</dd>
+                  </div>
+                )}
+                <div className="colophon-row">
+                  <dt>Imprint</dt>
+                  <span className="dot-leader-fill" aria-hidden="true" />
+                  <dd>Knovera Press, San Francisco &amp; London</dd>
+                </div>
+              </dl>
             </div>
           </div>
+        </section>
+      </article>
 
-          {/* Dual Edition Box Set Recommendation (Only when eligible) */}
-          {isBundleEligible && (
-            <div className="knovera-bundle-callout">
-              <div className="knovera-bundle-callout-text">
-                <span className="knovera-bundle-callout-kicker">LOOKING FOR THE COMPLETE PAIR?</span>
-                <h4>The Complete Mastery &amp; Productivity Box Set</h4>
-                <p>
-                  Get both <em>The Focused Mind</em> and <em>Atomic Architectures</em> together for $29.99 (Save 22%).
-                </p>
-              </div>
-              <Link
-                href="/bundles/the-complete-mastery-bundle"
-                className="studio-button outline knovera-bundle-callout-btn"
-              >
-                View Box Set &rarr;
-              </Link>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Editorial Content Sections */}
+      {/* EXTENDED EDITORIAL SECTIONS (Author's Note, TOC, Package Contents, FAQs) */}
       <section className="knovera-editorial-grid">
-        {/* Left main column: Narrative, Outcomes, Deliverables, Author Note */}
         <div className="knovera-editorial-main">
-          {/* Author's Personal Note */}
+          {/* Author's Monograph */}
           <div className="knovera-editorial-block knovera-author-note-card">
             <span className="studio-kicker">EDITORIAL MONOGRAPH</span>
             <h2>{authorNote.heading}</h2>
@@ -300,7 +379,7 @@ export default function BookDetail({ book }: { book: Book }) {
             </div>
           </div>
 
-          {/* Stripe Press Style Praise & Endorsements */}
+          {/* Praise & Endorsements */}
           {book.praiseList && book.praiseList.length > 0 && (
             <div className="knovera-editorial-block sp-praise-block">
               <div className="sp-section-kicker">
@@ -323,19 +402,7 @@ export default function BookDetail({ book }: { book: Book }) {
             </div>
           )}
 
-          {/* Full description */}
-          <div className="knovera-editorial-block">
-            <div className="sp-section-kicker">
-              <span className="sp-dash" aria-hidden="true" />
-              <span className="sp-kicker-text">THE FRAMEWORK &amp; PHILOSOPHY</span>
-            </div>
-            <h2>About this edition</h2>
-            <div className="knovera-prose">
-              <p>{book.fullDescription}</p>
-            </div>
-          </div>
-
-          {/* Who It Is For */}
+          {/* Audience Reader Profile */}
           <div className="knovera-editorial-block">
             <span className="studio-kicker">READER PROFILE</span>
             <h2>Who this book is written for</h2>
@@ -344,66 +411,19 @@ export default function BookDetail({ book }: { book: Book }) {
             </div>
           </div>
 
-          {/* What's Included */}
+          {/* Package Contents */}
           <div className="knovera-editorial-block">
             <span className="studio-kicker">PACKAGE CONTENTS</span>
             <h2>What you will receive</h2>
             <ul className="knovera-included-list">
               {book.whatsIncluded.map((item, index) => (
                 <li key={index}>
-                  <Check size={18} className="knovera-check-icon" aria-hidden="true" />
+                  <Check size={16} className="knovera-check-icon shrink-0" aria-hidden="true" />
                   <span>{item}</span>
                 </li>
               ))}
             </ul>
           </div>
-
-          {/* Stripe Press Craftsmanship & Edition Architecture */}
-          <div className="knovera-editorial-block sp-craft-block">
-            <div className="sp-section-kicker">
-              <span className="sp-dash" aria-hidden="true" />
-              <span className="sp-kicker-text">CRAFTSMANSHIP &amp; EDITION ARCHITECTURE</span>
-            </div>
-            <div className="sp-craft-grid">
-              <div className="sp-craft-card">
-                <span className="sp-craft-index">01 · TYPOGRAPHY</span>
-                <h4 className="sp-craft-title">{book.material?.typography || 'Monotype Fournier & Spectral Serif'}</h4>
-                <p className="sp-craft-desc">Editorial display serif headlines balanced with high-legibility proportional reading scales.</p>
-              </div>
-              <div className="sp-craft-card">
-                <span className="sp-craft-index">02 · TYPESETTING</span>
-                <h4 className="sp-craft-title">{book.material?.typesetting || 'Proportional 12/16pt reading body'}</h4>
-                <p className="sp-craft-desc">Generous margin callouts, chapter ornaments, vector charts, and distraction-free leading.</p>
-              </div>
-              <div className="sp-craft-card">
-                <span className="sp-craft-index">03 · DUAL FORMATS</span>
-                <h4 className="sp-craft-title">{book.material?.formats || 'Reflowable EPUB 3 + 300 DPI Archival PDF'}</h4>
-                <p className="sp-craft-desc">Universal compatibility for Kindle (via Send-to-Kindle), Apple Books, Kobo, reMarkable, and tablet readers.</p>
-              </div>
-              <div className="sp-craft-card">
-                <span className="sp-craft-index">04 · PRESERVATION</span>
-                <h4 className="sp-craft-title">{book.material?.preservation || '100% DRM-Free Universal Lifetime License'}</h4>
-                <p className="sp-craft-desc">Universal file ownership with lifetime updates and errata revisions added to your private library.</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Stripe Press Companion Reader Monograph (Zine) */}
-          {book.sampleExcerpt.trim() && (
-            <div className="sp-monograph-card">
-              <div className="sp-monograph-content">
-                <span className="sp-monograph-pill">COMPANION READER MONOGRAPH</span>
-                <h3 className="sp-monograph-title">Preview Opening Chapters &amp; Exercises</h3>
-                <p className="sp-monograph-desc">
-                  Read an unhurried, free excerpt from the opening chapter directly in your browser with adjustable typography. No registration or credit card required.
-                </p>
-              </div>
-              <Link href={samplePath} className="studio-button outline knovera-sample-open-btn">
-                <BookOpen size={16} aria-hidden="true" />
-                <span>Open Field Reader &rarr;</span>
-              </Link>
-            </div>
-          )}
 
           {/* Frequently Asked Questions */}
           <div className="knovera-editorial-block knovera-faq-section">
@@ -414,7 +434,7 @@ export default function BookDetail({ book }: { book: Book }) {
                 <details key={index} className="knovera-faq-item">
                   <summary className="knovera-faq-question">
                     <span>{faq.q}</span>
-                    <ChevronDown size={18} aria-hidden="true" className="knovera-faq-chevron" />
+                    <ChevronDown size={17} aria-hidden="true" className="knovera-faq-chevron shrink-0" />
                   </summary>
                   <p className="knovera-faq-answer">{faq.a}</p>
                 </details>
@@ -423,7 +443,7 @@ export default function BookDetail({ book }: { book: Book }) {
           </div>
         </div>
 
-        {/* Right sidebar: Table of Contents and Technical Specifications */}
+        {/* Sidebar: Table of Contents & Specifications */}
         <aside className="knovera-editorial-sidebar">
           {/* Table of Contents */}
           <div className="knovera-sidebar-card">
@@ -441,7 +461,7 @@ export default function BookDetail({ book }: { book: Book }) {
 
           {/* Technical Edition Specifications */}
           <div className="knovera-sidebar-card">
-            <span className="studio-kicker">SPECIFICATIONS</span>
+            <span className="studio-kicker">EDITION ARCHITECTURE</span>
             <h3>Edition &amp; File Details</h3>
             <dl className="knovera-specs-list">
               {book.pageCount && (
@@ -467,20 +487,15 @@ export default function BookDetail({ book }: { book: Book }) {
               <dt>Publisher</dt>
               <dd>Knovera Press</dd>
             </dl>
-            {book.currentEdition.releaseNotes && (
-              <p className="knovera-release-notes">
-                <strong>Release Notes:</strong> {book.currentEdition.releaseNotes}
-              </p>
-            )}
           </div>
 
-          {/* Direct Support & Reassurance */}
+          {/* Reader Support Card */}
           <div className="knovera-sidebar-card knovera-support-card">
             <span className="studio-kicker">READER SUPPORT</span>
             <h4>Need assistance?</h4>
             <p>
-              Have a question about Kindle transfer, tablet reading, or companion materials? We are
-              here to assist you directly.
+              Have questions regarding Send-to-Kindle transfer, tablet reading, or companion files?
+              Our editorial support desk is ready to assist.
             </p>
             <Link href="/contact" className="knovera-support-link">
               Contact reader support &rarr;
@@ -505,8 +520,8 @@ export default function BookDetail({ book }: { book: Book }) {
             onClick={() => addToCart(book, formatsLabel(book.formats))}
             tabIndex={showStickyBar ? 0 : -1}
           >
-            <ShoppingBag size={16} aria-hidden="true" />
-            <span>Add to Cart</span>
+            <ShoppingBag size={15} aria-hidden="true" className="shrink-0" />
+            <span>Acquire</span>
           </button>
         </div>
       </div>

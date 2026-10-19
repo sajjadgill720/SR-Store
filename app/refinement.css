@@ -1,32 +1,361 @@
 /* ==========================================================================
-   Knovera Editorial Architecture — Elite & Balanced Design System
-   Loaded after legacy styles. Curated luxury palette with tonal depth:
-   - Dark spectrum: Deep Espresso Obsidian (#20171A), Velvet Burgundy (#682B38)
-   - Light spectrum: Warm Parchment (#FAF6EE), Porcelain White (#FFFFFF), Warm Sand (#EFE8DD)
-   Balanced, human typography — zero hyper-zoomed headings.
+   Knovera Press — Typeset & Printed Master Styles
    ========================================================================== */
 
 :root {
-  --refine-line: rgba(36, 33, 31, 0.1);
-  --refine-gold: rgba(200, 168, 176, 0.4);
+  --refine-line: var(--paper-rule);
+  --refine-gold: var(--amber-mark);
 }
 
-/* Base smoothing */
+/* Base print background */
 body {
-  background-color: #FAF7F2;
-  color: var(--color-ink);
+  background-color: var(--paper-page);
+  color: var(--ink-primary);
+}
+
+/* Restrained Print Motion */
+@keyframes inkIn {
+  from {
+    clip-path: inset(0 100% 0 0);
+    opacity: 0.1;
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+}
+
+.typeset-ink-in {
+  animation: inkIn 450ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Print Rules & Leader Dots */
+.hairline-top {
+  border-top: 1px solid var(--paper-rule);
+}
+
+.hairline-bottom {
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.hairline-double {
+  border-top: 1px solid var(--ink-primary);
+  border-bottom: 3px double var(--ink-primary);
+}
+
+.dot-leader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.dot-leader-fill {
+  flex: 1;
+  border-bottom: 1px dotted var(--ink-faint);
+  margin: 0 10px;
+  min-width: 20px;
+  opacity: 0.7;
+}
+
+/* 3-line drop cap for book description */
+.typeset-dropcap::first-letter {
+  font-family: var(--font-editorial), Georgia, serif;
+  float: left;
+  font-size: 68px;
+  line-height: 52px;
+  padding-top: 4px;
+  padding-right: 12px;
+  padding-bottom: 2px;
+  color: var(--ink-primary);
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typeset-ink-in {
+    animation: none !important;
+    clip-path: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* ==========================================================================
+   THE RUNNING HEAD & TABLE OF CONTENTS
+   ========================================================================== */
+.print-running-head {
+  background: var(--paper-page);
+  border-bottom: 1px solid var(--paper-rule);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.running-head-bar {
+  padding: 10px var(--studio-space, 24px);
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.running-head-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+}
+
+.running-head-left {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--ink-primary);
+}
+
+.running-head-brand {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-primary);
+}
+
+.running-head-meta {
+  font-size: 10px;
+  color: var(--ink-muted);
+  letter-spacing: 0.08em;
+}
+
+.running-head-center {
+  text-align: center;
+}
+
+.running-head-section {
+  font-family: var(--font-editorial), Georgia, serif;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--ink-primary);
+  letter-spacing: 0.01em;
+}
+
+.running-head-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 12px;
+}
+
+.running-head-folio {
+  font-family: var(--font-editorial), Georgia, serif;
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-muted);
+}
+
+.running-head-divider {
+  color: var(--paper-rule);
+}
+
+.running-head-cart {
+  color: var(--ink-primary);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border: 1px solid var(--paper-rule);
+  border-radius: 2px;
+  background: var(--paper-card);
+  transition: all 0.15s ease;
+}
+
+.running-head-cart:hover {
+  background: var(--ink-primary);
+  color: var(--paper-page);
+  border-color: var(--ink-primary);
+}
+
+.running-head-cart-num {
+  font-family: var(--font-editorial), Georgia, serif;
+  font-weight: 700;
+}
+
+.running-head-trigger {
+  background: none;
+  border: 1px solid var(--paper-rule);
+  border-radius: 2px;
+  padding: 4px;
+  color: var(--ink-primary);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Desktop Table of Contents Bar */
+.running-head-toc {
+  padding: 6px var(--studio-space, 24px);
+  background: var(--paper-card);
+  font-size: 11.5px;
+}
+
+.running-head-toc-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+.running-head-toc-item {
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.running-head-toc-link {
+  text-decoration: none;
+  color: var(--ink-muted);
+  display: inline-flex;
+  gap: 5px;
+  transition: color 0.15s ease;
+}
+
+.running-head-toc-link:hover,
+.running-head-toc-link.is-active {
+  color: var(--ink-primary);
+  font-weight: 600;
+}
+
+.running-head-roman {
+  font-family: var(--font-editorial), Georgia, serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-muted);
+}
+
+.running-head-leader {
+  color: var(--ink-faint);
+  margin: 0 10px;
+  letter-spacing: 2px;
+  opacity: 0.6;
+  font-size: 10px;
+}
+
+.running-head-toc-spacer {
+  flex: 1;
+}
+
+.running-head-toc-utility {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--ink-muted);
+}
+
+.running-head-util-link {
+  text-decoration: none;
+  color: var(--ink-muted);
+  transition: color 0.15s ease;
+}
+
+.running-head-util-link:hover {
+  color: var(--ink-primary);
+}
+
+.running-head-util-divider {
+  color: var(--paper-rule);
+}
+
+/* Mobile Drawer */
+.print-mobile-drawer {
+  background: var(--paper-card);
+  padding: 20px var(--studio-space, 24px);
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.print-mobile-drawer-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.print-mobile-eyebrow {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--ink-muted);
+  margin-bottom: 14px;
+}
+
+.print-mobile-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.print-mobile-link {
+  display: flex;
+  align-items: baseline;
+  text-decoration: none;
+  color: var(--ink-primary);
+  font-size: 14px;
+  overflow: hidden;
+}
+
+.print-mobile-roman {
+  font-family: var(--font-editorial), Georgia, serif;
+  font-weight: 600;
+  margin-right: 8px;
+  color: var(--ink-muted);
+}
+
+.print-mobile-label {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.print-mobile-dots {
+  margin-left: 8px;
+  color: var(--ink-faint);
+  letter-spacing: 2px;
+  opacity: 0.5;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.print-mobile-secondary {
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.print-mobile-sublink {
+  font-size: 12.5px;
+  color: var(--ink-muted);
+  text-decoration: none;
 }
 
 /* --------------------------------------------------------------------------
-   1. TOP ANNOUNCEMENT BAR (Rich Dark Accent Shade)
+   1. TOP ANNOUNCEMENT BAR (Print Paper Notice)
    -------------------------------------------------------------------------- */
 .site-announcement {
-  background: #20171A;
-  color: rgba(247, 243, 235, 0.88);
+  background: var(--paper-card);
+  color: var(--ink-muted);
   font-family: var(--font-sans), sans-serif;
-  font-size: 11.5px;
-  padding: 8px var(--studio-space, 24px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 11px;
+  padding: 7px var(--studio-space, 24px);
+  border-bottom: 1px solid var(--paper-rule);
 }
 
 .site-announcement-inner {
@@ -39,9 +368,17 @@ body {
 }
 
 .site-announcement-message {
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  color: #F0E8DE;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--ink-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.site-announcement-dot {
+  color: var(--amber-mark);
+  font-size: 7px;
 }
 
 .site-announcement-links {
@@ -52,18 +389,18 @@ body {
 }
 
 .site-announcement-link {
-  color: #E2AAB4;
+  color: var(--ink-muted);
   font-weight: 500;
   text-decoration: none;
   transition: color 0.18s ease;
 }
 
 .site-announcement-link:hover {
-  color: #FFFFFF;
+  color: var(--ink-primary);
 }
 
 .site-announcement-separator {
-  color: rgba(255, 255, 255, 0.25);
+  color: var(--paper-rule);
 }
 
 /* --------------------------------------------------------------------------
@@ -1212,3 +1549,2332 @@ textarea:focus-visible {
     animation: none;
   }
 }
+
+/* ==========================================================================
+   PRINT REDESIGN — COMPONENT 2: STANDING SPINE SHELF & INDEX VIEW
+   ========================================================================== */
+
+/* Catalogue Page Layout */
+.knovera-catalog-page {
+  padding-top: 36px;
+  padding-bottom: 72px;
+}
+
+.knovera-catalog-page .catalog-lead-text {
+  font-family: var(--font-dm-sans);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-ink-muted);
+  max-width: 600px;
+}
+
+/* Toolbar & Paper Controls */
+.studio-catalog-toolbar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.studio-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--color-paper-raised);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  padding: 0 14px;
+  min-height: 44px;
+  flex: 1;
+  min-width: 260px;
+  box-shadow: inset 0 1px 2px rgba(26, 24, 21, 0.04);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.studio-search:focus-within {
+  border-color: var(--color-ink);
+  box-shadow: 0 0 0 3px rgba(232, 163, 23, 0.25);
+}
+
+.studio-search input {
+  background: transparent;
+  border: none;
+  width: 100%;
+  font-family: var(--font-dm-sans);
+  font-size: 13.5px;
+  color: var(--color-ink);
+  outline: none;
+}
+
+.studio-search input::placeholder {
+  color: var(--color-ink-faint);
+}
+
+.studio-catalog-toolbar .studio-button.outline {
+  background: var(--color-paper-card);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  color: var(--color-ink);
+  font-family: var(--font-dm-sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0 16px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.studio-catalog-toolbar .studio-button.outline.active,
+.studio-catalog-toolbar .studio-button.outline[aria-pressed="true"] {
+  background: var(--color-ink);
+  color: var(--color-paper-page);
+  border-color: var(--color-ink);
+}
+
+.saved-count-pill {
+  font-family: var(--font-cormorant);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+/* Topic Navigation — Small Caps Typeset Tabs */
+.studio-topic-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 0 18px;
+  border-bottom: 1px solid var(--color-hairline);
+}
+
+.topic-tab-button {
+  padding: 6px 14px;
+  min-height: 32px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-ink-muted);
+  font-family: var(--font-dm-sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.topic-tab-button:hover {
+  color: var(--color-ink);
+  background: rgba(217, 207, 189, 0.25);
+  border-color: var(--color-hairline);
+}
+
+.topic-tab-button[aria-pressed="true"] {
+  background: var(--color-paper-card);
+  color: var(--color-ink);
+  border-color: var(--color-sand);
+  box-shadow: 0 1px 3px rgba(26, 24, 21, 0.06);
+}
+
+/* Catalog Meta Controls Bar */
+.studio-catalog-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0 20px;
+  flex-wrap: wrap;
+}
+
+.catalog-meta-summary {
+  font-family: var(--font-dm-sans);
+  font-size: 12.5px;
+  color: var(--color-ink-muted);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.catalog-folio-marker {
+  font-family: var(--font-cormorant);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--color-accent);
+}
+
+.catalog-meta-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* Presentation Toggle: Shelf / Index / Plates */
+.catalog-presentation-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--color-paper-card);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  padding: 3px 8px;
+}
+
+.catalog-toggle-label {
+  font-family: var(--font-dm-sans);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--color-ink-faint);
+  margin-right: 2px;
+}
+
+.catalog-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 2px;
+  font-family: var(--font-dm-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.catalog-toggle-btn:hover {
+  color: var(--color-ink);
+}
+
+.catalog-toggle-btn.active,
+.catalog-toggle-btn[aria-pressed="true"] {
+  background: var(--color-ink);
+  color: var(--color-paper-page);
+}
+
+.catalog-toggle-sep {
+  color: var(--color-hairline);
+  font-size: 11px;
+}
+
+/* Filter Details Dropdown */
+.studio-filter-details {
+  position: relative;
+}
+
+.studio-filter-details summary {
+  cursor: pointer;
+  font-family: var(--font-dm-sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  padding: 6px 10px;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  background: var(--color-paper-card);
+  list-style: none;
+}
+
+.studio-filter-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.filter-dropdown-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: var(--color-paper-raised);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  box-shadow: 0 8px 24px rgba(26, 24, 21, 0.12);
+  display: flex;
+  gap: 14px;
+  z-index: 20;
+}
+
+.filter-dropdown-panel label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-family: var(--font-dm-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+.filter-dropdown-panel select {
+  padding: 6px 10px;
+  border: 1px solid var(--color-hairline);
+  border-radius: 2px;
+  background: var(--color-paper-card);
+  color: var(--color-ink);
+  font-size: 12.5px;
+  outline: none;
+}
+
+/* ==========================================================================
+   THE STANDING SPINE BOOK SHELF
+   ========================================================================== */
+
+.catalog-shelf-section {
+  margin: 28px 0 48px;
+  position: relative;
+}
+
+.catalog-shelf-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-cormorant);
+  font-style: italic;
+  font-size: 13.5px;
+  color: var(--color-ink-muted);
+  margin-bottom: 24px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--color-hairline);
+}
+
+.shelf-hint-fleuron {
+  color: var(--color-accent);
+  font-style: normal;
+  font-size: 16px;
+}
+
+.catalog-shelf-container {
+  position: relative;
+  padding-top: 40px;
+  padding-bottom: 10px;
+}
+
+.catalog-shelf-books {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  overflow-x: auto;
+  overflow-y: visible;
+  padding: 30px 20px 0;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-sand) transparent;
+  min-height: 330px;
+}
+
+.catalog-shelf-books::-webkit-scrollbar {
+  height: 6px;
+}
+
+.catalog-shelf-books::-webkit-scrollbar-thumb {
+  background: var(--color-sand);
+  border-radius: 3px;
+}
+
+/* Individual Standing Spine */
+.standing-spine-wrap {
+  position: relative;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  scroll-snap-align: start;
+}
+
+.standing-spine {
+  width: var(--spine-w, 44px);
+  height: var(--spine-h, 270px);
+  background-color: var(--spine-bg, #3A342C);
+  color: var(--spine-color, #F7F3EB);
+  border-left: 1px solid var(--spine-border, rgba(0,0,0,0.3));
+  border-right: 1px solid var(--spine-border, rgba(0,0,0,0.3));
+  border-top: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 2px 2px 0 0;
+  box-shadow:
+    inset 2px 0 3px rgba(255, 255, 255, 0.12),
+    inset -2px 0 3px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    2px 2px 6px rgba(26, 24, 21, 0.22);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0 10px;
+  text-decoration: none;
+  cursor: pointer;
+  position: relative;
+  transform-origin: bottom center;
+  transition: transform 300ms cubic-bezier(0.2, 0.8, 0.25, 1), box-shadow 300ms ease;
+  z-index: 1;
+}
+
+/* Headband */
+.spine-headband {
+  width: 70%;
+  height: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--color-accent) 0,
+    var(--color-accent) 3px,
+    #3A342C 3px,
+    #3A342C 6px
+  );
+  border-radius: 1px;
+  opacity: 0.85;
+}
+
+/* Bookmark ribbon hanging over head */
+.spine-ribbon-tab {
+  position: absolute;
+  top: -6px;
+  right: 6px;
+  width: 9px;
+  height: 20px;
+  background: var(--color-accent);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 4px), 0 100%);
+  box-shadow: 0 2px 4px rgba(26, 24, 21, 0.3);
+  z-index: 3;
+}
+
+/* Vertical Title on Spine */
+.spine-title-vert {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: var(--font-cormorant);
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-height: calc(var(--spine-h, 270px) - 95px);
+  padding: 0 2px;
+  color: inherit;
+  opacity: 0.95;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+/* Heel imprint & author */
+.spine-foot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.spine-author-caps {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: var(--font-dm-sans);
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.75;
+  max-height: 50px;
+  overflow: hidden;
+}
+
+.spine-colophon-mark {
+  font-family: var(--font-cormorant);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  opacity: 0.6;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 2px;
+  width: 14px;
+  text-align: center;
+}
+
+/* Hover & Focus Micro-motion */
+.standing-spine-wrap:hover .standing-spine,
+.standing-spine:focus {
+  transform: translateY(-16px) rotate(2deg);
+  box-shadow:
+    inset 2px 0 3px rgba(255, 255, 255, 0.15),
+    inset -2px 0 3px rgba(0, 0, 0, 0.3),
+    4px 16px 20px rgba(26, 24, 21, 0.35);
+  z-index: 5;
+}
+
+/* Peek Card */
+.spine-peek-card {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%) translateY(8px) scale(0.96);
+  opacity: 0;
+  pointer-events: none;
+  background: var(--color-paper-raised);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 16px 32px rgba(26, 24, 21, 0.18), 0 2px 6px rgba(26, 24, 21, 0.08);
+  padding: 14px;
+  width: 260px;
+  display: flex;
+  gap: 12px;
+  z-index: 30;
+  transition: opacity 220ms ease, transform 220ms cubic-bezier(0.2, 0.8, 0.25, 1);
+}
+
+.standing-spine-wrap:hover .spine-peek-card,
+.standing-spine:focus + .spine-peek-card {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.spine-peek-cover {
+  width: 64px;
+  flex-shrink: 0;
+}
+
+.spine-peek-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.spine-peek-kicker {
+  font-family: var(--font-dm-sans);
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 2px;
+}
+
+.spine-peek-title {
+  font-family: var(--font-cormorant);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--color-ink);
+  margin: 0 0 3px;
+}
+
+.spine-peek-author {
+  font-family: var(--font-dm-sans);
+  font-size: 10.5px;
+  color: var(--color-ink-muted);
+  margin: 0 0 6px;
+}
+
+.spine-peek-desc {
+  font-family: var(--font-dm-sans);
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--color-ink-muted);
+  margin: 0 0 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.spine-peek-action {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px dotted var(--color-hairline);
+  padding-top: 6px;
+}
+
+.spine-peek-price {
+  font-family: var(--font-cormorant);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.spine-peek-inspect {
+  font-family: var(--font-dm-sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+/* Shelf Board (Physical Shelf Baseline) */
+.shelf-beam {
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.shelf-beam-lip {
+  height: 4px;
+  background: #FCFAF6;
+  border-top: 1px solid var(--color-hairline);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+.shelf-beam-face {
+  height: 14px;
+  background: linear-gradient(180deg, #D9CFBD 0%, #C2B5A0 60%, #8A7B66 100%);
+  border-bottom: 1px solid #70624F;
+  box-shadow: 0 2px 4px rgba(26, 24, 21, 0.12);
+}
+
+.shelf-beam-shadow {
+  height: 12px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(26, 24, 21, 0.18) 0%, rgba(26, 24, 21, 0) 70%);
+}
+
+/* ==========================================================================
+   THE BIBLIOGRAPHIC INDEX TABLE
+   ========================================================================== */
+
+.catalog-index-section {
+  background: var(--color-paper-card);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  margin: 24px 0 40px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(26, 24, 21, 0.04);
+}
+
+.catalog-index-header {
+  display: grid;
+  grid-template-columns: 60px 1.5fr 1fr 120px 180px;
+  gap: 16px;
+  padding: 12px 20px;
+  background: var(--color-paper-raised);
+  border-bottom: 1px solid var(--color-hairline);
+  font-family: var(--font-dm-sans);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+.catalog-index-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.catalog-index-row {
+  display: grid;
+  grid-template-columns: 60px 1.5fr 1fr 120px 180px;
+  gap: 16px;
+  padding: 14px 20px;
+  align-items: center;
+  border-bottom: 1px solid var(--color-hairline);
+  transition: background-color 0.15s ease;
+}
+
+.catalog-index-row:last-child {
+  border-bottom: none;
+}
+
+.catalog-index-row:hover {
+  background: var(--color-paper-raised);
+}
+
+.ci-num {
+  font-family: var(--font-cormorant);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--color-ink-faint);
+}
+
+.ci-title {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.ci-title-link {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ci-title-text {
+  font-family: var(--font-cormorant);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-ink);
+  line-height: 1.2;
+  transition: color 0.15s ease;
+}
+
+.ci-title-link:hover .ci-title-text {
+  color: var(--color-accent);
+}
+
+.ci-saved-badge {
+  font-family: var(--font-dm-sans);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--color-accent);
+}
+
+.ci-subtitle {
+  font-family: var(--font-cormorant);
+  font-style: italic;
+  font-size: 13.5px;
+  color: var(--color-ink-muted);
+}
+
+.ci-category-tag {
+  font-family: var(--font-dm-sans);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-ink-faint);
+}
+
+.ci-author {
+  font-family: var(--font-dm-sans);
+  font-size: 12.5px;
+  color: var(--color-ink);
+  font-weight: 500;
+}
+
+.ci-format {
+  font-family: var(--font-dm-sans);
+  font-size: 11px;
+  color: var(--color-ink-muted);
+  letter-spacing: 0.05em;
+}
+
+.ci-price {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ci-price-val {
+  font-family: var(--font-cormorant);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--color-ink);
+  flex-shrink: 0;
+}
+
+.ci-inspect-btn {
+  font-size: 10.5px !important;
+  padding: 4px 10px !important;
+  min-height: 28px !important;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   BOOK COVER CRAFT: GROOVE, STACKED PAGES, RIBBON
+   ========================================================================== */
+
+.edition-cover {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  border-radius: var(--radius-sm) !important;
+  overflow: visible;
+}
+
+.edition-cover img {
+  border-radius: var(--radius-sm);
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  box-shadow:
+    inset 2px 0 3px rgba(255, 255, 255, 0.4),
+    inset -1px 0 2px rgba(0, 0, 0, 0.15),
+    2px 0 0 -1px #E4DCCE,
+    4px 0 0 -2px #D9CFBD,
+    0 10px 14px -8px rgba(60, 48, 30, 0.35);
+}
+
+/* Notched Bookmark Ribbon on Covers */
+.book-cover-ribbon {
+  position: absolute;
+  top: -4px;
+  right: 14px;
+  width: 11px;
+  height: 34px;
+  background: var(--color-accent);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 5px), 0 100%);
+  box-shadow: 0 2px 4px rgba(26, 24, 21, 0.25);
+  z-index: 6;
+  pointer-events: none;
+}
+
+/* Pagination Nav */
+.pagination-nav {
+  margin-top: 36px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-hairline);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pagination-label {
+  font-family: var(--font-cormorant);
+  font-size: 15px;
+  font-style: italic;
+  color: var(--color-ink-muted);
+}
+
+@media (max-width: 768px) {
+  .catalog-index-header {
+    display: none;
+  }
+  .catalog-index-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 16px;
+  }
+  .ci-num {
+    display: none;
+  }
+  .ci-price {
+    justify-content: space-between;
+  }
+}
+
+/* ==========================================================================
+   PRINT REDESIGN — COMPONENT 3: OPEN FOLIO DOUBLE-PAGE SPREAD & COLOPHON
+   ========================================================================== */
+
+.knovera-detail-page {
+  padding-top: 24px;
+  padding-bottom: 80px;
+}
+
+/* Spread Navigation & Running Breadcrumb */
+.book-spread-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-hairline);
+  font-family: var(--font-dm-sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.book-nav-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-ink);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.book-nav-back:hover {
+  color: var(--color-accent);
+}
+
+.book-nav-folio {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-ink-muted);
+}
+
+.book-nav-bullet {
+  color: var(--color-accent);
+}
+
+/* The Open Folio Spread */
+.book-open-spread {
+  display: grid;
+  grid-template-columns: minmax(300px, 1fr) 1px minmax(380px, 1.3fr);
+  gap: 40px;
+  background: var(--color-paper-card);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  padding: 48px 44px;
+  box-shadow: 0 4px 20px rgba(26, 24, 21, 0.05);
+  margin-bottom: 48px;
+  position: relative;
+}
+
+/* Central Gutter / Spine Fold Stitch */
+.book-spread-gutter {
+  position: relative;
+  width: 1px;
+  background: var(--color-hairline);
+  box-shadow: -2px 0 6px rgba(26, 24, 21, 0.04), 2px 0 6px rgba(26, 24, 21, 0.04);
+}
+
+.gutter-stitch-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  background: repeating-linear-gradient(
+    180deg,
+    var(--color-sand) 0,
+    var(--color-sand) 6px,
+    transparent 6px,
+    transparent 12px
+  );
+  opacity: 0.7;
+}
+
+/* Left Page: The Plate */
+.book-spread-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.book-plate-wrapper {
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 96px;
+}
+
+.book-plate-frame {
+  max-width: 320px;
+  margin: 0 auto 28px;
+  filter: drop-shadow(0 14px 24px rgba(26, 24, 21, 0.22));
+}
+
+.book-plate-imprint {
+  background: var(--color-paper-raised);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  padding: 16px 18px;
+  margin-bottom: 16px;
+}
+
+.imprint-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-dm-sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  border-bottom: 1px solid var(--color-hairline);
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+}
+
+.imprint-version {
+  color: var(--color-accent);
+}
+
+.imprint-statement {
+  font-family: var(--font-dm-sans);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--color-ink-muted);
+  margin: 0 0 12px;
+}
+
+.imprint-specs-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-family: var(--font-dm-sans);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.imprint-specs-row span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.book-sample-plate-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 18px;
+  background: var(--color-paper-raised);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  color: var(--color-ink);
+  font-family: var(--font-dm-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.book-sample-plate-btn:hover {
+  background: var(--color-ink);
+  color: var(--color-paper-page);
+  border-color: var(--color-ink);
+}
+
+/* Right Page: The Typeset Text */
+.book-spread-right {
+  display: flex;
+  flex-direction: column;
+}
+
+.book-typeset-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.book-typeset-kicker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-dm-sans);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 10px;
+}
+
+.kicker-sep {
+  color: var(--color-hairline);
+}
+
+.book-typeset-title {
+  font-family: var(--font-cormorant);
+  font-size: clamp(38px, 4.2vw, 62px);
+  line-height: 1.05;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: var(--color-ink);
+  margin: 0 0 10px;
+}
+
+.book-typeset-subtitle {
+  font-family: var(--font-cormorant);
+  font-style: italic;
+  font-size: clamp(19px, 2vw, 24px);
+  line-height: 1.25;
+  color: var(--color-ink-muted);
+  margin: 0 0 16px;
+}
+
+.book-typeset-byline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-dm-sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  margin-bottom: 20px;
+}
+
+.byline-bullet {
+  color: var(--color-accent);
+  font-size: 13px;
+}
+
+.hairline-divider {
+  width: 100%;
+  height: 1px;
+  background: var(--color-hairline);
+  margin-bottom: 24px;
+}
+
+/* 3-Line Traditional Drop Cap */
+.book-dropcap-prose {
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.typeset-dropcap {
+  float: left;
+  font-family: var(--font-cormorant);
+  font-size: 64px;
+  line-height: 52px;
+  padding-top: 4px;
+  padding-right: 12px;
+  padding-bottom: 2px;
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.dropcap-lead-paragraph {
+  font-family: var(--font-dm-sans);
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+/* Right-Gutter Marginalia Callout */
+.book-marginal-note {
+  background: var(--color-paper-raised);
+  border-left: 2px solid var(--color-accent);
+  padding: 10px 14px;
+  margin: 18px 0 28px;
+  border-radius: 0 2px 2px 0;
+  display: flex;
+  gap: 8px;
+}
+
+.marginal-anchor {
+  font-family: var(--font-cormorant);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--color-accent);
+  line-height: 1.2;
+}
+
+.marginal-text {
+  font-family: var(--font-cormorant);
+  font-style: italic;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-ink-muted);
+  margin: 0;
+}
+
+/* Order Slip Card */
+.book-order-slip {
+  background: var(--color-paper-raised);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  padding: 24px;
+  margin-bottom: 32px;
+  box-shadow: 0 2px 8px rgba(26, 24, 21, 0.04);
+  position: relative;
+}
+
+.order-slip-perforation {
+  position: absolute;
+  top: 0;
+  left: 12px;
+  right: 12px;
+  height: 1px;
+  border-top: 1px dashed var(--color-hairline);
+}
+
+.order-slip-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+
+.order-slip-kicker {
+  font-family: var(--font-dm-sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.slip-fleuron {
+  color: var(--color-accent);
+}
+
+.order-slip-pricing {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.order-slip-amount {
+  font-family: var(--font-cormorant);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-ink);
+}
+
+.order-slip-cur {
+  font-family: var(--font-dm-sans);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-ink-muted);
+}
+
+.order-slip-strike {
+  font-family: var(--font-cormorant);
+  font-size: 18px;
+  color: var(--color-ink-faint);
+  text-decoration: line-through;
+}
+
+.order-slip-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-dm-sans);
+  font-size: 11.5px;
+  color: var(--color-ink-muted);
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.order-slip-format-tag {
+  background: var(--color-paper-card);
+  border: 1px solid var(--color-hairline);
+  padding: 2px 8px;
+  border-radius: 2px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 10px;
+}
+
+.order-slip-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.book-acquisition-btn {
+  background: var(--color-ink);
+  color: var(--color-paper-page);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 14px 20px;
+  font-family: var(--font-dm-sans);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 6px rgba(26, 24, 21, 0.15);
+}
+
+.book-acquisition-btn:hover {
+  background: #2D2822;
+  box-shadow: 0 4px 12px rgba(26, 24, 21, 0.25);
+}
+
+.book-acquisition-btn:focus-visible {
+  outline: 2px solid var(--color-ink);
+  box-shadow: 0 0 0 4px var(--color-accent);
+}
+
+.btn-price-tag {
+  font-family: var(--font-cormorant);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.book-ribbon-save-btn {
+  background: var(--color-paper-card);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  font-family: var(--font-dm-sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.book-ribbon-save-btn:hover {
+  border-color: var(--color-sand);
+  background: var(--color-paper-raised);
+}
+
+.book-ribbon-save-btn[aria-pressed="true"] {
+  background: var(--color-paper-card);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.order-slip-guarantees {
+  list-style: none;
+  margin: 0;
+  padding: 12px 0 0;
+  border-top: 1px solid var(--color-hairline);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.order-slip-guarantees li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-family: var(--font-dm-sans);
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--color-ink-muted);
+}
+
+.guarantee-dot {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+/* Two-Volume Slipcase Callout */
+.book-paired-slipcase {
+  background: var(--color-paper-page);
+  border: 1px solid var(--color-sand);
+  border-radius: var(--radius-sm);
+  padding: 18px 20px;
+  margin-bottom: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.paired-slipcase-info h4 {
+  font-family: var(--font-cormorant);
+  font-size: 19px;
+  font-weight: 600;
+  margin: 4px 0;
+  color: var(--color-ink);
+}
+
+.paired-slipcase-info p {
+  font-family: var(--font-dm-sans);
+  font-size: 12.5px;
+  color: var(--color-ink-muted);
+  margin: 0;
+}
+
+/* Colophon Block */
+.book-colophon-block {
+  border-top: 1px double var(--color-sand);
+  padding-top: 24px;
+  margin-top: 28px;
+}
+
+.colophon-title-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.colophon-kicker {
+  font-family: var(--font-dm-sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+.colophon-anchor {
+  font-family: var(--font-cormorant);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-ink-faint);
+}
+
+.colophon-dl {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+}
+
+.colophon-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.colophon-row dt {
+  font-family: var(--font-dm-sans);
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  flex-shrink: 0;
+}
+
+.colophon-row dd {
+  font-family: var(--font-dm-sans);
+  color: var(--color-ink);
+  margin: 0;
+  flex-shrink: 0;
+  font-size: 11.5px;
+}
+
+/* Responsive Double-Page Spread */
+@media (max-width: 900px) {
+  .book-open-spread {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 28px 20px;
+  }
+  .book-spread-gutter {
+    display: none;
+  }
+  .book-plate-wrapper {
+    position: static;
+  }
+  .book-plate-frame {
+    max-width: 240px;
+  }
+}
+
+/* ==========================================================================
+   PRINT REDESIGN — COMPONENT 4: POSTAL DISPATCH & COLOPHON FOOTER
+   ========================================================================== */
+
+.colophon-footer {
+  background: var(--color-paper-card);
+  border-top: 1px solid var(--color-hairline);
+  padding: 32px 0 48px;
+  margin-top: 64px;
+}
+
+.colophon-footer-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Return to First Page Footnote Button */
+.return-to-first-page-wrap {
+  margin-bottom: 32px;
+}
+
+.return-to-first-page-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  color: var(--color-ink-muted);
+  font-family: var(--font-dm-sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s ease;
+}
+
+.return-to-first-page-btn:hover {
+  color: var(--color-accent);
+}
+
+/* Dispatch Section: Archival Letter & Postal Slip */
+.dispatch-envelope-section {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 48px;
+  background: var(--color-paper-page);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  padding: 44px;
+  margin-bottom: 56px;
+  box-shadow: 0 2px 12px rgba(26, 24, 21, 0.04);
+  align-items: center;
+}
+
+.dispatch-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-dm-sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  margin-bottom: 12px;
+}
+
+.dispatch-fleuron {
+  color: var(--color-accent);
+  font-size: 14px;
+}
+
+.dispatch-headline {
+  font-family: var(--font-cormorant);
+  font-size: clamp(34px, 4vw, 50px);
+  line-height: 1.05;
+  font-weight: 600;
+  color: var(--color-ink);
+  letter-spacing: -0.02em;
+  margin: 0 0 14px;
+}
+
+.headline-italic {
+  font-style: italic;
+  color: var(--color-ink);
+}
+
+.dispatch-body {
+  font-family: var(--font-dm-sans);
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--color-ink-muted);
+  max-width: 500px;
+  margin: 0 0 20px;
+}
+
+.dispatch-endorsement {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-cormorant);
+  font-style: italic;
+  font-size: 13.5px;
+  color: var(--color-ink-muted);
+}
+
+.endorsement-mark {
+  color: var(--color-accent);
+  font-style: normal;
+}
+
+/* The Postal Slip */
+.postal-slip-card {
+  background: var(--color-paper-raised);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  padding: 28px 24px;
+  position: relative;
+  box-shadow: 0 4px 16px rgba(26, 24, 21, 0.06);
+}
+
+.postal-notch {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: var(--color-paper-page);
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 1px solid var(--color-hairline);
+}
+
+.postal-notch-left {
+  left: -8px;
+}
+
+.postal-notch-right {
+  right: -8px;
+}
+
+.postal-slip-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px dashed var(--color-hairline);
+  padding-bottom: 12px;
+  margin-bottom: 18px;
+}
+
+.postal-slip-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.postal-folio {
+  font-family: var(--font-cormorant);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--color-accent);
+}
+
+.postal-title {
+  font-family: var(--font-dm-sans);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+.postal-postmark-wrap {
+  width: 54px;
+  height: 54px;
+  transform: rotate(-8deg);
+  opacity: 0.7;
+  color: var(--color-ink-faint);
+}
+
+.dispatch-postmark {
+  width: 100%;
+  height: 100%;
+}
+
+.postal-input-label {
+  display: block;
+  font-family: var(--font-dm-sans);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  margin-bottom: 6px;
+}
+
+.postal-input-underline-wrap {
+  border-bottom: 1px solid var(--color-ink);
+  margin-bottom: 18px;
+  transition: border-color 0.15s ease;
+}
+
+.postal-input-underline-wrap:focus-within {
+  border-color: var(--color-accent);
+}
+
+.postal-email-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-family: var(--font-dm-sans);
+  font-size: 14px;
+  color: var(--color-ink);
+  padding: 6px 0 8px;
+  outline: none;
+}
+
+.postal-email-input::placeholder {
+  color: var(--color-ink-faint);
+}
+
+.postal-submit-btn {
+  background: var(--color-ink);
+  color: var(--color-paper-page);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 12px 18px;
+  font-family: var(--font-dm-sans);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.postal-submit-btn:hover {
+  background: #2D2822;
+}
+
+.postal-submit-btn:focus-visible {
+  outline: 2px solid var(--color-ink);
+  box-shadow: 0 0 0 4px var(--color-accent);
+}
+
+.postal-error-msg {
+  color: #B91C1C;
+  font-family: var(--font-dm-sans);
+  font-size: 11.5px;
+  margin-top: 8px;
+}
+
+.postal-success-slip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-family: var(--font-dm-sans);
+  font-size: 11.5px;
+  color: #065F46;
+  margin-top: 12px;
+}
+
+.postal-slip-footer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-dm-sans);
+  font-size: 10.5px;
+  color: var(--color-ink-faint);
+  margin-top: 12px;
+}
+
+/* Colophon Directory Layout */
+.colophon-directory {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 56px;
+  padding-bottom: 44px;
+  border-bottom: 1px solid var(--color-hairline);
+  margin-bottom: 28px;
+}
+
+.colophon-brand-title {
+  font-family: var(--font-cormorant);
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--color-ink);
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.colophon-brand-mission {
+  font-family: var(--font-dm-sans);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-ink-muted);
+  margin: 0 0 16px;
+  max-width: 320px;
+}
+
+.colophon-brand-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-dm-sans);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--color-ink-faint);
+  flex-wrap: wrap;
+}
+
+.badge-sep {
+  color: var(--color-hairline);
+}
+
+.colophon-toc-columns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.colophon-toc-heading {
+  font-family: var(--font-dm-sans);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  margin: 0 0 16px;
+}
+
+.toc-roman {
+  font-family: var(--font-cormorant);
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.colophon-toc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.colophon-toc-link {
+  font-family: var(--font-dm-sans);
+  font-size: 13px;
+  color: var(--color-ink-muted);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.colophon-toc-link:hover {
+  color: var(--color-ink);
+}
+
+/* Final Colophon Imprint Bar */
+.colophon-imprint-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-dm-sans);
+  font-size: 11px;
+  color: var(--color-ink-faint);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.colophon-sep {
+  color: var(--color-accent);
+  margin: 0 8px;
+}
+
+.colophon-copyright {
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+@media (max-width: 900px) {
+  .dispatch-envelope-section {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 28px 20px;
+  }
+  .colophon-directory {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+  .colophon-toc-columns {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+/* ==========================================================================
+   PRINT REDESIGN — COMPONENT 5: CART ACCOUNTING LEDGER ORDER SLIP
+   ========================================================================== */
+
+.cart-ledger-page {
+  padding-top: 28px;
+  padding-bottom: 72px;
+}
+
+.cart-nav-back-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-hairline);
+  font-family: var(--font-dm-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cart-nav-folio {
+  color: var(--color-ink-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cart-nav-sep {
+  color: var(--color-accent);
+}
+
+.cart-lead-text {
+  font-family: var(--font-dm-sans);
+  font-size: 15px;
+  color: var(--color-ink-muted);
+  max-width: 580px;
+  margin-top: 6px;
+}
+
+.cart-empty-slip {
+  background: var(--color-paper-card);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.empty-slip-fleuron {
+  font-size: 28px;
+  color: var(--color-accent);
+  display: block;
+  margin-bottom: 14px;
+}
+
+/* Cart Ledger Layout */
+.cart-ledger-layout {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 40px;
+  margin-top: 32px;
+  align-items: start;
+}
+
+/* Ruled Ledger Main Table */
+.cart-ledger-main {
+  background: var(--color-paper-card);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(26, 24, 21, 0.04);
+}
+
+.cart-ledger-header {
+  display: grid;
+  grid-template-columns: 1fr 140px 100px;
+  gap: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-hairline);
+  font-family: var(--font-dm-sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+}
+
+.clh-price {
+  text-align: right;
+}
+
+.cart-ledger-rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-ledger-row {
+  display: grid;
+  grid-template-columns: 1fr 140px 100px;
+  gap: 16px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--color-hairline);
+  align-items: center;
+}
+
+.cart-row-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.cart-row-index {
+  font-family: var(--font-cormorant);
+  font-size: 13.5px;
+  color: var(--color-ink-faint);
+  font-weight: 600;
+}
+
+.cart-row-cover {
+  width: 52px;
+  display: block;
+}
+
+.cart-row-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cart-row-title-link {
+  text-decoration: none;
+}
+
+.cart-row-title {
+  font-family: var(--font-cormorant);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--color-ink);
+  line-height: 1.2;
+  margin: 0;
+  transition: color 0.15s ease;
+}
+
+.cart-row-title-link:hover .cart-row-title {
+  color: var(--color-accent);
+}
+
+.cart-row-author {
+  font-family: var(--font-dm-sans);
+  font-size: 12px;
+  color: var(--color-ink-muted);
+  margin: 0;
+}
+
+.cart-row-format {
+  font-family: var(--font-dm-sans);
+  font-size: 10.5px;
+  color: var(--color-ink-faint);
+  margin: 0;
+}
+
+/* Stepper & Controls */
+.cart-row-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.cart-stepper {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--color-hairline);
+  background: var(--color-paper-raised);
+  border-radius: var(--radius-sm);
+}
+
+.stepper-btn {
+  background: transparent;
+  border: none;
+  padding: 5px 8px;
+  color: var(--color-ink);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stepper-btn:hover {
+  background: rgba(217, 207, 189, 0.3);
+}
+
+.stepper-val {
+  font-family: var(--font-cormorant);
+  font-size: 14px;
+  font-weight: 700;
+  padding: 0 8px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.cart-remove-link {
+  background: transparent;
+  border: none;
+  font-family: var(--font-dm-sans);
+  font-size: 11px;
+  color: var(--color-ink-faint);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s ease;
+}
+
+.cart-remove-link:hover {
+  color: #B91C1C;
+}
+
+.cart-row-total {
+  text-align: right;
+}
+
+.cart-row-amount {
+  font-family: var(--font-cormorant);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.cart-ledger-footer-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 18px;
+}
+
+.cart-clear-btn {
+  background: transparent;
+  border: none;
+  font-family: var(--font-dm-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-ink-faint);
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s ease;
+}
+
+.cart-clear-btn:hover {
+  color: #B91C1C;
+}
+
+.cart-continue-link {
+  font-family: var(--font-dm-sans);
+  font-size: 12px;
+  color: var(--color-ink-muted);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.cart-continue-link:hover {
+  color: var(--color-ink);
+}
+
+/* Right: Settlement Slip */
+.cart-summary-slip {
+  background: var(--color-paper-raised);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-sm);
+  padding: 28px 24px;
+  box-shadow: 0 4px 16px rgba(26, 24, 21, 0.06);
+  position: relative;
+}
+
+.slip-perforation-edge {
+  position: absolute;
+  top: 0;
+  left: 12px;
+  right: 12px;
+  height: 1px;
+  border-top: 1px dashed var(--color-hairline);
+}
+
+.slip-kicker-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-dm-sans);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted);
+  margin-bottom: 8px;
+}
+
+.slip-number {
+  color: var(--color-accent);
+}
+
+.slip-title {
+  font-family: var(--font-cormorant);
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin: 0 0 6px;
+}
+
+.slip-caption {
+  font-family: var(--font-dm-sans);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--color-ink-muted);
+  margin: 0 0 20px;
+}
+
+.slip-ledger-dl {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 0 24px;
+  padding: 16px 0;
+  border-top: 1px solid var(--color-hairline);
+  border-bottom: 1px solid var(--color-hairline);
+}
+
+.slip-ledger-row {
+  display: flex;
+  align-items: baseline;
+  font-size: 12px;
+}
+
+.slip-ledger-row dt {
+  font-family: var(--font-dm-sans);
+  color: var(--color-ink-muted);
+  flex-shrink: 0;
+}
+
+.slip-ledger-row dd {
+  font-family: var(--font-cormorant);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin: 0;
+  flex-shrink: 0;
+}
+
+/* Double Hairline Rule on Total */
+.slip-total-row {
+  border-top: 3px double var(--color-ink);
+  padding-top: 12px;
+  margin-top: 4px;
+}
+
+.slip-total-label {
+  font-family: var(--font-dm-sans) !important;
+  font-weight: 700 !important;
+  font-size: 11px !important;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink) !important;
+}
+
+.slip-total-val {
+  font-family: var(--font-cormorant) !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  color: var(--color-ink) !important;
+}
+
+.cart-checkout-btn {
+  background: var(--color-ink);
+  color: var(--color-paper-page);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 14px 20px;
+  font-family: var(--font-dm-sans);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 6px rgba(26, 24, 21, 0.15);
+}
+
+.cart-checkout-btn:hover {
+  background: #2D2822;
+  box-shadow: 0 4px 12px rgba(26, 24, 21, 0.25);
+}
+
+.slip-guarantees-box {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--color-hairline);
+}
+
+.slip-assurance {
+  font-family: var(--font-dm-sans);
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--color-ink-muted);
+  margin: 0 0 10px;
+}
+
+.slip-extra-links {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.slip-sub-link {
+  font-family: var(--font-dm-sans);
+  font-size: 11px;
+  color: var(--color-ink-faint);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.slip-sub-link:hover {
+  color: var(--color-ink);
+}
+
+@media (max-width: 860px) {
+  .cart-ledger-layout {
+    grid-template-columns: 1fr;
+  }
+  .cart-ledger-header {
+    display: none;
+  }
+  .cart-ledger-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .cart-row-total {
+    text-align: left;
+  }
+}
+
+/* ==========================================================================
+   POLISH: INK BUTTON CONTRAST & LETTERPRESS TOPIC TABS
+   ========================================================================== */
+
+/* Guaranteed Crisp Paper Ink Button Typography */
+.book-acquisition-btn,
+.book-acquisition-btn span,
+.book-acquisition-btn small,
+.cart-checkout-btn,
+.cart-checkout-btn span {
+  color: var(--color-paper-page) !important;
+}
+
+.book-acquisition-btn .btn-price-tag,
+.book-acquisition-btn .btn-price-tag small {
+  color: var(--color-accent) !important;
+}
+
+/* Topic Navigation — Strict Print Small-Caps Tabs, No Bubbly Pills */
+.studio-topic-row button,
+.topic-tab-button {
+  border-radius: var(--radius-sm) !important;
+  background: var(--color-paper-card) !important;
+  border: 1px solid var(--color-hairline) !important;
+  color: var(--color-ink-muted) !important;
+  font-family: var(--font-dm-sans) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  padding: 6px 14px !important;
+  min-height: 34px !important;
+  box-shadow: 0 1px 2px rgba(26, 24, 21, 0.04) !important;
+  transition: all 0.15s ease !important;
+}
+
+.studio-topic-row button:hover,
+.topic-tab-button:hover {
+  background: var(--color-paper-raised) !important;
+  color: var(--color-ink) !important;
+  border-color: var(--color-sand) !important;
+}
+
+.studio-topic-row button[aria-pressed="true"],
+.topic-tab-button[aria-pressed="true"] {
+  background: var(--color-ink) !important;
+  color: var(--color-paper-page) !important;
+  border-color: var(--color-ink) !important;
+  box-shadow: 0 2px 6px rgba(26, 24, 21, 0.2) !important;
+}
+
+
+
+
+
