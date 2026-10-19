@@ -9,12 +9,7 @@ import {
   ShieldCheck,
   Smartphone,
   RefreshCw,
-  Sparkles,
   Bookmark,
-  ChevronLeft,
-  ChevronRight,
-  Pause,
-  Play,
 } from 'lucide-react';
 import BookCover from '../books/BookCover';
 import { money, formatsLabel } from '../../lib/catalog';
@@ -67,44 +62,52 @@ export default function Marketplace({ books }: { books: Book[] }) {
           <div className="knovera-hero-grid">
             {/* Left: Press & Imprint Framing */}
             <div className="knovera-hero-content">
-              <div className="knovera-kicker-badge">
-                <span className="knovera-kicker-dot" aria-hidden="true" />
-                <span>A LITTLE CURIOSITY. A NEW CHAPTER.</span>
+              <div className="knovera-hero-eyebrow">
+                <span className="knovera-eyebrow-rule" aria-hidden="true" />
+                <span className="knovera-eyebrow-text">INDEPENDENT PUBLISHING PRESS · EDITION ARCHITECTURE</span>
               </div>
 
               <h1 id="hero-heading" className="knovera-hero-title">
-                A good book.
-                <br /><span>A new perspective.</span>
+                Books engineered for
+                <br />
+                <em>unbroken focus</em> &amp; leverage.
               </h1>
 
               <p className="knovera-hero-lead">
-                Find something that stays with you. Explore digital books, read a sample,
-                and make room for your next discovery.
+                Definitive digital reference editions on cognitive architecture, systems design,
+                and high-leverage craft. Archival typesetting, completely DRM-free, and designed for decades of reference.
               </p>
 
-              {/* Quick Trust Highlights right under lead for immediate confidence */}
+              <div className="knovera-hero-actions">
+                <a href="#collection" className="studio-button knovera-hero-cta">
+                  <span>Explore the Collection</span>
+                  <ArrowRight size={16} aria-hidden="true" />
+                </a>
+                {featured && featured.sampleExcerpt.trim() && (
+                  <Link
+                    href={`/samples/${featured.slug}`}
+                    className="studio-button outline knovera-hero-sample-btn"
+                  >
+                    <BookOpen size={16} aria-hidden="true" />
+                    <span>Read Free Sample</span>
+                  </Link>
+                )}
+              </div>
+
+              {/* Quick Trust Highlights right under actions for immediate confidence */}
               <div className="knovera-hero-specs" aria-label="Format specifications">
                 <div className="knovera-spec-item">
-                  <Download size={15} aria-hidden="true" />
+                  <Download size={14} aria-hidden="true" />
                   <span>DRM-Free EPUB &amp; Typeset PDF</span>
                 </div>
                 <div className="knovera-spec-item">
-                  <Smartphone size={15} aria-hidden="true" />
+                  <Smartphone size={14} aria-hidden="true" />
                   <span>Kindle &amp; Apple Books Ready</span>
                 </div>
                 <div className="knovera-spec-item">
-                  <ShieldCheck size={15} aria-hidden="true" />
-                  <span>Secure digital delivery</span>
+                  <ShieldCheck size={14} aria-hidden="true" />
+                  <span>Lifetime Revisions Included</span>
                 </div>
-              </div>
-
-              <div className="knovera-hero-actions">
-                {featured && <a href="#featured-book" className="studio-button">
-                  Explore featured book <ArrowRight size={16} aria-hidden="true" />
-                </a>}
-                <a href="#collection" className="studio-button outline">
-                  Browse {books.length} {books.length === 1 ? 'title' : 'titles'}
-                </a>
               </div>
             </div>
 
@@ -112,9 +115,10 @@ export default function Marketplace({ books }: { books: Book[] }) {
             {featured && (
               <div id="featured-book" className="knovera-featured-box rotating-showcase" ref={showcase} role="region" aria-roledescription="carousel" aria-label="Discover books" data-playing={autoRotate}>
                 <div className="knovera-featured-card">
-                  <div className="knovera-featured-tag">
-                    <Sparkles size={13} aria-hidden="true" />
-                    <span>FEATURED EDITION</span>
+                  <div className="knovera-spotlight-eyebrow">
+                    <span className="knovera-spotlight-label">FEATURED TITLE</span>
+                    <span className="knovera-spotlight-dot" aria-hidden="true">·</span>
+                    <span className="knovera-spotlight-cat">{featured.category}</span>
                   </div>
 
                   <div className="knovera-featured-layout" role="group" aria-roledescription="slide" aria-label={`${selectedIndex + 1} of ${books.length}: ${featured.title}`}>
@@ -182,13 +186,26 @@ export default function Marketplace({ books }: { books: Book[] }) {
                     </div>
                   </div>
                 </div>
-                {canRotate && <div className="showcase-controls">
-                  <span className="showcase-position" aria-live={autoRotate ? 'off' : 'polite'}>{String(selectedIndex + 1).padStart(2, '0')} <span>/ {String(books.length).padStart(2, '0')}</span></span>
-                  <div className="showcase-track" aria-hidden="true">{books.map(book => <span key={book.id} data-active={book.id === featured.id} />)}</div>
-                  <button type="button" className="showcase-control" aria-label="Previous book" onClick={() => move(-1)}><ChevronLeft size={17} aria-hidden="true" /></button>
-                  {!reducedMotion && <button type="button" className="showcase-control" aria-label={playing ? 'Pause book rotation' : 'Start book rotation'} onClick={() => setPlaying(value => !value)}>{playing ? <Pause size={15} aria-hidden="true" /> : <Play size={15} aria-hidden="true" />}</button>}
-                  <button type="button" className="showcase-control" aria-label="Next book" onClick={() => move(1)}><ChevronRight size={17} aria-hidden="true" /></button>
-                </div>}
+                {canRotate && (
+                  <div className="knovera-hero-edition-tabs" role="tablist" aria-label="Select spotlight volume">
+                    {books.map((book, idx) => (
+                      <button
+                        key={book.id}
+                        type="button"
+                        role="tab"
+                        aria-selected={book.id === featured.id}
+                        className={`knovera-hero-tab-btn ${book.id === featured.id ? 'active' : ''}`}
+                        onClick={() => {
+                          setPlaying(false);
+                          setSelectedId(book.id);
+                        }}
+                      >
+                        <span className="tab-idx">{String(idx + 1).padStart(2, '0')}</span>
+                        <span className="tab-name">{book.title.split(':')[0]}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>

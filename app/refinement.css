@@ -133,40 +133,27 @@ textarea:focus-visible {
   align-items: center;
 }
 
-.knovera-kicker-badge {
+.knovera-hero-eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 14px 6px 10px;
-  background: rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(104, 43, 56, 0.16);
-  border-radius: 999px;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.knovera-eyebrow-rule {
+  display: inline-block;
+  width: 28px;
+  height: 1.5px;
+  background: var(--color-accent);
+  opacity: 0.8;
+}
+
+.knovera-eyebrow-text {
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.13em;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
   color: var(--color-accent);
-  box-shadow: 0 2px 10px -2px rgba(104, 43, 56, 0.08);
-  backdrop-filter: blur(8px);
-}
-
-.knovera-kicker-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(104, 43, 56, 0.2);
-  animation: kicker-pulse 2.2s infinite ease-in-out;
-}
-
-@keyframes kicker-pulse {
-  0%, 100% {
-    box-shadow: 0 0 0 3px rgba(104, 43, 56, 0.2);
-    transform: scale(1);
-  }
-  50% {
-    box-shadow: 0 0 0 7px rgba(104, 43, 56, 0.05);
-    transform: scale(1.15);
-  }
 }
 
 .knovera-hero-title {
@@ -176,14 +163,16 @@ textarea:focus-visible {
   line-height: 1.05;
   letter-spacing: -0.025em;
   max-width: 660px;
-  margin: 24px 0 20px;
+  margin: 0 0 20px;
   text-wrap: balance;
   color: var(--color-ink);
 }
 
-.knovera-hero-title span {
+.knovera-hero-title span,
+.knovera-hero-title em {
   color: var(--color-accent);
   font-style: italic;
+  font-weight: inherit;
 }
 
 .knovera-hero-lead {
@@ -194,28 +183,34 @@ textarea:focus-visible {
 }
 
 .knovera-hero-specs {
-  gap: 12px;
-  margin: 28px 0;
-  flex-direction: column;
-  align-items: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 24px;
+  margin: 32px 0 0;
+  padding-top: 24px;
+  border-top: 1px solid var(--refine-line);
 }
 
 .knovera-spec-item {
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 500;
-  color: var(--color-ink);
+  color: var(--color-ink-muted);
   display: inline-flex;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
 }
 
 .knovera-spec-item svg {
   color: var(--color-accent);
+  opacity: 0.85;
 }
 
 .knovera-hero-actions {
   gap: 14px;
   flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  margin-top: 28px;
 }
 
 /* --------------------------------------------------------------------------
@@ -243,19 +238,82 @@ textarea:focus-visible {
   border-color: rgba(104, 43, 56, 0.24);
 }
 
-.knovera-featured-tag {
+.knovera-spotlight-eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: rgba(104, 43, 56, 0.08);
-  border: 1px solid rgba(104, 43, 56, 0.16);
-  border-radius: 999px;
-  padding: 5px 12px;
+  gap: 8px;
   font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   color: var(--color-accent);
+  text-transform: uppercase;
   margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--refine-line);
+  width: 100%;
+}
+
+.knovera-spotlight-dot {
+  opacity: 0.4;
+}
+
+.knovera-spotlight-cat {
+  color: var(--color-ink-muted);
+  font-weight: 500;
+}
+
+.knovera-hero-edition-tabs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 8px;
+  border-top: 1px solid var(--refine-line);
+  padding-top: 20px;
+  margin-top: 26px;
+}
+
+.knovera-hero-tab-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  padding: 10px 14px;
+  border: 1px solid var(--refine-line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(8px);
+}
+
+.knovera-hero-tab-btn:hover {
+  background: #FFFFFF;
+  border-color: var(--color-accent-border);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(104, 43, 56, 0.08);
+}
+
+.knovera-hero-tab-btn.active {
+  background: #FFFFFF;
+  border-color: var(--color-accent);
+  box-shadow: 0 4px 16px -2px rgba(104, 43, 56, 0.18), inset 0 0 0 1px var(--color-accent);
+}
+
+.knovera-hero-tab-btn .tab-idx {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--color-accent);
+  letter-spacing: 0.1em;
+}
+
+.knovera-hero-tab-btn .tab-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .knovera-featured-layout {
