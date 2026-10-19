@@ -22,8 +22,36 @@ export function CommunityHub() {
   const [filter, setFilter] = useState('All conversations');
   const activity = useCommunityActivity();
   const filtered = DISCUSSIONS.filter(item => (filter !== 'Saved' || activity.saved.includes(item.slug)) && (filter !== 'My circles' || activity.joined.includes(item.circle)) && `${item.title} ${item.excerpt} ${getCircle(item.circle)?.name}`.toLowerCase().includes(query.toLowerCase().trim()));
-  return <div className="community-shell community-hub">
-    <div className="community-page-heading"><div><span className="community-eyebrow">YOUR COMMUNITY</span><h1>Discover your next conversation.</h1></div><a href="#member-conversations" className="community-button"><MessageCircle size={17} /> Join the conversation</a></div>
+
+  return (
+    <div className="community-shell community-hub">
+      <div className="studio-page-heading">
+        <span className="studio-kicker">KNOVERA READER CIRCLES &amp; SALON</span>
+        <h1>Discover your next conversation.</h1>
+        <p>Explore guided reading circles, companion discussions, and your personal reading space.</p>
+      </div>
+      <div className="community-status-bar">
+        <div className="community-status-metrics">
+        <span className="community-status-kicker">YOUR READING SPACE:</span>
+        <span className="community-status-pill">
+          <strong>{activity.joined.length}</strong> circles joined
+        </span>
+        <span className="community-status-bullet">·</span>
+        <span className="community-status-pill">
+          <strong>{activity.saved.length}</strong> saved reads
+        </span>
+        <span className="community-status-bullet">·</span>
+        <span className="community-status-pill">
+          <strong>{Object.keys(activity.notes).length}</strong> journal entries
+        </span>
+      </div>
+      <div className="community-status-actions">
+        <a href="#member-conversations" className="community-status-link">
+          <MessageCircle size={14} />
+          <span>Jump to conversations</span>
+        </a>
+      </div>
+    </div>
     <section className="community-hero">
       <div><span className="community-hero-badge"><Sparkles size={14} /> A place for every kind of reader</span><h2>Great reads.<br /><em>Even better connections.</em></h2><p>Books, ideas, questions, and everything in between. Follow your curiosity. Find a circle. Bring your perspective.</p><a href="#circles" className="community-button">Explore your interests <ArrowUpRight size={17} /></a></div>
       <div className="community-hero-art" aria-hidden="true"><div className="community-art-book book-back"><Sparkles size={28} /><span>A NEW<br />PERSPECTIVE</span></div><div className="community-art-book book-front"><BookOpen size={30} /><span>ONE MORE<br />CHAPTER.</span><i>and a world to talk about</i></div><span className="community-art-caption"><MessageCircle size={15} /> It starts with a good book.</span></div>
@@ -34,7 +62,8 @@ export function CommunityHub() {
     <div className="community-guided-heading"><span><BookOpen size={16} /> From Knovera</span><p className="community-result-count" aria-live="polite">{filtered.length} guided {filtered.length === 1 ? 'read' : 'reads'}</p></div><div className="conversation-grid">{filtered.map(item => <DiscussionCard key={item.slug} discussion={item} />)}</div>{filtered.length === 0 && <div className="community-empty"><Compass size={28} /><h3>A new direction awaits.</h3><p>{filter === 'Saved' ? 'Bookmark a conversation to keep it here.' : filter === 'My circles' ? 'Add a circle to discover its guided reads.' : 'Try a different search to find your next idea.'}</p><button className="community-button secondary" onClick={() => { setQuery(''); setFilter('All conversations'); }}>Explore all conversations</button></div>}</div>
     <div className="community-sidebar"><aside className="community-discovery-panel"><span className="community-eyebrow">A LITTLE INSPIRATION</span><h3>Find a new favorite.</h3><p>Sometimes a few pages open up a whole new conversation.</p><div className="community-discovery-icon"><BookOpen size={34} /><Sparkles size={19} /></div><Link className="community-button secondary" href="/books">Explore books <ArrowUpRight size={16} /></Link></aside><Guidelines /><aside className="community-mini-panel"><ShieldCheck size={18} /><div><strong>Your journal. Your space.</strong><p>Public conversations connect us. Private reflections stay yours.</p></div></aside></div></div></section>
     <section className="community-invitation"><span className="community-invitation-icon"><Users size={26} /></span><div><h2>Stay in the loop.</h2><p>Choose the reading topics you want to hear about.</p></div><Link className="community-button secondary" href="/reader-club#preferences">Reader Club preferences <ArrowUpRight size={17} /></Link></section>
-  </div>;
+    </div>
+  );
 }
 
 export function CircleDetail({ circle }: { circle: Circle }) {

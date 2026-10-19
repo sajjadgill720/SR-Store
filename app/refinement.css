@@ -117,6 +117,8 @@ body {
 .studio-nav-link:hover {
   color: var(--color-accent);
   background: rgba(104, 43, 56, 0.05);
+}
+
 .studio-header-link {
   font-size: 12.5px;
   font-weight: 500;
@@ -808,216 +810,285 @@ textarea:focus-visible {
 }
 
 /* ==========================================================================
-   10. THE SHOWSTOPPER CTA (Deep Obsidian Velvet Dark Portion)
+   10. EDITORIAL DISPATCH & READER SIGNUP (REFINED REFERENCE DESIGN)
    ========================================================================== */
-.studio-footer-invitation {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  background:
-    radial-gradient(ellipse 70% 60% at 85% -10%, rgba(162, 66, 86, 0.44), transparent 70%),
-    radial-gradient(ellipse 55% 55% at 15% 110%, rgba(104, 43, 56, 0.4), transparent 70%),
-    linear-gradient(145deg, #181215 0%, #22151B 50%, #161113 100%);
-  border: 1px solid rgba(230, 195, 205, 0.22);
-  border-radius: 24px;
-  padding: clamp(36px, 5vw, 60px) clamp(26px, 4.5vw, 56px);
-  display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-  gap: clamp(28px, 4vw, 52px);
-  align-items: center;
-  margin-bottom: 56px;
-  box-shadow:
-    0 28px 75px -20px rgba(18, 12, 15, 0.55),
-    0 1px 0 rgba(255, 255, 255, 0.12) inset;
-}
 
-.studio-footer-invitation-glow {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 50% 0%, rgba(232, 170, 182, 0.15) 0%, transparent 60%);
-  pointer-events: none;
-}
-
-.studio-footer-invitation-kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  color: #E8AAB6;
-  text-transform: uppercase;
-  margin-bottom: 12px;
-}
-
-.studio-kicker-pulse-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #E8AAB6;
-  box-shadow: 0 0 8px #E8AAB6;
-  animation: cta-pulse 2s infinite ease-in-out;
-}
-
-
-.studio-footer-invitation-copy h2 {
-  font-family: var(--font-editorial), Georgia, serif;
-  font-size: clamp(30px, 3.4vw, 44px);
-  font-weight: 600;
-  line-height: 1.12;
-  letter-spacing: -0.02em;
-  color: #FFFFFF;
-  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
-  margin: 0 0 14px;
-}
-
-.studio-footer-invitation-copy p {
-  color: rgba(247, 243, 235, 0.82);
-  font-size: 15px;
-  line-height: 1.7;
-  max-width: 48ch;
-  margin: 0;
-}
-
-.studio-footer-perks {
+/* Subtle Top-Left Back to top link */
+.amazon-back-to-top-wrap {
+  margin-bottom: 20px;
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 24px;
+  justify-content: flex-start;
 }
 
-.studio-footer-perk-item {
+.amazon-back-to-top-link {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 11.5px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 13.5px;
   font-weight: 500;
-  color: #F0E8DD;
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 999px;
-  padding: 5px 12px;
-  backdrop-filter: blur(10px);
+  color: #767069;
+  cursor: pointer;
+  transition: color 0.15s ease;
 }
 
-/* Newsletter Form Inside CTA */
-.studio-newsletter {
+.amazon-back-to-top-link:hover {
+  color: #171514;
+}
+
+/* Outer Warm Paper Card */
+.amazon-footer-dispatch-card,
+.studio-footer-invitation {
+  position: relative;
+  background: #FAF7F2;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 28px;
+  padding: clamp(36px, 4.5vw, 56px) clamp(28px, 4.5vw, 56px);
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: clamp(32px, 5vw, 60px);
+  align-items: center;
+  margin-bottom: 56px;
+  box-shadow: none;
+  isolation: isolate;
+}
+
+.amazon-dispatch-main {
   display: flex;
   flex-direction: column;
 }
 
-.studio-newsletter-header {
-  margin-bottom: 10px;
-}
-
-.studio-newsletter-label {
+.amazon-dispatch-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.12em;
-  color: #E8AAB6;
+  letter-spacing: 0.14em;
+  color: #5C564F;
   text-transform: uppercase;
+  margin-bottom: 24px;
 }
 
-.studio-newsletter-capsule {
-  display: flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 999px;
-  padding: 5px 5px 5px 16px;
-  backdrop-filter: blur(20px);
-  box-shadow:
-    inset 0 2px 6px rgba(0, 0, 0, 0.35),
-    0 10px 30px -10px rgba(0, 0, 0, 0.4);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  gap: 10px;
+.amazon-kicker-sparkle {
+  color: #D97706;
 }
 
-.studio-newsletter-capsule:focus-within {
-  border-color: #E8AAB6;
-  background: rgba(255, 255, 255, 0.12);
-  box-shadow:
-    0 0 0 3px rgba(232, 170, 182, 0.3),
-    inset 0 2px 6px rgba(0, 0, 0, 0.35);
+.amazon-kicker-brand {
+  color: #171514;
+  font-weight: 800;
 }
 
-.studio-newsletter-input-wrap {
+.amazon-badge-divider {
+  color: #A8A29A;
+}
+
+.amazon-kicker-text {
+  color: #6B6560;
+  font-weight: 600;
+}
+
+.amazon-dispatch-desc {
+  color: #4A453F;
+  font-size: clamp(15px, 1.35vw, 16.5px);
+  line-height: 1.7;
+  max-width: 44ch;
+  margin: 0 0 32px;
+}
+
+/* Star Rating & Social Proof */
+.amazon-dispatch-rating {
   display: flex;
   align-items: center;
   gap: 8px;
-  flex: 1;
-  min-width: 0;
+  flex-wrap: wrap;
 }
 
-.studio-newsletter-input-icon {
-  color: rgba(247, 243, 235, 0.5);
-  flex-shrink: 0;
-}
-
-.studio-newsletter-input {
-  width: 100%;
-  background: transparent;
-  border: none;
-  outline: none;
-  font-size: 14.5px;
-  color: #FFFFFF;
-  font-family: var(--font-sans), sans-serif;
-  padding: 6px 0;
-}
-
-.studio-newsletter-input::placeholder {
-  color: rgba(247, 243, 235, 0.45);
-  font-weight: 400;
-}
-
-.studio-newsletter-submit {
+.amazon-stars {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 7px;
-  background: linear-gradient(135deg, #A84157 0%, #762637 100%);
-  color: #FFFFFF;
-  font-weight: 600;
+  gap: 2px;
+}
+
+.amazon-star-fill {
+  color: #E59819;
+  fill: #E59819;
+}
+
+.amazon-rating-score {
+  font-size: 14px;
+  font-weight: 700;
+  color: #171514;
+}
+
+.amazon-rating-count {
   font-size: 13.5px;
-  letter-spacing: 0.01em;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 999px;
-  padding: 11px 22px;
-  cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 18px -2px rgba(168, 65, 87, 0.6);
+  color: #767069;
+}
+
+/* Right White Card */
+.amazon-dispatch-action-box {
+  background: #FFFFFF;
+  border-radius: 20px;
+  padding: clamp(28px, 3.5vw, 36px) clamp(24px, 3.2vw, 34px);
+  box-shadow: 0 10px 30px -10px rgba(45, 35, 30, 0.08), 0 1px 3px rgba(45, 35, 30, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.amazon-action-box-inner {
+  display: flex;
+  flex-direction: column;
+}
+
+.amazon-box-title {
+  font-family: var(--font-editorial), Georgia, serif;
+  font-size: clamp(26px, 2.5vw, 32px);
+  font-weight: 500;
+  line-height: 1.15;
+  color: #171514;
+  letter-spacing: -0.02em;
+  margin: 0 0 6px;
+}
+
+.amazon-box-subtitle {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #6B6560;
+  margin: 0 0 20px;
+}
+
+/* Newsletter Form */
+.amazon-newsletter-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.amazon-input-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #171514;
+  margin-bottom: 7px;
+}
+
+.amazon-input-wrapper {
+  display: flex;
+  align-items: center;
+  background: #FFFFFF;
+  border: 1px solid #D8D4CC;
+  border-radius: 10px;
+  height: 46px;
+  padding: 0 14px;
+  margin-bottom: 12px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.amazon-input-wrapper:focus-within {
+  border-color: #171514;
+  box-shadow: 0 0 0 2px rgba(23, 21, 20, 0.1);
+}
+
+.amazon-input-icon {
+  color: #767069;
+  margin-right: 10px;
   flex-shrink: 0;
-  white-space: nowrap;
 }
 
-.studio-newsletter-submit:hover:not(:disabled) {
-  transform: translateY(-1px) scale(1.02);
-  background: linear-gradient(135deg, #BD4B64 0%, #892D40 100%);
-  box-shadow: 0 8px 24px -2px rgba(168, 65, 87, 0.85);
+.amazon-email-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 14px;
+  color: #171514;
 }
 
-.studio-newsletter-submit:disabled {
-  opacity: 0.7;
+.amazon-email-input::placeholder {
+  color: #8C867E;
+}
+
+/* Black Sign Up Button */
+.amazon-cta-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 46px;
+  background: #171514;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 10px;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  box-shadow: 0 2px 6px rgba(23, 21, 20, 0.12);
+}
+
+.amazon-cta-btn:hover:not(:disabled) {
+  background: #2D2927;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(23, 21, 20, 0.18);
+}
+
+.amazon-cta-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.amazon-cta-btn:disabled {
+  opacity: 0.65;
   cursor: not-allowed;
+  transform: none;
 }
 
-.studio-newsletter-footer {
+.amazon-error-msg {
+  color: #C40000;
+  font-size: 12px;
+  font-weight: 500;
+  margin: 6px 0 0;
+}
+
+.amazon-success-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #EDF7ED;
+  border: 1px solid #C8E6C9;
+  border-radius: 6px;
+  padding: 10px 14px;
+  color: #1E4620;
+  font-size: 13px;
+  font-weight: 500;
   margin-top: 10px;
 }
 
-.studio-newsletter .studio-caption {
-  font-size: 12px;
-  color: rgba(247, 243, 235, 0.65);
-  line-height: 1.6;
+.amazon-success-icon {
+  color: #2E7D32;
+  flex-shrink: 0;
 }
 
-.studio-newsletter .studio-error {
-  color: #F87171;
-  font-size: 12.5px;
-  margin-top: 8px;
+.amazon-form-footer {
+  margin-top: 12px;
+}
+
+.amazon-security-badge {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 11.5px;
+  color: #767069;
+  line-height: 1.5;
+}
+
+.amazon-security-badge svg {
+  color: #8C867E;
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 
 /* --------------------------------------------------------------------------
@@ -1052,21 +1123,18 @@ textarea:focus-visible {
 }
 
 @media (max-width: 900px) {
+  .amazon-footer-dispatch-card,
   .studio-footer-invitation {
     grid-template-columns: 1fr;
-    gap: 32px;
-    padding: 32px 20px;
+    gap: 28px;
+    padding: 28px 20px;
   }
-  .studio-newsletter-capsule {
+  .amazon-input-row {
     flex-direction: column;
-    border-radius: 18px;
-    padding: 12px 14px;
-    align-items: stretch;
   }
-  .studio-newsletter-submit {
+  .amazon-cta-btn {
     width: 100%;
-    justify-content: center;
-    margin-top: 8px;
+    padding: 12px 20px;
   }
 }
 
