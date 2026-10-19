@@ -1,0 +1,195 @@
+/* Public-interface study: spacious product staging, quiet chrome, precise borders.
+   Keep Knovera's own typography and warm palette. Loaded after legacy styles. */
+:root { --refine-line: rgba(36,33,31,.12); }
+/* Soft color fields keep the product imagery central; no extra image downloads. */
+.knovera-home .knovera-hero {
+  background: radial-gradient(ellipse at 87% 28%,rgba(209,219,246,.48),transparent 46%),
+    radial-gradient(ellipse at 12% 70%,rgba(247,220,210,.4),transparent 44%),var(--bg-paper);
+}
+.knovera-home .knovera-featured-box {
+  background: radial-gradient(ellipse at 12% 12%,#fff 0%,transparent 65%),linear-gradient(140deg,#f6edf0,#edf0f8 62%,#e9efec);
+  border-color: rgba(137,136,165,.25);
+}
+.knovera-home .knovera-books-grid {
+  grid-template-columns: repeat(auto-fit,minmax(min(100%,280px),1fr));
+}
+.knovera-home .knovera-card-cover-container {
+  background: linear-gradient(145deg,#f4edf4,#e7edf8); border-bottom: 1px solid var(--refine-line);
+}
+.knovera-home .knovera-book-card:nth-child(3n+2) .knovera-card-cover-container { background: linear-gradient(145deg,#edf3ee,#e1ece9); }
+.knovera-home .knovera-book-card:nth-child(3n) .knovera-card-cover-container { background: linear-gradient(145deg,#fcf1e5,#f1e3e0); }
+.knovera-home .knovera-collection-section { border-top: 1px solid var(--refine-line); }
+.knovera-home .sp-praise-block { background: #f1f0f5; border-block: 1px solid var(--refine-line); padding: 72px 0; }
+.reader-profile-note { font-size: 12px; color: var(--color-ink-muted); margin: -12px 0 28px; }
+.knovera-home .reader-profile {
+  padding: 30px; border: 1px solid rgba(109,110,137,.17); border-radius: 18px;
+  background: linear-gradient(130deg,#fff,#faf9fc); box-shadow: none;
+}
+.knovera-home .reader-profile:hover { transform: translateY(-2px); box-shadow: 0 12px 28px -24px #474059; }
+.reader-profile-top { display: flex; gap: 14px; align-items: center; }
+.reader-profile-avatar {
+  display: grid; place-items: center; flex-shrink: 0; width: 48px; height: 48px;
+  border-radius: 50%; background: #e7e3f5; color: #544376; font-weight: 600;
+  box-shadow: inset 0 1px 0 #fff;
+}
+.reader-profile:nth-child(2) .reader-profile-avatar { background: #e1eaf8; color: #3d5679; }
+.reader-profile:nth-child(3) .reader-profile-avatar { background: #f8e6df; color: #804e3d; }
+.reader-profile:nth-child(4) .reader-profile-avatar { background: #e0ede5; color: #3e6553; }
+.reader-profile-icon { margin-left: auto; color: #8c829f; flex-shrink: 0; }
+.reader-profile .sp-praise-role { font-size: 12px; display: block; margin-top: 3px; }
+.reader-profile-title { font-family: var(--font-sans),sans-serif; font-size: 22px; font-weight: 500; letter-spacing: -.035em; margin: 26px 0 10px; }
+.reader-profile-copy { font-size: 15px; line-height: 1.75; color: var(--color-ink-muted); margin: 0; max-width: 48ch; }
+@media (max-width: 600px) {
+  .knovera-home .sp-praise-block { padding: 48px 0; }
+  .knovera-home .reader-profile { padding: 22px; }
+  .reader-profile-icon { display: none; }
+}
+.studio-header {
+  background: rgba(247,243,235,.92);
+  backdrop-filter: blur(20px) saturate(125%);
+  border-bottom: 1px solid var(--refine-line);
+  box-shadow: none;
+}
+.studio-header-inner { min-height: 76px; max-width: 1280px; }
+.studio-brand-sub { display: none; }
+.studio-brand-name { font-size: 27px; letter-spacing: -.045em; }
+.studio-nav-link { font-size: 13px; font-weight: 500; letter-spacing: -.01em; }
+.studio-cart-link { border-radius: 999px; background: transparent; box-shadow: none; }
+.studio-button {
+  border-radius: 999px;
+  min-height: 46px;
+  font-weight: 500;
+  letter-spacing: -.01em;
+  box-shadow: none;
+  transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+.studio-button::after { display: none; }
+.studio-button:hover { transform: translateY(-1px); box-shadow: none; }
+.studio-button.outline { background: transparent; border-color: var(--refine-line); }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--color-accent); outline-offset: 4px;
+}
+.knovera-container, .knovera-hero-container { max-width: 1240px; }
+.knovera-hero { padding: clamp(48px,7vw,100px) 24px 64px; background: var(--bg-paper); }
+.knovera-hero-grid { grid-template-columns: 1fr 1fr; gap: clamp(36px,5vw,80px); align-items: center; }
+.knovera-kicker-badge {
+  background: transparent; border: 0; padding: 0; box-shadow: none;
+  font-size: 10px; letter-spacing: .13em; color: var(--color-ink-muted);
+}
+.knovera-kicker-dot { animation: none; width: 5px; height: 5px; box-shadow: none; }
+.knovera-hero-title {
+  font-family: var(--font-sans), sans-serif; font-size: clamp(42px,4.4vw,66px);
+  font-weight: 500; line-height: 1.06; letter-spacing: -.065em;
+  max-width: 650px; margin: 24px 0; text-wrap: balance;
+}
+.knovera-hero-title span { color: var(--color-accent); }
+.knovera-hero-lead { font-size: 17px; line-height: 1.7; max-width: 420px; color: var(--color-ink-muted); }
+.knovera-hero-specs { gap: 10px; margin: 26px 0; flex-direction: column; align-items: flex-start; }
+.knovera-spec-item { font-size: 12px; }
+.knovera-hero-actions { gap: 12px; flex-wrap: wrap; }
+.knovera-featured-box {
+  background: linear-gradient(145deg,#fffdfa,#eee6dc);
+  border: 1px solid rgba(104,43,56,.12); border-radius: 24px;
+  padding: 30px; box-shadow: 0 24px 70px -40px rgba(45,31,28,.25);
+}
+.knovera-featured-box:hover { transform: none; box-shadow: 0 24px 70px -40px rgba(45,31,28,.25); }
+.knovera-featured-box::before, .knovera-featured-box::after,
+.knovera-book-card::before, .knovera-book-card::after,
+.knovera-pillar-card::before, .knovera-pillar-card::after { display: none; }
+.knovera-featured-tag { background: transparent; border: 0; padding: 0; font-size: 10px; letter-spacing: .12em; }
+.knovera-featured-layout { grid-template-columns: minmax(120px,.75fr) minmax(0,1fr); gap: 24px; }
+.knovera-featured-cover-wrap, .knovera-cover-link { animation: none; }
+.knovera-featured-title { font-size: 30px; line-height: 1.1; letter-spacing: -.025em; }
+.knovera-featured-desc { font-size: 13px; line-height: 1.7; }
+.knovera-featured-subtitle { font-size: 13px; }
+.knovera-featured-cta { width: 100%; justify-content: center; }
+.knovera-featured-buttons .studio-button { font-size: 12px; padding: 12px 16px; }
+.knovera-format-badge { white-space: normal; line-height: 1.5; }
+.knovera-section-title { font-size: clamp(30px,3vw,44px); letter-spacing: -.035em; line-height: 1.15; text-wrap: balance; }
+.knovera-collection-section, .knovera-pillars-section { padding-top: 72px; padding-bottom: 72px; }
+.knovera-section-header { margin-bottom: 36px; }
+.knovera-books-grid { gap: 24px; }
+.knovera-book-card { border: 1px solid var(--refine-line); border-radius: 18px; box-shadow: none; overflow: hidden; }
+.knovera-book-card:hover { transform: translateY(-3px); box-shadow: 0 16px 32px -24px rgba(36,33,31,.28); }
+.knovera-card-cover-area { background: var(--bg-warm-tint); }
+.knovera-card-body { padding: 26px; }
+.knovera-card-title { letter-spacing: -.025em; }
+.knovera-card-desc { line-height: 1.7; }
+.knovera-bundle-banner { border-radius: 20px; box-shadow: none; border: 1px solid var(--refine-line); }
+.knovera-bundle-banner::after { display: none; }
+.knovera-pillars-grid { gap: 0; border: 1px solid var(--refine-line); border-radius: 18px; overflow: hidden; }
+.knovera-pillar-card { border: 0; border-right: 1px solid var(--refine-line); border-radius: 0; box-shadow: none; padding: 28px; background: transparent; }
+.knovera-pillar-card:last-child { border-right: 0; }
+.knovera-pillar-card:hover { transform: none; box-shadow: none; }
+.knovera-pillar-icon { background: transparent; padding: 0; justify-content: flex-start; }
+.studio-page-heading h1 { letter-spacing: -.045em; text-wrap: balance; }
+.studio-footer { border-top: 1px solid var(--refine-line); }
+@media (max-width: 1000px) {
+  .knovera-hero-grid { grid-template-columns: 1fr; max-width: 720px; margin: auto; }
+  .knovera-hero-title { max-width: 640px; }
+  .knovera-featured-box { width: 100%; }
+  .knovera-hero-lead { max-width: 520px; }
+  .knovera-pillars-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .knovera-pillar-card { border-bottom: 1px solid var(--refine-line); }
+}
+@media (min-width: 640px) { .studio-header .studio-menu-trigger { display: none; } }
+@media (max-width: 600px) {
+  .studio-header-inner { min-height: 64px; }
+  .knovera-hero { padding: 40px 20px; }
+  .knovera-hero-title { font-size: clamp(36px,10vw,48px); }
+  .knovera-hero-lead { font-size: 16px; }
+  .knovera-featured-box { padding: 22px; border-radius: 18px; }
+  .knovera-featured-layout { grid-template-columns: 1fr; }
+  .knovera-featured-cover-wrap { max-width: 200px; margin: 16px auto 28px; }
+  .knovera-featured-title { font-size: 30px; }
+  .knovera-pillars-grid { grid-template-columns: 1fr; }
+  .knovera-pillar-card { border-right: 0; }
+  .knovera-pillar-card:last-child { border-bottom: 0; }
+  .knovera-collection-section, .knovera-pillars-section { padding-top: 48px; padding-bottom: 48px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .studio-button, .knovera-book-card { transition: none; }
+  .studio-button:hover, .knovera-book-card:hover { transform: none; }
+}
+
+/* A softly lit product stage, with deliberate motion and quiet playback controls. */
+.rotating-showcase { position: relative; isolation: isolate; overflow: hidden; }
+.rotating-showcase .knovera-featured-layout { min-height: 420px; }
+.rotating-showcase .knovera-featured-cover-wrap {
+  perspective: 900px; background: transparent; border: 0; box-shadow: none;
+  animation: showcase-arrive 650ms cubic-bezier(.2,.7,.3,1) both;
+}
+.rotating-showcase .knovera-cover-link { animation: none; transform: rotate(-4deg) rotateY(-9deg); transform-style: preserve-3d; }
+.rotating-showcase[data-playing="true"] .knovera-cover-link { animation: showcase-turn 7s ease-in-out infinite; }
+.rotating-showcase:hover .knovera-cover-link,
+.rotating-showcase:focus-within .knovera-cover-link { animation-play-state: paused; }
+.rotating-showcase .edition-cover { box-shadow: 14px 22px 30px -18px rgba(67,43,53,.42); }
+.showcase-controls { display: flex; align-items: center; gap: 8px; border-top: 1px solid var(--refine-line); padding-top: 20px; margin-top: 26px; }
+.showcase-position { flex-shrink: 0; font-size: 12px; font-variant-numeric: tabular-nums; color: var(--color-accent); }
+.showcase-position > span { color: var(--color-ink-muted); }
+.showcase-track { display: flex; gap: 5px; flex: 1; min-width: 0; margin: 0 16px; overflow: hidden; }
+.showcase-track > span { height: 3px; flex: 1; min-width: 2px; max-width: 38px; border-radius: 4px; background: rgba(104,43,56,.12); }
+.showcase-track > span[data-active="true"] { background: var(--color-accent); }
+.showcase-control { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; border: 1px solid var(--refine-line); border-radius: 50%; background: rgba(255,255,255,.65); color: var(--color-ink); cursor: pointer; }
+.showcase-control:hover { background: #fff; border-color: var(--color-accent-border); }
+.knovera-home .reader-profile { border-top: 3px solid #d9d1e9; }
+.knovera-home .reader-profile:nth-child(2) { border-top-color: #cbd9ee; }
+.knovera-home .reader-profile:nth-child(3) { border-top-color: #efd6c9; }
+.knovera-home .reader-profile:nth-child(4) { border-top-color: #cadfd3; }
+@keyframes showcase-turn {
+  0%,100% { transform: translateY(0) rotate(-4deg) rotateY(-9deg); }
+  50% { transform: translateY(-7px) rotate(1deg) rotateY(9deg); }
+}
+@keyframes showcase-arrive {
+  from { opacity: .4; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (max-width: 600px) {
+  .rotating-showcase .knovera-featured-layout { min-height: 0; }
+  .showcase-track { margin-inline: 5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rotating-showcase .knovera-featured-cover-wrap,
+  .rotating-showcase[data-playing="true"] .knovera-cover-link { animation: none; }
+  .rotating-showcase .knovera-cover-link { transform: none; }
+}

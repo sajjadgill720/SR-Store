@@ -61,7 +61,7 @@ const FAQS = [
   },
   {
     q: 'What is your refund policy?',
-    a: 'Every book comes with an unconditional 30-day money-back guarantee. If an edition does not provide genuine practical value for your daily work or habits, email author support for a prompt full refund.',
+    a: 'Please review our published refund policy at /legal/refunds before purchasing. For help with an order or download, contact support with your order number.',
   },
   {
     q: 'Will I receive future edition updates?',
@@ -238,7 +238,7 @@ export default function BookDetail({ book }: { book: Book }) {
               </div>
               <div className="knovera-perk">
                 <Check size={14} className="knovera-perk-icon" aria-hidden="true" />
-                <span>30-day money-back guarantee with immediate refund</span>
+                <span>Secure checkout and purchase-verified downloads</span>
               </div>
             </div>
 
@@ -408,7 +408,7 @@ export default function BookDetail({ book }: { book: Book }) {
           {/* Frequently Asked Questions */}
           <div className="knovera-editorial-block knovera-faq-section">
             <span className="studio-kicker">COMMONLY ASKED QUESTIONS</span>
-            <h2>Reading, delivery, and guarantee</h2>
+            <h2>Reading, delivery, and support</h2>
             <div className="knovera-faq-list">
               {FAQS.map((faq, index) => (
                 <details key={index} className="knovera-faq-item">

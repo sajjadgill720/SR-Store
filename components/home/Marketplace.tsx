@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import {
   BookOpen,
@@ -10,21 +10,54 @@ import {
   Smartphone,
   RefreshCw,
   Sparkles,
-  Layers,
-  CheckCircle2,
   Bookmark,
+  ChevronLeft,
+  ChevronRight,
+  Pause,
+  Play,
 } from 'lucide-react';
 import BookCover from '../books/BookCover';
 import { money, formatsLabel } from '../../lib/catalog';
 import { useCart } from '../../lib/store/cart';
 import type { Book } from '../../lib/types';
 
-export default function Marketplace({ books }: { books: Book[] }) {
-  const { addToCart, toggleWishlist, isWishlisted } = useCart();
+const motionQuery = '(prefers-reduced-motion: reduce)';
+const subscribeMotion = (notify: () => void) => {
+  const query = window.matchMedia(motionQuery);
+  query.addEventListener('change', notify);
+  return () => query.removeEventListener('change', notify);
+};
+const getReducedMotion = () => window.matchMedia(motionQuery).matches;
 
-  // Find the featured flagship book (The Focused Mind or first featured)
-  const featured = books.find(book => book.slug === 'the-focused-mind') || books.find(book => book.featured) || books[0];
-  const otherBooks = books.filter(book => book.id !== featured?.id);
+export default function Marketplace({ books }: { books: Book[] }) {
+  const { toggleWishlist, isWishlisted } = useCart();
+
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [playing, setPlaying] = useState(true);
+  const showcase = useRef<HTMLDivElement>(null);
+  const reducedMotion = useSyncExternalStore(subscribeMotion, getReducedMotion, () => true);
+  const featured = books.find(book => book.id === selectedId) || books.find(book => book.featured) || books[0];
+  const selectedIndex = featured ? books.findIndex(book => book.id === featured.id) : 0;
+  const canRotate = books.length > 1;
+  const autoRotate = playing && !reducedMotion && canRotate;
+  const move = (direction: number) => {
+    setPlaying(false);
+    setSelectedId(books[(selectedIndex + direction + books.length) % books.length].id);
+  };
+  useEffect(() => {
+    if (!autoRotate) return;
+    const timer = window.setInterval(() => {
+      if (document.visibilityState !== 'visible' || showcase.current?.matches(':hover') || showcase.current?.contains(document.activeElement)) return;
+      setSelectedId(books[(selectedIndex + 1) % books.length].id);
+    }, 7000);
+    return () => window.clearInterval(timer);
+  }, [autoRotate, books, selectedIndex]);
+  const readerProfiles = [
+    { name: 'Aisha', role: 'Student', initials: 'A', title: 'A little space to learn.', text: 'A chapter between classes. A new subject to explore. Reading that fits around a busy day.' },
+    { name: 'Daniel', role: 'Everyday reader', initials: 'D', title: 'Something beyond the everyday.', text: 'An interesting idea for the commute, a quiet evening, or a well-earned weekend.' },
+    { name: 'Sara', role: 'Parent', initials: 'S', title: 'Curiosity to share.', text: 'Make room for reading together, discovering new interests, and asking another question.' },
+    { name: 'Omar', role: 'Freelancer', initials: 'O', title: 'A fresh point of view.', text: 'Step away from the to-do list and spend a little time with a different perspective.' },
+  ];
 
   return (
     <div className="knovera-home">
@@ -36,16 +69,17 @@ export default function Marketplace({ books }: { books: Book[] }) {
             <div className="knovera-hero-content">
               <div className="knovera-kicker-badge">
                 <span className="knovera-kicker-dot" aria-hidden="true" />
-                <span>DISTINCTIVE DIGITAL EDITIONS · KNOVERA PRESS</span>
+                <span>A LITTLE CURIOSITY. A NEW CHAPTER.</span>
               </div>
 
               <h1 id="hero-heading" className="knovera-hero-title">
-                Books for high cognitive leverage, deliberate systems, and unbroken depth.
+                A good book.
+                <br /><span>A new perspective.</span>
               </h1>
 
               <p className="knovera-hero-lead">
-                An intimate collection of carefully researched, meticulously typeset digital editions
-                engineered for deep synthesis, deliberate practice, and enduring leverage. Built to be referenced for years.
+                Find something that stays with you. Explore digital books, read a sample,
+                and make room for your next discovery.
               </p>
 
               {/* Quick Trust Highlights right under lead for immediate confidence */}
@@ -60,31 +94,31 @@ export default function Marketplace({ books }: { books: Book[] }) {
                 </div>
                 <div className="knovera-spec-item">
                   <ShieldCheck size={15} aria-hidden="true" />
-                  <span>30-Day Money-Back Guarantee</span>
+                  <span>Secure digital delivery</span>
                 </div>
               </div>
 
               <div className="knovera-hero-actions">
-                <a href="#featured-book" className="studio-button">
-                  Explore Featured Book <ArrowRight size={16} aria-hidden="true" />
-                </a>
+                {featured && <a href="#featured-book" className="studio-button">
+                  Explore featured book <ArrowRight size={16} aria-hidden="true" />
+                </a>}
                 <a href="#collection" className="studio-button outline">
-                  Browse All 4 Titles
+                  Browse {books.length} {books.length === 1 ? 'title' : 'titles'}
                 </a>
               </div>
             </div>
 
             {/* Right: Featured Book Spotlight with visible price and zero fold delay */}
             {featured && (
-              <div id="featured-book" className="knovera-featured-box">
+              <div id="featured-book" className="knovera-featured-box rotating-showcase" ref={showcase} role="region" aria-roledescription="carousel" aria-label="Discover books" data-playing={autoRotate}>
                 <div className="knovera-featured-card">
                   <div className="knovera-featured-tag">
                     <Sparkles size={13} aria-hidden="true" />
                     <span>FEATURED EDITION</span>
                   </div>
 
-                  <div className="knovera-featured-layout">
-                    <div className="knovera-featured-cover-wrap">
+                  <div className="knovera-featured-layout" role="group" aria-roledescription="slide" aria-label={`${selectedIndex + 1} of ${books.length}: ${featured.title}`}>
+                    <div className="knovera-featured-cover-wrap" key={featured.id}>
                       <Link
                         href={`/books/${featured.slug}`}
                         aria-label={`View details for ${featured.title}`}
@@ -123,37 +157,17 @@ export default function Marketplace({ books }: { books: Book[] }) {
                           )}
                         </div>
                         <span className="knovera-format-badge">
-                          {formatsLabel(featured.formats)} · {featured.pageCount || 284} pages
+                          {formatsLabel(featured.formats)}{featured.pageCount ? ` · ${featured.pageCount} pages` : ''}
                         </span>
                       </div>
 
                       <div className="knovera-featured-buttons">
                         <Link
                           href={`/books/${featured.slug}`}
-                          className="sp-buy-button"
+                          className="studio-button knovera-featured-cta"
                           aria-label={`View Edition and Purchase ${featured.title} for ${money(featured.price)}`}
                         >
-                          <div className="sp-buy-hover-bar" aria-hidden="true" />
-                          <div className="sp-buy-content">
-                            <div className="sp-buy-title">
-                              <span className="sp-buy-label">Order Digital Master Edition</span>
-                              <span className="sp-buy-sublabel">Reflowable EPUB + Typeset PDF</span>
-                            </div>
-                            <div className="sp-buy-pricing">
-                              {money(featured.price)}
-                              <small>USD</small>
-                            </div>
-                          </div>
-                          <div className="sp-buy-icon-chamber" aria-hidden="true">
-                            <div className="sp-buy-arrow-pair">
-                              <svg className="sp-buy-arrow-1" viewBox="0 0 9 9">
-                                <path d="M1.27308 8.6948L6.64773 3.31482L6.63707 7.34714H8.38423V0.305237H1.34766L1.337 2.04174H5.37464L0 7.42171L1.27308 8.6948Z"/>
-                              </svg>
-                              <svg className="sp-buy-arrow-2" viewBox="0 0 9 9">
-                                <path d="M1.27308 8.6948L6.64773 3.31482L6.63707 7.34714H8.38423V0.305237H1.34766L1.337 2.04174H5.37464L0 7.42171L1.27308 8.6948Z"/>
-                              </svg>
-                            </div>
-                          </div>
+                          <span>View edition</span><ArrowRight size={16} aria-hidden="true" />
                         </Link>
                         {featured.sampleExcerpt.trim() && (
                           <Link
@@ -168,6 +182,13 @@ export default function Marketplace({ books }: { books: Book[] }) {
                     </div>
                   </div>
                 </div>
+                {canRotate && <div className="showcase-controls">
+                  <span className="showcase-position" aria-live={autoRotate ? 'off' : 'polite'}>{String(selectedIndex + 1).padStart(2, '0')} <span>/ {String(books.length).padStart(2, '0')}</span></span>
+                  <div className="showcase-track" aria-hidden="true">{books.map(book => <span key={book.id} data-active={book.id === featured.id} />)}</div>
+                  <button type="button" className="showcase-control" aria-label="Previous book" onClick={() => move(-1)}><ChevronLeft size={17} aria-hidden="true" /></button>
+                  {!reducedMotion && <button type="button" className="showcase-control" aria-label={playing ? 'Pause book rotation' : 'Start book rotation'} onClick={() => setPlaying(value => !value)}>{playing ? <Pause size={15} aria-hidden="true" /> : <Play size={15} aria-hidden="true" />}</button>}
+                  <button type="button" className="showcase-control" aria-label="Next book" onClick={() => move(1)}><ChevronRight size={17} aria-hidden="true" /></button>
+                </div>}
               </div>
             )}
           </div>
@@ -179,14 +200,14 @@ export default function Marketplace({ books }: { books: Book[] }) {
         <div className="knovera-container">
           <div className="knovera-section-header">
             <div>
-              <span className="studio-kicker">THE COMPLETE CATALOG</span>
+              <span className="studio-kicker">EXPLORE THE COLLECTION</span>
               <h2 id="collection-heading" className="knovera-section-title">
-                Four books. Four distinct perspectives.
+                More stories. New perspectives.
               </h2>
             </div>
             <p className="knovera-section-sub">
-              Every book is engineered around practical mental models, field-tested systems, and
-              immediate reader leverage. Available in DRM-free universal formats.
+              Browse at your own pace. Find a subject that draws you in, explore an edition,
+              and see where your curiosity takes you.
             </p>
           </div>
 
@@ -295,63 +316,29 @@ export default function Marketplace({ books }: { books: Book[] }) {
       </section>
 
       {/* 3. EDITORIAL PRAISE & CRITICAL RECEPTION (Stripe Press Signature) */}
-      <section className="sp-praise-block" aria-labelledby="praise-heading">
+      <section id="readers" className="sp-praise-block" aria-labelledby="praise-heading">
         <div className="knovera-container">
           <div className="sp-section-kicker">
             <span className="sp-dash" aria-hidden="true" />
-            <span className="sp-kicker-text">PRAISE &amp; CRITICAL ACCLAIM</span>
+            <span className="sp-kicker-text">EVERYDAY READERS</span>
           </div>
           <div className="knovera-section-header">
-            <div>
-              <h2 id="praise-heading" className="knovera-section-title">
-                Endorsements from practitioners &amp; builders.
-              </h2>
-            </div>
-            <p className="knovera-section-sub">
-              Ideas tested in production environments, research laboratories, and daily craft.
-            </p>
+            <h2 id="praise-heading" className="knovera-section-title">Different days. A shared curiosity.</h2>
+            <p className="knovera-section-sub">For the moments you make your own.</p>
           </div>
-
+          <p className="reader-profile-note">Illustrative reader profiles, not customer reviews.</p>
           <div className="sp-praise-grid">
-            <div className="sp-praise-card">
-              <blockquote className="sp-praise-quote">
-                &ldquo;The Focused Mind is the single clearest blueprint for knowledge workers drowning in digital noise. It replaced our team&rsquo;s chaotic sprint habits with genuine, unhurried depth.&rdquo;
-              </blockquote>
-              <div className="sp-praise-author">
-                <span className="sp-praise-name">Dr. Helena Vance</span>
-                <span className="sp-praise-role">Director of Cognitive Systems, Applied Research Lab</span>
-              </div>
-            </div>
-
-            <div className="sp-praise-card">
-              <blockquote className="sp-praise-quote">
-                &ldquo;Finally, a book on habit formation that discards the exhausted moralizing about willpower and treats daily behavior as a rigorous engineering challenge.&rdquo;
-              </blockquote>
-              <div className="sp-praise-author">
-                <span className="sp-praise-name">Marcus Thorne</span>
-                <span className="sp-praise-role">Founding Partner, Vantage Ventures</span>
-              </div>
-            </div>
-
-            <div className="sp-praise-card">
-              <blockquote className="sp-praise-quote">
-                &ldquo;The Solo Architect captures the exact spirit of modern individual leverage. It is a devastatingly pragmatic antidote to enterprise microservice bloat.&rdquo;
-              </blockquote>
-              <div className="sp-praise-author">
-                <span className="sp-praise-name">Karthik Subramanian</span>
-                <span className="sp-praise-role">Staff Infrastructure Architect &amp; Open Source Maintainer</span>
-              </div>
-            </div>
-
-            <div className="sp-praise-card">
-              <blockquote className="sp-praise-quote">
-                &ldquo;A peaceful, beautiful oasis in a world of frantic tablet apps. Our seven-year-old spent entire rainy afternoons immersed in the logic mazes.&rdquo;
-              </blockquote>
-              <div className="sp-praise-author">
-                <span className="sp-praise-name">Sarah Lindqvist</span>
-                <span className="sp-praise-role">Montessori Educator &amp; Parent</span>
-              </div>
-            </div>
+            {readerProfiles.map(profile => (
+              <article className="sp-praise-card reader-profile" key={profile.name}>
+                <div className="reader-profile-top">
+                  <span className="reader-profile-avatar" aria-hidden="true">{profile.initials}</span>
+                  <div><h3 className="sp-praise-name">{profile.name}</h3><span className="sp-praise-role">{profile.role} · Illustrative profile</span></div>
+                  <BookOpen className="reader-profile-icon" size={24} aria-hidden="true" />
+                </div>
+                <h4 className="reader-profile-title">{profile.title}</h4>
+                <p className="reader-profile-copy">{profile.text}</p>
+              </article>
+            ))}
           </div>
         </div>
       </section>
@@ -407,10 +394,10 @@ export default function Marketplace({ books }: { books: Book[] }) {
               <div className="knovera-pillar-icon" aria-hidden="true">
                 <ShieldCheck size={22} />
               </div>
-              <h3 className="knovera-pillar-title">30-Day Guarantee</h3>
+              <h3 className="knovera-pillar-title">Here to help</h3>
               <p className="knovera-pillar-desc">
-                If an edition does not provide genuine practical value for your daily work or habits,
-                reach out anytime for a prompt, courteous full refund.
+                Need help with a download or your order? Visit our support page for assistance and
+                review our published refund policy before purchasing.
               </p>
             </div>
           </div>

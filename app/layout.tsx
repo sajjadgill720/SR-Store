@@ -5,6 +5,7 @@ import { DM_Sans, Cormorant_Garamond } from 'next/font/google';
 import './globals.css';
 import './theme.css';
 import './storefront.css';
+import './refinement.css';
 import { CartProvider } from '../lib/store/cart';
 import TopBar from '../components/layout/TopBar';
 import Header from '../components/layout/Header';
@@ -12,6 +13,7 @@ import Footer from '../components/layout/Footer';
 import AddToCartModal from '../components/books/AddToCartModal';
 import MobileNav from '../components/layout/MobileNav';
 import RouteChrome from '../components/layout/RouteChrome';
+import MotionProvider from '../components/common/MotionProvider';
 
 const sans = DM_Sans({ subsets: ['latin'], variable: '--font-sans', display: 'swap' });
 const serif = Cormorant_Garamond({ subsets: ['latin'], weight: ['400', '500', '600', '700'], style: ['normal', 'italic'], variable: '--font-editorial', display: 'swap' });
@@ -52,6 +54,7 @@ export default function RootLayout({
           <Footer />
           <MobileNav />
           <AddToCartModal />
+          <MotionProvider />
         </CartProvider>
       </body>
     </html>

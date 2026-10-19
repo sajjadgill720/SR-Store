@@ -95,10 +95,10 @@ export default function AboutPage() {
                   <ShieldCheck className="w-5 h-5" />
                 </div>
                 <h3 className="font-serif font-bold text-base text-[var(--color-ink)] mb-1">
-                  30-Day Money-Back Guarantee
+                  Reader support
                 </h3>
                 <p className="text-xs sm:text-sm text-[var(--color-ink-muted)] leading-relaxed">
-                  If an edition does not provide genuine practical value for your daily work or habits, email author support directly for a prompt, courteous full refund.
+                  For help with an order or download, contact support with your order number. Please review our published refund policy before purchasing.
                 </p>
               </div>
             </div>
