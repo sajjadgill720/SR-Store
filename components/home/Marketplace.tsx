@@ -217,7 +217,10 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
                     </div>
 
                     <h3 className="knovera-card-title">
-                      <Link href={`/books/${book.slug}`}>{book.title}</Link>
+                      <Link href={`/books/${book.slug}`} aria-label={book.title}>
+                        <span className="store-book-title-full">{book.title}</span>
+                        <span className="store-book-title-short">{book.title.split(':')[0]}</span>
+                      </Link>
                     </h3>
 
                     <p className="knovera-card-desc">{book.shortDescription}</p>
@@ -278,7 +281,8 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
                   <div className="boxset-left">
                     <span className="store-set-kicker">A CURATED DIGITAL READING SET</span>
                     <h3 id="boxset-heading" className="boxset-title">
-                      {currentBundle.title === 'The Complete Mastery & Productivity Bundle' ? <>The Complete<br/>Mastery &amp; <em>Productivity</em><br/>Bundle</> : currentBundle.title}
+                      <span className="boxset-desktop-title">{currentBundle.title === 'The Complete Mastery & Productivity Bundle' ? <>The Complete<br/>Mastery &amp; <em>Productivity</em><br/>Bundle</> : currentBundle.title}</span>
+                      <span className="boxset-mobile-title">{currentBundle.title.replace(/^The Complete /, '').replace(/ Bundle$/, '')}</span>
                     </h3>
 
                     <p className="boxset-desc">Bring related ideas together. Explore {currentBundle.books.length} complementary ebooks in one reading set, with a sample and format details for every title.</p>
@@ -322,7 +326,7 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
       <section className="store-feature-section knovera-container" aria-labelledby="store-features-heading">
         <span className="studio-kicker">MAKE YOURSELF AT HOME</span><h2 id="store-features-heading">More than your next download.</h2>
         <div className="store-feature-grid">
-          {[{href:'/books?saved=1',title:'Your saved finds',text:'Keep a shortlist of ebooks you want to come back to.',icon:Bookmark},{href:'/account/library',title:'Your personal library',text:'Find your purchases and access available downloads.',icon:BookOpen},{href:'/community',title:'A place to share ideas',text:'Explore reading circles, conversations, and your private journal.',icon:RefreshCw},{href:'/free-resources',title:'Explore free resources',text:'Discover companion resources and preview what’s available.',icon:Download}].map(({href,title,text,icon:Icon})=><Link key={href} href={href} className="store-feature-card"><Icon size={22} aria-hidden="true"/><h3>{title}</h3><p>{text}</p><span>Explore <ArrowRight size={16}/></span></Link>)}
+          {[{href:'/books?saved=1',title:'Your saved finds',mobileTitle:'Saved books',text:'Keep a shortlist of ebooks you want to come back to.',icon:Bookmark},{href:'/account/library',title:'Your personal library',mobileTitle:'My library',text:'Find your purchases and access available downloads.',icon:BookOpen},{href:'/community',title:'A place to share ideas',mobileTitle:'Reader community',text:'Explore reading circles, conversations, and your private journal.',icon:RefreshCw},{href:'/free-resources',title:'Explore free resources',mobileTitle:'Free resources',text:'Discover companion resources and preview what’s available.',icon:Download}].map(({href,title,mobileTitle,text,icon:Icon})=><Link key={href} href={href} className="store-feature-card"><Icon size={22} aria-hidden="true"/><h3><span className="store-desktop-copy">{title}</span><span className="store-mobile-copy">{mobileTitle}</span></h3><p>{text}</p><span>Explore <ArrowRight size={16}/></span></Link>)}
         </div>
       </section>
 
@@ -346,9 +350,9 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
               </div>
               <h3 className="knovera-pillar-title">Know what’s included</h3>
               <p className="knovera-pillar-desc">
-                Each product lists its included file formats. Check the details and read a sample before adding it to your cart.
+                <span className="store-desktop-copy">Each product lists its included file formats. Check the details and read a sample before adding it to your cart.</span><span className="store-mobile-copy">Check formats and samples before you buy.</span>
               </p>
-              <Link href="/help" className="studio-text-link">Reading &amp; download help →</Link>
+              <Link href="/help" className="studio-text-link"><span className="store-desktop-copy">Reading &amp; download help →</span><span className="store-mobile-copy">Reading help →</span></Link>
             </div>
 
             <div className="knovera-pillar-card">
@@ -357,7 +361,7 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
               </div>
               <h3 className="knovera-pillar-title">Device Compatibility</h3>
               <p className="knovera-pillar-desc">
-                Choose the format that suits your reading device. Our reading guides walk you through getting started.
+                <span className="store-desktop-copy">Choose the format that suits your reading device. Our reading guides walk you through getting started.</span><span className="store-mobile-copy">Read on your phone, tablet, or ereader.</span>
               </p>
             </div>
 
@@ -367,7 +371,7 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
               </div>
               <h3 className="knovera-pillar-title">Your purchase library</h3>
               <p className="knovera-pillar-desc">
-                Sign in to see your purchases and available downloads. Have an older order? Use purchase recovery to find it.
+                <span className="store-desktop-copy">Sign in to see your purchases and available downloads. Have an older order? Use purchase recovery to find it.</span><span className="store-mobile-copy">Your purchases and downloads, in one place.</span>
               </p>
             </div>
 
@@ -377,8 +381,8 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
               </div>
               <h3 className="knovera-pillar-title">Here to help</h3>
               <p className="knovera-pillar-desc">
-                Need help with a download or your order? Visit our support page for assistance and
-                review our published refund policy before purchasing.
+                <span className="store-desktop-copy">Need help with a download or your order? Visit our support page for assistance and
+                review our published refund policy before purchasing.</span><span className="store-mobile-copy">Help with orders, downloads, and refunds.</span>
               </p><Link href="/contact" className="studio-text-link">Contact support →</Link>
             </div>
           </div>

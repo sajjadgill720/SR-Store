@@ -196,3 +196,144 @@ body { --font-cormorant:var(--font-editorial),Georgia,serif; --font-dm-sans:var(
 .studio-order-files { padding-block:16px 48px; }
 .studio-order-file { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px; padding:26px; border:1px solid #e0d7c9; background:#fcfaf6; border-radius:16px; margin-block:20px; }
 .studio-order-file h2 { font-size:26px; }
+
+.boxset-mobile-title { display:none; }
+.store-book-title-short { display:none; }
+/* Catalogue cards must adapt independently of the homepage collection. */
+@media(max-width:700px) {
+ .knovera-catalog-page { min-width:0; }
+ .knovera-catalog-page .studio-page-heading { padding-block:24px 16px; }
+ .knovera-catalog-page .studio-page-heading h1 { font-size:34px; line-height:1.05; }
+ .knovera-catalog-page .catalog-lead-text { font-size:13px; line-height:1.5; }
+ .knovera-catalog-page .studio-catalog-toolbar { flex-wrap:wrap; gap:10px; }
+ .knovera-catalog-page .studio-search { flex:1 1 100%; min-width:0; }
+ .knovera-catalog-page .studio-search input { min-width:0; font-size:16px; }
+ .knovera-catalog-page .studio-topic-row { display:flex; flex-wrap:nowrap; overflow-x:auto; gap:8px; padding-bottom:8px; }
+ .knovera-catalog-page .topic-tab-button { flex-shrink:0; min-height:44px; font-size:11px; padding:8px 12px; }
+ .knovera-catalog-page .studio-catalog-meta { gap:10px; padding-bottom:12px; }
+ .knovera-catalog-page .catalog-meta-controls { width:100%; gap:10px; align-items:stretch; }
+ .knovera-catalog-page .catalog-presentation-toggle { flex:1; justify-content:space-between; padding:3px; gap:0; }
+ .knovera-catalog-page .catalog-toggle-label,.knovera-catalog-page .catalog-toggle-sep { display:none; }
+ .knovera-catalog-page .catalog-toggle-btn { min-height:44px; padding:8px; font-size:10px; letter-spacing:0; }
+ .knovera-catalog-page .studio-filter-details summary { min-height:52px; display:flex; align-items:center; padding:8px 10px; font-size:10px; letter-spacing:0; }
+ .knovera-catalog-page .filter-dropdown-panel { width:min(288px,calc(100vw - 40px)); flex-direction:column; gap:12px; }
+ .knovera-catalog-page .filter-dropdown-panel select { min-height:44px; width:100%; font-size:16px; }
+ .knovera-catalog-page .edition-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin:12px 0 28px; }
+ .knovera-catalog-page .edition-card { min-width:0; border-radius:12px; }
+ .knovera-catalog-page .edition-card-art { padding:34px 12px 30px; }
+ .knovera-catalog-page .edition-card-art>a { max-width:112px; min-width:0; }
+ .knovera-catalog-page .edition-cover { width:100%; max-width:100%; }
+ .knovera-catalog-page .edition-save { width:44px; height:44px; top:0; right:0; }
+ .knovera-catalog-page .edition-card-art .knovera-card-edition-chip { top:auto; bottom:8px; left:8px; max-width:calc(100% - 16px); font-size:7px; padding:3px 6px; letter-spacing:.04em; }
+ .knovera-catalog-page .edition-card-copy { min-width:0; padding:12px; }
+ .knovera-catalog-page .edition-card-copy>.studio-kicker { font-size:8px; letter-spacing:.04em; }
+ .knovera-catalog-page .edition-card h3 { font-size:20px; line-height:1.1; margin:8px 0 12px; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; }
+ .knovera-catalog-page .store-book-title-full { display:none; }
+ .knovera-catalog-page .store-book-title-short { display:inline; }
+ .knovera-catalog-page .edition-card-copy>p { display:none; }
+ .knovera-catalog-page .edition-card-price { flex-direction:column; gap:4px; margin-top:auto; padding-top:10px; margin-bottom:10px; font-size:17px; }
+ .knovera-catalog-page .edition-card-price>span:last-child { font-size:10px; }
+ .knovera-catalog-page .edition-card-copy>.studio-button { min-height:44px; padding:8px 5px; font-size:11px; gap:5px; justify-content:center; }
+ .knovera-catalog-page .edition-card-copy>.studio-text-link { display:flex; align-items:center; justify-content:center; min-height:44px; font-size:11px; }
+ .knovera-catalog-page .catalog-shelf-hint { display:none; }
+ .knovera-catalog-page .catalog-shelf-container { overflow-x:auto; padding-top:12px; }
+ .knovera-catalog-page .spine-peek-card { display:none; }
+ .knovera-catalog-page .catalog-index-row { min-width:0; grid-template-columns:minmax(0,1fr); gap:8px; padding:16px 12px; }
+ .knovera-catalog-page .ci-title-text { font-size:23px; line-height:1.1; }
+ .knovera-catalog-page .ci-subtitle,.knovera-catalog-page .ci-author { display:none; }
+ .knovera-catalog-page .ci-price { gap:12px; }
+ .knovera-catalog-page .ci-inspect-btn { min-height:44px; }
+}
+.store-mobile-copy,.store-mobile-footer-nav,.store-mobile-footer-policies { display:none; }
+@media(max-width:600px) {
+ .store-desktop-copy { display:none; } .store-mobile-copy { display:inline; }
+ .knovera-home .store-feature-section { padding-block:30px; }
+ .knovera-home .store-feature-section>h2 { font-size:29px; margin:10px 0 18px; }
+ .knovera-home .store-feature-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+ .knovera-home .store-feature-card { min-width:0; padding:16px 13px; border-radius:12px; }
+ .knovera-home .store-feature-card>svg { width:20px; height:20px; margin-bottom:10px; }
+ .knovera-home .store-feature-card h3 { font-size:21px; margin:0 0 8px; line-height:1.1; }
+ .knovera-home .store-feature-card p { display:none; }
+ .knovera-home .store-feature-card>span { font-size:11px; min-height:26px; }
+ .knovera-home .knovera-pillars-section { padding-block:28px; }
+ .knovera-home .knovera-pillars-section .knovera-section-header { margin-bottom:18px; }
+ .knovera-home .knovera-pillars-section .knovera-section-title { font-size:29px; }
+ .knovera-home .knovera-pillars-section .knovera-section-sub { display:none; }
+ .knovera-home .knovera-pillars-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+ .knovera-home .knovera-pillar-card { min-width:0; padding:16px 13px; border-radius:12px; }
+ .knovera-home .knovera-pillar-icon { width:30px; height:30px; margin-bottom:10px; border-radius:8px; }
+ .knovera-home .knovera-pillar-icon svg { width:17px; height:17px; }
+ .knovera-home .knovera-pillar-title { font-size:20px; line-height:1.1; margin-bottom:8px; }
+ .knovera-home .knovera-pillar-desc { font-size:11px; line-height:1.5; margin:0; }
+ .knovera-home .knovera-pillar-card .studio-text-link { display:inline-flex; align-items:center; min-height:44px; font-size:11px; margin-top:4px; }
+
+ .colophon-footer { margin-top:20px; padding:16px 0 24px; }
+ .colophon-footer-inner { padding-inline:16px; }
+ .colophon-footer .return-to-first-page-wrap { margin-bottom:8px; }
+ .colophon-footer .return-to-first-page-btn { min-height:44px; }
+ .colophon-footer .dispatch-envelope-section { display:block; padding:18px; border-radius:16px; margin-bottom:24px; }
+ .colophon-footer .dispatch-letter-left { display:none; }
+ .colophon-footer .store-newsletter-card { padding:0; background:transparent; border:0; border-radius:0; box-shadow:none; }
+ .colophon-footer .store-newsletter-card h2 { font-size:28px; margin-bottom:14px; }
+ .colophon-footer .store-newsletter-card>p { display:none; }
+ .colophon-footer .store-newsletter-card form { grid-template-columns:minmax(0,1fr) auto; gap:8px; }
+ .colophon-footer .store-newsletter-card form>label,.colophon-footer .store-newsletter-card form>p { grid-column:1/-1; }
+ .colophon-footer .store-newsletter-input { padding-inline:10px; gap:8px; border-radius:9px; }
+ .colophon-footer .store-newsletter-input svg { display:none; }
+ .colophon-footer .store-newsletter-input input { min-height:48px; font-size:14px; }
+ .colophon-footer .store-auth-submit { min-height:48px; padding:8px 12px; border-radius:9px; font-size:12px; gap:6px; }
+ .colophon-footer .store-newsletter-privacy { font-size:10px; line-height:1.5; margin:4px 0 0; }
+ .colophon-footer .colophon-directory { display:none; }
+ .store-mobile-footer-nav { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }
+ .store-mobile-footer-nav h3 { font:600 12px/1.4 var(--font-sans),sans-serif; margin:0 0 6px; }
+ .store-mobile-footer-nav a { display:flex; align-items:center; min-height:44px; font-size:12px; color:#5f594f; }
+ .store-mobile-footer-nav a:hover,.store-mobile-footer-policies a:hover { text-decoration:underline; }
+ .store-mobile-footer-policies { display:flex; flex-wrap:wrap; gap:0 18px; margin-top:16px; padding-block:10px; border-block:1px solid #e0d7c9; }
+ .store-mobile-footer-policies a { display:inline-flex; align-items:center; min-height:44px; font-size:11px; }
+ .colophon-footer .colophon-imprint-bar { margin-top:14px; justify-content:center; }
+ .colophon-footer .colophon-imprint-text { display:none; }
+ .colophon-footer .colophon-copyright { font-size:9px; letter-spacing:.04em; }
+}
+@media(max-width:360px) {
+ .colophon-footer .store-newsletter-card form { grid-template-columns:minmax(0,1fr); }
+ .colophon-footer .store-newsletter-card h2 { font-size:26px; }
+}
+@media(max-width:600px) {
+ /* Two books per row, with details one tap away. */
+ .knovera-home .knovera-books-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+ .knovera-home .knovera-book-card { min-width:0; border-radius:12px; display:flex; flex-direction:column; }
+ .knovera-home .knovera-card-cover-container { padding:30px 12px 26px; }
+ .knovera-home .knovera-card-cover-link { width:100%; max-width:112px; }
+ .knovera-home .knovera-card-cover-link .edition-cover { width:100%; max-width:100%; }
+ .knovera-home .knovera-card-edition-chip { display:none; }
+ .knovera-home .knovera-card-badge { font-size:7px; left:8px; bottom:8px; padding:3px 6px; }
+ .knovera-home .knovera-wishlist-btn { top:0; right:0; width:44px; height:44px; }
+ .knovera-home .knovera-card-body { padding:12px; flex:1; display:flex; flex-direction:column; }
+ .knovera-home .knovera-card-category { font-size:8px; letter-spacing:.04em; }
+ .knovera-home .knovera-card-pages,.knovera-home .knovera-card-desc { display:none; }
+ .knovera-home .knovera-card-title { font-size:19px; line-height:1.15; margin:7px 0 12px; }
+ .knovera-home .knovera-card-title a { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+ .store-book-title-full { display:none; } .store-book-title-short { display:inline; }
+ .knovera-home .knovera-card-footer { display:flex; flex-direction:column; align-items:stretch; gap:10px; margin-top:auto; padding-top:10px; }
+ .knovera-home .knovera-card-pricing { gap:3px; }
+ .knovera-home .knovera-card-price { font-size:17px; }
+ .knovera-home .knovera-card-formats { font-size:9px; }
+ .knovera-home .knovera-card-actions { display:flex; flex-direction:column; align-items:stretch; gap:0; }
+ .knovera-home .knovera-btn-sm,.knovera-home .knovera-sample-link { min-height:44px; justify-content:center; font-size:11px; padding:8px; }
+ .knovera-home .knovera-section-sub { font-size:13px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+
+ .knovera-home .boxset-section { padding:20px 16px; border-radius:20px; margin-top:32px; }
+ .knovera-home .boxset-grid { display:flex; flex-direction:column; gap:14px; }
+ .knovera-home .boxset-left { display:contents; }
+ .knovera-home .store-set-kicker { order:0; align-self:flex-start; margin:0; padding:7px 10px; font-size:8px; letter-spacing:.09em; }
+ .knovera-home .boxset-title { order:1; font-size:32px; line-height:1.05; margin:0; }
+ .boxset-desktop-title { display:none; } .boxset-mobile-title { display:inline; }
+ .knovera-home .boxset-desc,.knovera-home .boxset-contents-list { display:none; }
+ .knovera-home .bshow-showcase { order:2; }
+ .knovera-home .boxset-pricing-row { order:3; margin:4px 0 0; }
+ .knovera-home .boxset-price-amount { font-size:34px; }
+ .knovera-home .store-set-note { order:4; font-size:11px; line-height:1.5; margin:-8px 0 0; }
+ .knovera-home .boxset-actions-row { order:5; display:flex; flex-direction:column; align-items:stretch; gap:10px; margin:0; }
+ .knovera-home .boxset-cta-btn { width:100%; min-height:48px; justify-content:center; font-size:13px; }
+ .knovera-home .boxset-delivery-note { font-size:10px; text-align:center; }
+}

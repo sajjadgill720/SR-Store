@@ -25,8 +25,8 @@ export default function BookCard({ book, returnTo, priority = false }: {
     </div>
     <div className="edition-card-copy">
     <span className="studio-kicker">{book.category}</span>
-    <Link href={detail}>
-    <h3>{book.title}</h3>
+    <Link href={detail} aria-label={book.title}>
+    <h3><span className="store-book-title-full">{book.title}</span><span className="store-book-title-short">{book.title.split(':')[0]}</span></h3>
     </Link>
     <p>{book.shortDescription}</p>
       <div className="edition-card-price">

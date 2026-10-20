@@ -58,4 +58,30 @@
  .bshow-hint { font-size:10px; }
 }
 @media(max-width:380px) { .bshow-bookTitle { font-size:21px; } .bshow-label strong { font-size:22px; } .bshow-seal { right:-4px; width:52px; height:52px; } .bshow-invitationIcon { display:none; } }
+/* A compact, parallel shelf on phones; keep the full desktop presentation. */
+@media(max-width:600px) {
+ .bshow-stage { height:250px; }
+ .bshow-scene { transform:none; }
+ .bshow-books { bottom:52px; width:90%; max-width:330px; gap:16px; }
+ .bshow-book { height:190px; padding:21px 14px 18px; transform:none; }
+ .bshow-bookTitle,.bshow-umber .bshow-bookTitle { font-size:clamp(21px,6vw,27px); margin-top:26px; line-height:1.05; }
+ .bshow-book.bshow-selected,.bshow-book.bshow-selected:hover { transform:translateY(-8px); outline:2px solid #965e36; outline-offset:3px; }
+ .bshow-peek { bottom:37px; right:12px; width:24px; height:24px; }
+ .bshow-slipcase { bottom:0; height:86px; max-width:360px; border-radius:7px; }
+ .bshow-label { width:84%; min-height:57px; padding:9px; }
+ .bshow-label>span,.bshow-label i { display:none; }
+ .bshow-label strong { font-size:21px; margin:0 0 5px; }
+ .bshow-label small { font-size:6px; letter-spacing:.1em; }
+ .bshow-seal { width:46px; height:46px; right:0; top:0; }
+ .bshow-seal strong { font-size:20px; } .bshow-seal span { font-size:4px; }
+ .bshow-hint { font-size:11px; margin:13px 0; }
+ .bshow-preview { padding:16px; min-height:0; border-radius:12px; }
+ .bshow-invitation { min-height:40px; gap:10px; }
+ .bshow-invitation h4 { font-size:22px; margin:0; }
+ .bshow-invitation p { display:none; }
+ .bshow-previewOpen h4 { font-size:25px; padding-right:20px; }
+ .bshow-previewOpen p { display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; }
+ .bshow-meta { margin-bottom:8px; font-size:8px; }
+ .bshow-actions { margin-top:12px; gap:4px 12px; }
+}
 @media(prefers-reduced-motion:reduce) { .bshow-scene,.bshow-book,.bshow-book.bshow-selected,.bshow-book.bshow-selected:hover,.bshow-book:hover { transition:none; } .bshow-scene { transform:none; } .bshow-previewContent { animation:none; } }

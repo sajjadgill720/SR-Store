@@ -134,6 +134,12 @@ export default function Footer() {
           </div>
         </div>
 
+        <nav className="store-mobile-footer-nav" aria-label="Store and reader help">
+          <div><h3>Explore</h3><Link href="/books">All ebooks</Link><Link href="/bundles/the-complete-mastery-bundle">Box set</Link><Link href="/free-resources">Free resources</Link><Link href="/about">About Knovera</Link></div>
+          <div><h3>Reader help</h3><Link href="/account/library">My library</Link><Link href="/access">Find an order</Link><Link href="/help">Reading help</Link><Link href="/contact">Contact support</Link></div>
+        </nav>
+        <nav className="store-mobile-footer-policies" aria-label="Store policies"><Link href="/legal/refunds">Delivery &amp; refunds</Link><Link href="/legal/terms">Terms</Link><Link href="/legal/privacy">Privacy</Link></nav>
+
         {/* Final Colophon Imprint Statement */}
         <div className="colophon-imprint-bar">
           <div className="colophon-imprint-text">
