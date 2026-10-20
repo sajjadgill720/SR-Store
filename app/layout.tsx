@@ -14,6 +14,7 @@ import Footer from '../components/layout/Footer';
 import AddToCartModal from '../components/books/AddToCartModal';
 import MobileNav from '../components/layout/MobileNav';
 import RouteChrome from '../components/layout/RouteChrome';
+import FooterReturn from '../components/layout/FooterReturn';
 import MotionProvider from '../components/common/MotionProvider';
 
 const sans = DM_Sans({ subsets: ['latin'], variable: '--font-sans', display: 'swap' });
@@ -49,6 +50,7 @@ export default function RootLayout({
           <Suspense fallback={null}><RouteChrome /></Suspense>
           <Header />
           <main id="main-content" className="flex-1" tabIndex={-1}>
+            <Suspense fallback={null}><FooterReturn /></Suspense>
             {children}
           </main>
           <Suspense fallback={null}><Footer /></Suspense>

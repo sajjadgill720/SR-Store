@@ -199,6 +199,58 @@ body { --font-cormorant:var(--font-editorial),Georgia,serif; --font-dm-sans:var(
 
 .boxset-mobile-title { display:none; }
 .store-book-title-short { display:none; }
+.hero-reader-club { display:flex; align-items:center; gap:12px; width:fit-content; max-width:100%; margin-top:22px; padding:11px 15px 11px 11px; border:1px solid #dac9b3; background:#fcfaf3b3; border-radius:12px; color:#352a23; transition:background .2s,border-color .2s; }
+.hero-reader-club:hover { background:#fffdf6; border-color:#9b7653; }
+.hero-reader-club-icon { display:grid; place-items:center; width:36px; height:36px; background:#eee1d5; border-radius:9px; color:#702a3c; flex-shrink:0; }
+.hero-reader-club strong { display:block; font-size:13px; font-weight:600; }
+.hero-reader-club small { display:block; color:#655b4e; font-size:10px; margin-top:4px; }
+.hero-reader-club>svg { margin-left:12px; flex-shrink:0; }
+@media(max-width:600px) { .hero-reader-club { margin-top:18px; padding:10px; gap:10px; } .hero-reader-club strong { font-size:12px; } .hero-reader-club>svg { margin-left:4px; } }
+.store-footer-return { max-width:1240px; margin:16px auto 0; padding-inline:24px; }
+.store-footer-return a { display:inline-flex; align-items:center; gap:8px; min-height:44px; color:#5f594f; font-size:13px; text-underline-offset:4px; }
+.store-footer-return a:hover { color:#211e19; text-decoration:underline; }
+#store-footer { scroll-margin-top:90px; }
+.reader-resource-guide { padding:20px; border:1px solid #ddd3c2; border-radius:16px; background:#f8f4eb; margin-bottom:24px; }
+.reader-resource-guide ol { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); list-style:none; padding:0; gap:20px; }
+.reader-resource-guide li { display:grid; gap:7px; font-size:13px; }
+.reader-resource-guide li span,.reader-resource-guide>p { color:#5f594f; font-size:12px; line-height:1.6; }
+.reader-resource-guide>p { margin:16px 0 0; }
+.reader-resource-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }
+.reader-resource-card { min-width:0; border:1px solid #e0d7c9; border-radius:16px; background:#fcfaf6; padding:24px; display:flex; flex-direction:column; align-items:stretch; }
+.reader-resource-card h2 { font:500 30px/1.05 var(--font-editorial),Georgia,serif; margin:12px 0; }
+.reader-resource-card>p { font-size:13px; line-height:1.6; color:#5f594f; margin-bottom:18px; }
+.reader-resource-card>.studio-button { margin-top:auto; min-height:48px; font-size:13px; justify-content:center; }
+.reader-resource-card details { border-block:1px solid #e0d7c9; margin-top:14px; }
+.reader-resource-card summary,.reader-resource-faq summary { cursor:pointer; min-height:44px; font-size:13px; padding-block:13px; }
+.reader-resource-card pre { white-space:pre-wrap; overflow-wrap:anywhere; font:12px/1.7 var(--font-sans),sans-serif; background:#f2ebdf; padding:12px; border-radius:8px; }
+.reader-resource-card details p { font-size:11px; color:#5f594f; margin-block:12px; }
+.reader-resource-related { display:flex; align-items:center; gap:8px; min-height:44px; font-size:12px; line-height:1.5; color:#702a3c; margin-top:8px; }
+.reader-resource-related svg { flex-shrink:0; }
+.reader-resource-card .reader-resource-status { margin:12px 0 0; font-size:12px; }
+.reader-resource-next { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px; margin-block:28px; }
+.reader-resource-next h2 { font:500 28px/1.1 var(--font-editorial),Georgia,serif; margin-bottom:12px; }
+.reader-resource-next p,.reader-resource-faq p { font-size:13px; line-height:1.6; color:#5f594f; margin-block:12px; }
+.reader-resource-next a,.reader-resource-faq a { display:inline-flex; align-items:center; gap:8px; min-height:44px; font-size:12px; text-decoration:underline; text-underline-offset:4px; }
+.reader-resource-faq { border-block:1px solid #ddd3c2; margin-bottom:32px; }
+@media(max-width:600px) {
+ .reader-resources .studio-page-heading { padding-block:24px; }
+ .reader-resources .studio-page-heading h1 { font-size:36px; line-height:1.05; }
+ .reader-resources .studio-page-heading p { font-size:13px; line-height:1.6; }
+ .reader-resource-guide { padding:16px; }
+ .reader-resource-guide ol { grid-template-columns:minmax(0,1fr); gap:12px; }
+ .reader-resource-guide li { gap:3px; }
+ .reader-resource-grid { gap:10px; }
+ .reader-resource-card { padding:14px 12px; border-radius:12px; }
+ .reader-resource-card .studio-kicker { font-size:8px; letter-spacing:.03em; }
+ .reader-resource-card h2 { font-size:23px; margin:10px 0; }
+ .reader-resource-card>p { font-size:12px; line-height:1.5; }
+ .reader-resource-card>.studio-button { font-size:11px; padding:8px 5px; gap:5px; }
+ .reader-resource-card summary { font-size:12px; }
+ .reader-resource-related { font-size:10px; }
+ .reader-resource-next { gap:16px; }
+ .reader-resource-next h2 { font-size:24px; }
+ .reader-resource-next p { font-size:12px; }
+}
 /* Catalogue cards must adapt independently of the homepage collection. */
 @media(max-width:700px) {
  .knovera-catalog-page { min-width:0; }

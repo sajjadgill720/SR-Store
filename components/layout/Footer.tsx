@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import Link from './FooterLink';
 import { usePathname } from 'next/navigation';
 import Newsletter from './Newsletter';
 import { ArrowUp } from 'lucide-react';
@@ -46,7 +46,7 @@ const groups = [
 export default function Footer() {
   const path = usePathname();
   if (['/account/login','/account/signup','/account/update-password'].includes(path)) return null;
-  if (['/cart','/checkout','/access','/account/library','/checkout/return'].includes(path) || path.startsWith('/orders/')) return <footer className="store-flow-footer"><Link href="/">Knovera · Digital store</Link><nav aria-label="Customer support"><Link href="/contact">Support</Link><Link href="/legal/refunds">Delivery &amp; refunds</Link><Link href="/legal/privacy">Privacy</Link></nav></footer>;
+  if (['/cart','/checkout','/access','/account/library','/checkout/return'].includes(path) || path.startsWith('/orders/')) return <footer id="store-footer" tabIndex={-1} className="store-flow-footer"><Link href="/">Knovera · Digital store</Link><nav aria-label="Customer support"><Link href="/contact">Support</Link><Link href="/legal/refunds">Delivery &amp; refunds</Link><Link href="/legal/privacy">Privacy</Link></nav></footer>;
   const scrollToTop = () => {
     if (typeof window !== 'undefined') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -54,7 +54,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="colophon-footer" role="contentinfo">
+    <footer id="store-footer" tabIndex={-1} className="colophon-footer" role="contentinfo">
       <div className="colophon-footer-inner">
         {/* Bibliographic Footnote: Return to the first page */}
         <div className="return-to-first-page-wrap">

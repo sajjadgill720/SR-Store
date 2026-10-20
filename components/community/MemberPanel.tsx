@@ -3,11 +3,12 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { importLocalActivity, refreshSession, useMemberSession } from '../../lib/community/client';
 import { useCommunityActivity as useLocalActivity } from '../../lib/store/community';
-import SignOut from '../auth/SignOut';
 import { User, LogIn, RefreshCw } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 
 export function MemberPanel() {
   const session = useMemberSession();
+  const path = usePathname();
   const local = useLocalActivity();
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
@@ -23,7 +24,7 @@ export function MemberPanel() {
             <span className="community-user-name">{session.member.name}</span>
           </span>
           <div className="community-user-actions">
-            <SignOut />
+            <Link href="/account/library" className="community-text-button">My account</Link>
             {hasLocal && (
               <button
                 className="community-sync-pill"
@@ -41,14 +42,14 @@ export function MemberPanel() {
                   }
                 }}
               >
-                Sync local activity
+                Bring browser saves into my account
               </button>
             )}
             <button 
               className="community-refresh-icon" 
               onClick={() => void refreshSession()} 
-              title="Refresh session sync"
-              aria-label="Refresh session sync"
+              title="Retry account sync"
+              aria-label="Retry account sync"
             >
               <RefreshCw size={12} />
             </button>
@@ -56,9 +57,10 @@ export function MemberPanel() {
         </div>
       ) : (
         <div className="community-account-guest">
-          <Link className="community-top-signin-btn" href="/account/login?next=/community">
+          <span className="community-subtle">{session.ready ? 'Guest mode · saves stay in this browser' : 'Checking your reading space…'}</span>
+          <Link className="community-top-signin-btn" href={`/account/login?next=${encodeURIComponent(path)}`}>
             <LogIn size={13} aria-hidden="true" />
-            <span>Sign in / Join</span>
+            <span>Sign in to sync or post</span>
           </Link>
         </div>
       )}

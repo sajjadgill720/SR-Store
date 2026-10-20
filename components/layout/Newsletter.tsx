@@ -1,7 +1,7 @@
 'use client';
 
 import { useId, useState } from 'react';
-import Link from 'next/link';
+import Link from './FooterLink';
 import { ArrowRight, CheckCircle2, Loader2, Lock, Mail } from 'lucide-react';
 
 export default function Newsletter() {

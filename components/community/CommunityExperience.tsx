@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { ArrowLeft, ArrowUpRight, Bookmark, BookOpen, Check, Compass, Heart, MessageCircle, Search, ShieldCheck, Sparkles, Target, Users } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, Bookmark, BookOpen, Check, Compass, Heart, Mail, MessageCircle, Search, ShieldCheck, Sparkles, Target, Users, X } from 'lucide-react';
 import { CIRCLES, DISCUSSIONS, type Circle, type Discussion, getCircle } from '../../lib/data/community';
 import { toggleActivity, updateActivity, useCommunityActivity, useMemberSession } from '../../lib/community/client';
 import { Replies, SharedThreads } from './SharedCommunity';
@@ -20,30 +20,42 @@ function Guidelines() { return <aside className="community-guidelines"><ShieldCh
 export function CommunityHub() {
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState('All conversations');
+  const [journalOpen, setJournalOpen] = useState(false);
   const activity = useCommunityActivity();
   const filtered = DISCUSSIONS.filter(item => (filter !== 'Saved' || activity.saved.includes(item.slug)) && (filter !== 'My circles' || activity.joined.includes(item.circle)) && `${item.title} ${item.excerpt} ${getCircle(item.circle)?.name}`.toLowerCase().includes(query.toLowerCase().trim()));
 
   return (
     <div className="community-shell community-hub">
-      <div className="studio-page-heading">
-        <span className="studio-kicker">KNOVERA READER CIRCLES &amp; SALON</span>
+      <div className="studio-page-heading community-intro">
+        <span className="studio-kicker">READER COMMUNITY</span>
         <h1>Discover your next conversation.</h1>
         <p>Explore guided reading circles, companion discussions, and your personal reading space.</p>
+        <div className="community-intro-actions"><a href="#circles" className="community-button">Find your circle<ArrowUpRight size={16} aria-hidden="true"/></a><Link href="/reader-club" className="community-intro-club"><Mail size={16} aria-hidden="true"/>Free Reader Club<ArrowUpRight size={15} aria-hidden="true"/></Link></div>
+        <span className="community-intro-emblem" aria-hidden="true"><BookOpen size={42}/><span>READ · REFLECT<br/>CONNECT</span></span>
       </div>
+    <section className="reader-start" aria-labelledby="reader-start-heading">
+      <div className="reader-start-heading"><h2 id="reader-start-heading">Your first few steps.</h2><span>Free to explore</span></div>
+      <ol className="reader-start-steps">
+        <li><span>1</span><h3>Choose a circle</h3><p>Pick an interest. Add a circle to personalize your feed.</p><a href="#circles">Find a circle →</a></li>
+        <li><span>2</span><h3>Read and reflect</h3><p>Try a short guided read. Save ideas in your private journal.</p><Link href={`/community/discussions/${DISCUSSIONS[0].slug}`}>Try a guided read →</Link></li>
+        <li><span>3</span><h3>Join the conversation</h3><p>Sign in to post or reply publicly. Reading and browser saves work as a guest.</p><a href="#member-conversations">See reader conversations →</a></li>
+      </ol>
+      <details className="reader-start-help"><summary>Where do my saves go? What is public?</summary><p>As a guest, circles, saved reads, practice progress, and journal entries stay in this browser. Clearing browser data removes them. Sign in to sync account activity across devices. Use “Bring browser saves into my account” to import guest activity; existing account reflections are preserved.</p><p>Journal reflections are private. Published conversations and replies are public under your reader name. Reading circles organize interests; adding one does not subscribe you to emails.</p><Link href="/free-resources">Try a free planner or checklist →</Link></details>
+    </section>
       <div className="community-status-bar">
         <div className="community-status-metrics">
         <span className="community-status-kicker">YOUR READING SPACE:</span>
-        <span className="community-status-pill">
+        <a href="#circles" className="community-status-pill">
           <strong>{activity.joined.length}</strong> circles joined
-        </span>
+        </a>
         <span className="community-status-bullet">·</span>
-        <span className="community-status-pill">
+        <a href="#community-reading-feed" className="community-status-pill" onClick={() => setFilter('Saved')}>
           <strong>{activity.saved.length}</strong> saved reads
-        </span>
+        </a>
         <span className="community-status-bullet">·</span>
-        <span className="community-status-pill">
+        <a href="#private-journal" className="community-status-pill" onClick={() => setJournalOpen(true)}>
           <strong>{Object.keys(activity.notes).length}</strong> journal entries
-        </span>
+        </a>
       </div>
       <div className="community-status-actions">
         <a href="#member-conversations" className="community-status-link">
@@ -52,14 +64,16 @@ export function CommunityHub() {
         </a>
       </div>
     </div>
-    <section className="community-hero">
-      <div><span className="community-hero-badge"><Sparkles size={14} /> A place for every kind of reader</span><h2>Great reads.<br /><em>Even better connections.</em></h2><p>Books, ideas, questions, and everything in between. Follow your curiosity. Find a circle. Bring your perspective.</p><a href="#circles" className="community-button">Explore your interests <ArrowUpRight size={17} /></a></div>
-      <div className="community-hero-art" aria-hidden="true"><div className="community-art-book book-back"><Sparkles size={28} /><span>A NEW<br />PERSPECTIVE</span></div><div className="community-art-book book-front"><BookOpen size={30} /><span>ONE MORE<br />CHAPTER.</span><i>and a world to talk about</i></div><span className="community-art-caption"><MessageCircle size={15} /> It starts with a good book.</span></div>
-    </section>
+    <details id="private-journal" className="community-journal-index" open={journalOpen} onToggle={event => setJournalOpen(event.currentTarget.open)}>
+      <summary><span>Your private journal</span><span>{Object.keys(activity.notes).length} entries</span></summary>
+      <p>Only your reflections appear here. Open an entry to continue writing; nothing is published to the community.</p>
+      {Object.keys(activity.notes).length ? <ul>{Object.keys(activity.notes).map((slug, index) => <li key={slug}><Link href={`/community/discussions/${encodeURIComponent(slug)}`}>{DISCUSSIONS.find(item => item.slug === slug)?.title || `Reader conversation · entry ${index + 1}`}<ArrowUpRight size={15} aria-hidden="true"/></Link></li>)}</ul> : <Link href={`/community/discussions/${DISCUSSIONS[0].slug}`}>Read a short prompt and start your first reflection <ArrowUpRight size={15} aria-hidden="true"/></Link>}
+    </details>
     <section id="circles" className="community-section"><div className="community-section-heading"><div><span className="community-eyebrow">FIND YOUR PEOPLE</span><h2>Explore reading circles</h2></div><span className="community-subtle">A starting point for your curiosity</span></div><div className="circle-grid">{CIRCLES.map(circle => <Link href={`/community/${circle.slug}`} className={`circle-card circle-${circle.icon}`} key={circle.slug}><div className="circle-card-top"><span className="circle-icon"><CircleIcon circle={circle} /></span><ArrowUpRight size={18} /></div><h3>{circle.name}</h3><p>{circle.description}</p><div className="circle-card-bottom"><span>{activity.joined.includes(circle.slug) ? <><Check size={13} /> In your circles</> : circle.category}</span><span>Explore <ArrowUpRight size={13} /></span></div></Link>)}</div><p className="community-interest-note">Your interests don’t need a label. Share any book, question, or idea in a member conversation.</p></section>
-    <section className="community-section community-feed-section"><div className="community-section-heading"><div><span className="community-eyebrow">THE READING FEED</span><h2>Ideas worth talking about</h2></div></div><div className="community-feed-layout"><div className="community-feed-main"><div className="community-feed-controls"><div className="community-tabs" role="group" aria-label="Conversation filters">{['All conversations', 'My circles', 'Saved'].map(option => <button key={option} aria-pressed={filter === option} onClick={() => setFilter(option)}>{option === 'All conversations' ? 'Discover' : option}</button>)}</div><label className="community-search"><Search size={17} aria-hidden="true" /><span className="sr-only">Search conversations</span><input type="search" value={query} onChange={event => setQuery(event.target.value)} placeholder="Search ideas, books, conversations…" /></label></div>
+    <section id="community-reading-feed" className="community-section community-feed-section"><div className="community-section-heading"><div><span className="community-eyebrow">THE READING FEED</span><h2>Ideas worth talking about</h2></div></div><div className="community-feed-layout"><div className="community-feed-main"><div className="community-feed-controls"><div className="community-tabs" role="group" aria-label="Conversation filters">{['All conversations', 'My circles', 'Saved'].map(option => <button key={option} aria-pressed={filter === option} onClick={() => setFilter(option)}>{option === 'All conversations' ? 'Discover' : option}</button>)}</div><label className="community-search"><Search size={17} aria-hidden="true" /><span className="sr-only">Search conversations</span><input type="search" value={query} onChange={event => setQuery(event.target.value)} placeholder="Search ideas, books, conversations…" />{query && <button type="button" aria-label="Clear conversation search" onClick={() => setQuery('')}><X size={16} aria-hidden="true"/></button>}</label></div>
+    {(query || filter !== 'All conversations') && <div className="community-filter-feedback"><span>{filter === 'All conversations' ? 'Discover' : filter}{query ? ` · “${query}”` : ''}</span><button type="button" onClick={() => {setQuery('');setFilter('All conversations');}}>Clear filters<X size={14} aria-hidden="true"/></button></div>}
     <SharedThreads filter={filter} query={query} />
-    <div className="community-guided-heading"><span><BookOpen size={16} /> From Knovera</span><p className="community-result-count" aria-live="polite">{filtered.length} guided {filtered.length === 1 ? 'read' : 'reads'}</p></div><div className="conversation-grid">{filtered.map(item => <DiscussionCard key={item.slug} discussion={item} />)}</div>{filtered.length === 0 && <div className="community-empty"><Compass size={28} /><h3>A new direction awaits.</h3><p>{filter === 'Saved' ? 'Bookmark a conversation to keep it here.' : filter === 'My circles' ? 'Add a circle to discover its guided reads.' : 'Try a different search to find your next idea.'}</p><button className="community-button secondary" onClick={() => { setQuery(''); setFilter('All conversations'); }}>Explore all conversations</button></div>}</div>
+    <div className="community-guided-heading"><span><BookOpen size={16} /> From Knovera</span><p className="community-result-count" aria-live="polite">{filtered.length} guided {filtered.length === 1 ? 'read' : 'reads'}</p></div><div className="conversation-grid">{filtered.map(item => <DiscussionCard key={item.slug} discussion={item} />)}</div>{filtered.length === 0 && <div className="community-empty"><Compass size={28} /><h3>No guided reads found.</h3><p>{query.trim() ? `No guided reads match “${query.trim()}”. Try another word or clear your filters.` : filter === 'Saved' ? 'Bookmark a conversation to keep it here.' : filter === 'My circles' ? 'Add a circle to discover its guided reads.' : 'Try a different search to find your next idea.'}</p><button className="community-button secondary" onClick={() => { setQuery(''); setFilter('All conversations'); }}>Explore all conversations</button></div>}</div>
     <div className="community-sidebar"><aside className="community-discovery-panel"><span className="community-eyebrow">A LITTLE INSPIRATION</span><h3>Find a new favorite.</h3><p>Sometimes a few pages open up a whole new conversation.</p><div className="community-discovery-icon"><BookOpen size={34} /><Sparkles size={19} /></div><Link className="community-button secondary" href="/books">Explore books <ArrowUpRight size={16} /></Link></aside><Guidelines /><aside className="community-mini-panel"><ShieldCheck size={18} /><div><strong>Your journal. Your space.</strong><p>Public conversations connect us. Private reflections stay yours.</p></div></aside></div></div></section>
     <section className="community-invitation"><span className="community-invitation-icon"><Users size={26} /></span><div><h2>Stay in the loop.</h2><p>Choose the reading topics you want to hear about.</p></div><Link className="community-button secondary" href="/reader-club#preferences">Reader Club preferences <ArrowUpRight size={17} /></Link></section>
     </div>
