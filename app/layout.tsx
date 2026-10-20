@@ -6,6 +6,7 @@ import './globals.css';
 import './theme.css';
 import './storefront.css';
 import './refinement.css';
+import './store-identity.css';
 import { CartProvider } from '../lib/store/cart';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
@@ -19,17 +20,17 @@ const serif = Cormorant_Garamond({ subsets: ['latin'], weight: ['400', '500', '6
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteOrigin()),
-  title: 'Knovera — Books, Ideas & Community',
-  description: 'Discover books, explore new ideas, and connect with readers. Browse digital editions, read samples, and find your next great read.',
+  title: 'Knovera — Ebooks & Digital Goods',
+  description: 'Your store for ebooks and useful digital goods. Browse the collection, read free samples, and build your personal library.',
   openGraph: {
-    title: 'Knovera — Books, Ideas & Community',
+    title: 'Knovera — Ebooks & Digital Goods',
     description: 'Find your next read and your next conversation. Discover books and connect with a community of curious readers.',
     type: 'website',
     siteName: 'Knovera',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Knovera — Books, Ideas & Community',
+    title: 'Knovera — Ebooks & Digital Goods',
     description: 'Books for your curiosity. Conversations for your perspective. Discover Knovera.',
   },
 };
@@ -49,7 +50,7 @@ export default function RootLayout({
           <main id="main-content" className="flex-1" tabIndex={-1}>
             {children}
           </main>
-          <Footer />
+          <Suspense fallback={null}><Footer /></Suspense>
           <MobileNav />
           <AddToCartModal />
           <MotionProvider />

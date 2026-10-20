@@ -1,43 +1,19 @@
 'use client';
-import { Suspense, useRef, useState, useEffect } from 'react';
+import { Suspense, useRef, useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ShoppingBag, Menu, X, BookOpen } from 'lucide-react';
+import { ShoppingBag, Menu, X } from 'lucide-react';
 import { useCart } from '../../lib/store/cart';
-
-const tableOfContents = [
-  { roman: 'I', href: '/books', label: 'Catalogue' },
-  { roman: 'II', href: '/community', label: 'Community' },
-  { roman: 'III', href: '/about', label: 'Colophon' },
-  { roman: 'IV', href: '/account/library', label: 'Library' },
-];
-
-function getPageMetadata(pathname: string) {
-  if (pathname === '/') return { section: 'Frontispiece & Imprint', folio: 'p. 001' };
-  if (pathname === '/books') return { section: 'The Catalogue', folio: 'p. 014' };
-  if (pathname.startsWith('/books/')) return { section: 'Volume Detail', folio: 'p. 042' };
-  if (pathname.startsWith('/community')) return { section: "The Reader's Circle", folio: 'p. 068' };
-  if (pathname === '/cart') return { section: 'The Order Ledger', folio: 'p. 088' };
-  if (pathname === '/checkout') return { section: 'Acquisition & License', folio: 'p. 092' };
-  if (pathname.startsWith('/account')) return { section: 'Personal Library', folio: 'p. 104' };
-  if (pathname === '/about') return { section: 'Imprint History', folio: 'p. 118' };
-  if (pathname.startsWith('/help')) return { section: 'Reading Guidance', folio: 'p. 132' };
-  if (pathname.startsWith('/access')) return { section: 'Purchase Retrieval', folio: 'p. 140' };
-  return { section: 'Knovera Press', folio: 'p. 050' };
-}
 
 function Navigation() {
   const path = usePathname();
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [openPath, setOpenPath] = useState<string | null>(null);
+  const menuOpen = openPath === path;
+  const setMenuOpen = useCallback((open: boolean) => setOpenPath(open ? path : null), [path]);
   const trigger = useRef<HTMLButtonElement>(null);
   const { cartCount } = useCart();
   const active = (href: string) => path === href || (href !== '/' && path.startsWith(href + '/'));
-  const { section, folio } = getPageMetadata(path);
 
-  // Close mobile menu on route change
-  useEffect(() => {
-    setMenuOpen(false);
-  }, [path]);
 
   // Handle ESC key
   useEffect(() => {
@@ -49,14 +25,16 @@ function Navigation() {
     }
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [menuOpen]);
+  }, [menuOpen, setMenuOpen]);
+
+  if (['/account/login','/account/signup','/account/update-password'].includes(path)) return null;
 
   return (
     <header className="print-running-head studio-header">
       <div className="running-head-bar">
         <div className="running-head-inner">
           <Link href="/" className="running-head-brand-link" aria-label="KNOVERA — Home">
-            <span className="running-head-brand">KNOVERA</span>
+            <span className="running-head-brand">KNOVERA<small className="store-brand-descriptor">DIGITAL STORE</small></span>
           </Link>
 
           {/* Desktop Single-Tier Navigation matching reference design */}
@@ -85,7 +63,7 @@ function Navigation() {
               aria-current={active('/about') || active('/colophon') ? 'page' : undefined}
             >
               <span className="running-head-numeral">iii.</span>
-              <span className="running-head-title">Colophon</span>
+              <span className="running-head-title">About</span>
             </Link>
 
             <Link
@@ -103,11 +81,13 @@ function Navigation() {
               aria-current={active('/newsletter') ? 'page' : undefined}
             >
               <span className="running-head-numeral">v.</span>
-              <span className="running-head-title">Dispatch</span>
+              <span className="running-head-title">Newsletter</span>
             </Link>
           </nav>
 
           <div className="running-head-right">
+            <Link href="/books?saved=1" className="store-header-saved">Saved</Link>
+            <Link href="/account/login" className="store-header-account">Sign in</Link>
             <Link
               href="/cart"
               className="running-head-cart-link"
@@ -140,9 +120,9 @@ function Navigation() {
               {[
                 { roman: 'i.', href: '/books', label: 'Ebooks' },
                 { roman: 'ii.', href: '/community', label: 'Reader Community' },
-                { roman: 'iii.', href: '/about', label: 'Colophon' },
+                { roman: 'iii.', href: '/about', label: 'About' },
                 { roman: 'iv.', href: '/account/library', label: 'Library' },
-                { roman: 'v.', href: '/newsletter', label: 'Dispatch' },
+                { roman: 'v.', href: '/newsletter', label: 'Newsletter' },
               ].map(item => (
                 <li key={item.href} className="print-mobile-item">
                   <Link

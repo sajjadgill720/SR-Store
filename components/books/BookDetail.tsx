@@ -13,7 +13,6 @@ import {
   ShieldCheck,
   ChevronDown,
   Check,
-  HelpCircle,
   ArrowRight,
 } from 'lucide-react';
 import type { Book } from '../../lib/types';
@@ -142,7 +141,7 @@ export default function BookDetail({ book }: { book: Book }) {
             {/* Bibliographic Imprint Statement under Frontispiece */}
             <div className="book-plate-imprint">
               <div className="imprint-header">
-                <span className="imprint-press">KNOVERA PRESS · SAN FRANCISCO</span>
+                <span className="imprint-press">KNOVERA · DIGITAL STORE</span>
                 <span className="imprint-version">{book.currentEdition.version}</span>
               </div>
               <p className="imprint-statement">
@@ -165,7 +164,7 @@ export default function BookDetail({ book }: { book: Book }) {
             {book.sampleExcerpt.trim() && (
               <Link className="book-sample-plate-btn" href={samplePath}>
                 <BookOpen size={15} aria-hidden="true" className="shrink-0" />
-                <span>Examine Opening Sample Chapter &rarr;</span>
+                <span>Read a free sample &rarr;</span>
               </Link>
             )}
           </div>
@@ -177,12 +176,12 @@ export default function BookDetail({ book }: { book: Book }) {
         </div>
 
         {/* RIGHT PAGE: THE TYPESET TEXT & ORDER SLIP */}
-        <section className="book-spread-right" aria-label="Book Information and Acquisition">
+        <section className="book-spread-right" aria-label="Product details and purchase options">
           <div className="book-typeset-content">
             <div className="book-typeset-kicker">
               <span>{book.category.toUpperCase()}</span>
               <span className="kicker-sep">/</span>
-              <span>{book.productType === 'printable' ? 'PRINTABLE WORKBOOK' : 'FIRST DIGITAL IMPRINT'}</span>
+              <span>{book.productType === 'printable' ? 'PRINTABLE WORKBOOK' : 'DIGITAL EBOOK'}</span>
             </div>
 
             <h1 id="book-title" className="book-typeset-title">
@@ -196,7 +195,7 @@ export default function BookDetail({ book }: { book: Book }) {
             <div className="book-typeset-byline">
               <span className="byline-author">By {book.author}</span>
               <span className="byline-bullet">❦</span>
-              <span className="byline-imprint">Knovera Press Standard Edition</span>
+              <span className="byline-imprint">Digital edition</span>
             </div>
 
             <div className="hairline-divider" aria-hidden="true" />
@@ -222,7 +221,7 @@ export default function BookDetail({ book }: { book: Book }) {
               
               <div className="order-slip-head">
                 <div className="order-slip-kicker">
-                  <span>DISPATCH REQUISITION NO. {book.id.toUpperCase().slice(-6)}</span>
+                  <span>PRODUCT REF. {book.id.toUpperCase().slice(-6)}</span>
                   <span className="slip-fleuron">✦</span>
                 </div>
                 <div className="order-slip-pricing">
@@ -244,14 +243,14 @@ export default function BookDetail({ book }: { book: Book }) {
                   disabled={!available}
                   className="book-acquisition-btn"
                   onClick={() => addToCart(book, formatsLabel(book.formats))}
-                  aria-label={`Acquire ${book.title} for ${money(book.price)}`}
+                  aria-label={`Add ${book.title} to cart for ${money(book.price)}`}
                 >
                   <span className="btn-main-label">
                     {available
                       ? book.productType === 'printable'
-                        ? 'Acquire Printable Edition'
-                        : 'Acquire Digital Master Edition'
-                      : 'Currently Out of Print'}
+                        ? 'Add printable to cart'
+                        : 'Add ebook to cart'
+                      : 'Currently unavailable'}
                   </span>
                   <span className="btn-price-tag">
                     {money(book.price)} <small>USD</small>
@@ -263,7 +262,7 @@ export default function BookDetail({ book }: { book: Book }) {
                   className="book-ribbon-save-btn"
                   aria-pressed={saved}
                   onClick={() => toggleWishlist(book.id)}
-                  aria-label={saved ? 'Remove bookmark' : 'Insert bookmark ribbon'}
+                  aria-label={saved ? 'Remove bookmark' : 'Save for later'}
                 >
                   <Bookmark
                     size={16}
@@ -271,7 +270,7 @@ export default function BookDetail({ book }: { book: Book }) {
                     aria-hidden="true"
                     className="shrink-0"
                   />
-                  <span>{saved ? 'Bookmarked in Collection' : 'Insert Bookmark Ribbon'}</span>
+                  <span>{saved ? 'Saved for later' : 'Save for later'}</span>
                 </button>
               </div>
 
@@ -300,14 +299,14 @@ export default function BookDetail({ book }: { book: Book }) {
                   <span className="studio-kicker">TWO-VOLUME BOXED SET</span>
                   <h4>The Complete Mastery &amp; Productivity Pair</h4>
                   <p>
-                    Acquire both <em>The Focused Mind</em> and <em>Atomic Architectures</em> together for $29.99 (Save 22%).
+                    Explore <em>The Focused Mind</em> and <em>Atomic Architectures</em> together. Each ebook is priced individually; see the set for the combined total.
                   </p>
                 </div>
                 <Link
                   href="/bundles/the-complete-mastery-bundle"
                   className="studio-button outline paired-slipcase-btn"
                 >
-                  Examine Boxed Set <ArrowRight size={14} className="shrink-0" />
+                  Explore reading set <ArrowRight size={14} className="shrink-0" />
                 </Link>
               </div>
             )}
@@ -356,7 +355,7 @@ export default function BookDetail({ book }: { book: Book }) {
                 <div className="colophon-row">
                   <dt>Imprint</dt>
                   <span className="dot-leader-fill" aria-hidden="true" />
-                  <dd>Knovera Press, San Francisco &amp; London</dd>
+                  <dd>Knovera digital store</dd>
                 </div>
               </dl>
             </div>
@@ -375,7 +374,7 @@ export default function BookDetail({ book }: { book: Book }) {
               <p>{authorNote.text}</p>
             </div>
             <div className="knovera-note-signoff">
-              <span>— Knovera Editorial Press</span>
+              <span>— Knovera</span>
             </div>
           </div>
 
@@ -436,7 +435,7 @@ export default function BookDetail({ book }: { book: Book }) {
                     <span>{faq.q}</span>
                     <ChevronDown size={17} aria-hidden="true" className="knovera-faq-chevron shrink-0" />
                   </summary>
-                  <p className="knovera-faq-answer">{faq.a}</p>
+                  <p className="knovera-faq-answer">{faq.a}{index===1 && <> <Link href="/help/kindle">Open the Kindle guide →</Link></>}{index===2 && <> <Link href="/account/library">Open your library →</Link></>}{index===4 && <> <Link href="/legal/refunds">Read the refund policy →</Link></>}</p>
                 </details>
               ))}
             </div>
@@ -484,8 +483,8 @@ export default function BookDetail({ book }: { book: Book }) {
               )}
               <dt>Rights &amp; DRM</dt>
               <dd>DRM-Free Universal License</dd>
-              <dt>Publisher</dt>
-              <dd>Knovera Press</dd>
+              <dt>Store</dt>
+              <dd>Knovera</dd>
             </dl>
           </div>
 
@@ -495,7 +494,7 @@ export default function BookDetail({ book }: { book: Book }) {
             <h4>Need assistance?</h4>
             <p>
               Have questions regarding Send-to-Kindle transfer, tablet reading, or companion files?
-              Our editorial support desk is ready to assist.
+              Our support team is ready to help.
             </p>
             <Link href="/contact" className="knovera-support-link">
               Contact reader support &rarr;
@@ -521,7 +520,7 @@ export default function BookDetail({ book }: { book: Book }) {
             tabIndex={showStickyBar ? 0 : -1}
           >
             <ShoppingBag size={15} aria-hidden="true" className="shrink-0" />
-            <span>Acquire</span>
+            <span>Add to cart</span>
           </button>
         </div>
       </div>

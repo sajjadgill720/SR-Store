@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import {
   BookOpen,
@@ -16,45 +16,14 @@ import { money, formatsLabel } from '../../lib/catalog';
 import { useCart } from '../../lib/store/cart';
 import type { Book, BundleOffer } from '../../lib/types';
 
-const motionQuery = '(prefers-reduced-motion: reduce)';
-const subscribeMotion = (notify: () => void) => {
-  const query = window.matchMedia(motionQuery);
-  query.addEventListener('change', notify);
-  return () => query.removeEventListener('change', notify);
-};
-const getReducedMotion = () => window.matchMedia(motionQuery).matches;
-
 export default function Marketplace({ books, bundles = [] }: { books: Book[]; bundles?: BundleOffer[] }) {
   const { toggleWishlist, isWishlisted } = useCart();
 
-  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [selectedBundleId, setSelectedBundleId] = useState<string | null>(null);
-  const [playing, setPlaying] = useState(true);
-  const showcase = useRef<HTMLDivElement>(null);
-  const reducedMotion = useSyncExternalStore(subscribeMotion, getReducedMotion, () => true);
-  const featured = books.find(book => book.id === selectedId) || books.find(book => book.featured) || books[0];
-  const selectedIndex = featured ? books.findIndex(book => book.id === featured.id) : 0;
+  const featured = books.find(book => book.featured) || books[0];
+  const second = books.find(book => book.id !== featured?.id) || featured;
+  const sample = books.find(book => book.sampleExcerpt.trim());
   const currentBundle = bundles.find(b => b.id === selectedBundleId) || bundles[0];
-  const canRotate = books.length > 1;
-  const autoRotate = playing && !reducedMotion && canRotate;
-  const move = (direction: number) => {
-    setPlaying(false);
-    setSelectedId(books[(selectedIndex + direction + books.length) % books.length].id);
-  };
-  useEffect(() => {
-    if (!autoRotate) return;
-    const timer = window.setInterval(() => {
-      if (document.visibilityState !== 'visible' || showcase.current?.matches(':hover') || showcase.current?.contains(document.activeElement)) return;
-      setSelectedId(books[(selectedIndex + 1) % books.length].id);
-    }, 7000);
-    return () => window.clearInterval(timer);
-  }, [autoRotate, books, selectedIndex]);
-  const readerProfiles = [
-    { name: 'Aisha', role: 'Student', initials: 'A', title: 'A little space to learn.', text: 'A chapter between classes. A new subject to explore. Reading that fits around a busy day.' },
-    { name: 'Daniel', role: 'Everyday reader', initials: 'D', title: 'Something beyond the everyday.', text: 'An interesting idea for the commute, a quiet evening, or a well-earned weekend.' },
-    { name: 'Sara', role: 'Parent', initials: 'S', title: 'Curiosity to share.', text: 'Make room for reading together, discovering new interests, and asking another question.' },
-    { name: 'Omar', role: 'Freelancer', initials: 'O', title: 'A fresh point of view.', text: 'Step away from the to-do list and spend a little time with a different perspective.' },
-  ];
 
   return (
     <div className="knovera-home">
@@ -64,7 +33,7 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
           <div className="hero-pic-grid">
             {/* Left: Headline, Description & CTAs */}
             <div className="hero-pic-left">
-              <span className="hero-pic-kicker">EBOOKS · GUIDES · TEMPLATES</span>
+              <span className="hero-pic-kicker">YOUR DIGITAL BOOKSHELF</span>
 
               <h1 id="hero-pic-heading" className="hero-pic-headline">
                 Read it tonight.<br />
@@ -72,19 +41,18 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
               </h1>
 
               <p className="hero-pic-lead">
-                Ebooks and working files on cognitive focus, architectural leverage and systems design.
-                Paid for once, delivered to your inbox, readable on any device.
+                A digital store for curious minds. Discover ebooks to learn from, ideas to live with, and useful resources for your everyday. Start with a free sample.
               </p>
 
               <div className="hero-pic-actions">
                 <Link href="/books" className="hero-pic-cta-primary">
-                  <span>Browse the catalogue</span>
+                  <span>Explore ebooks</span>
                   <span className="hero-pic-cta-arrow" aria-hidden="true">→</span>
                 </Link>
 
-                <Link href="/samples/the-focused-mind" className="hero-pic-sample-link">
+                {sample && <Link href={`/samples/${sample.slug}`} className="hero-pic-sample-link">
                   Read a free sample
-                </Link>
+                </Link>}
               </div>
 
               {/* Formats specification line with dashed rule */}
@@ -100,16 +68,16 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
               <div className="hero-pic-fan-wrap" role="region" aria-label="Featured publications">
                 {/* Book 1: Back Left (Sand/oatmeal cover) */}
                 <Link
-                  href="/books/the-focused-mind"
+                  href={featured ? `/books/${featured.slug}` : "/books"}
                   className="hero-pic-book hero-pic-book-sand"
-                  aria-label="Cognitive Focus by Knovera Press"
+                  aria-label={featured?.title || "Browse ebooks"}
                 >
                   <div className="hero-pic-book-texture" />
                   <div className="hero-pic-book-content">
-                    <span className="hero-pic-book-press">KNOVERA PRESS</span>
+                    <span className="hero-pic-book-press">KNOVERA</span>
                     <div className="hero-pic-book-sand-title-wrap">
-                      <span className="hero-pic-book-sand-title">Cognitive</span>
-                      <span className="hero-pic-book-sand-title">Focus</span>
+                      <span className="hero-pic-book-sand-title">{featured?.title.split(':')[0] || 'Discover'}</span>
+                      <span className="hero-pic-book-sand-title">Your next read</span>
                     </div>
                     <div className="hero-pic-book-sand-rule" />
                   </div>
@@ -119,19 +87,19 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
                 <Link
                   href="/books"
                   className="hero-pic-book hero-pic-book-umber"
-                  aria-label="Knovera Press Publications"
+                  aria-label="Browse the ebook collection"
                 >
                   <div className="hero-pic-book-texture" />
                   <div className="hero-pic-book-content">
-                    <span className="hero-pic-book-press">KNOVERA PRESS</span>
+                    <span className="hero-pic-book-press">KNOVERA</span>
                   </div>
                 </Link>
 
                 {/* Book 3: Front Center (Dark charcoal buckram with amber ribbon) */}
                 <Link
-                  href="/books/atomic-architectures"
+                  href={second ? `/books/${second.slug}` : "/books"}
                   className="hero-pic-book hero-pic-book-front"
-                  aria-label="Architectural Leverage by Knovera Press"
+                  aria-label={second?.title || "Explore ebooks"}
                 >
                   <div className="hero-pic-book-texture" />
                   {/* Amber Notched Ribbon Bookmark */}
@@ -139,19 +107,18 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
 
                   <div className="hero-pic-book-content hero-pic-front-content">
                     <div className="hero-pic-front-header">
-                      <span className="hero-pic-front-press">KNOVERA PRESS</span>
+                      <span className="hero-pic-front-press">KNOVERA</span>
                     </div>
 
                     <div className="hero-pic-front-title-block">
                       <h2 className="hero-pic-front-title">
-                        Architectural<br />
-                        <span className="hero-pic-front-title-italic">Leverage</span>
+                        {second?.title.split(':')[0] || 'A world of ideas'}
                       </h2>
                       <div className="hero-pic-front-rule" />
                     </div>
 
                     <div className="hero-pic-front-footer">
-                      <span className="hero-pic-front-author">02 · [AUTHOR]</span>
+                      <span className="hero-pic-front-author">{second?.author || "DIGITAL EDITION"}</span>
                     </div>
                   </div>
                 </Link>
@@ -170,7 +137,7 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
                     <circle cx="80" cy="80" r="45" fill="none" stroke="currentColor" strokeWidth="0.8" opacity="0.5" />
                     <text fill="currentColor" className="hero-pic-stamp-curved-text">
                       <textPath href="#hero-stamp-path-circle" startOffset="50%" textAnchor="middle">
-                        • INSTANT DELIVERY • KINDLE • EPUB • PDF •
+                        • YOUR NEXT READ • YOUR DIGITAL SHELF •
                       </textPath>
                     </text>
                     <text x="80" y="75" textAnchor="middle" fill="currentColor" className="hero-pic-stamp-title">
@@ -283,28 +250,25 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
           </div>
 
           {/* Dual Edition Box Set / Dynamic Bundle Showcase */}
-          {currentBundle && (() => {
-            const standaloneSum = currentBundle.originalPrice || currentBundle.books.reduce((sum, b) => sum + b.price, 0);
-            const bundleSavings = standaloneSum > currentBundle.price ? standaloneSum - currentBundle.price : 0;
-            const savingsPercent = currentBundle.savingsPercentage || (standaloneSum > 0 ? Math.round((bundleSavings / standaloneSum) * 100) : 0);
+          {currentBundle && currentBundle.books.length > 0 && (() => {
+            const standaloneSum = currentBundle.books.reduce((sum, b) => sum + b.price, 0);
             const book1 = currentBundle.books[0];
             const book2 = currentBundle.books[1] || currentBundle.books[0];
 
             return (
               <div className="boxset-section" id="box-sets" aria-labelledby="boxset-heading">
                 {bundles.length > 1 && (
-                  <div className="boxset-tabs" role="tablist" aria-label="Available Box Sets">
+                  <div className="boxset-tabs" role="group" aria-label="Available Box Sets">
                     {bundles.map(b => (
                       <button
                         key={b.id}
                         type="button"
-                        role="tab"
-                        aria-selected={b.id === currentBundle.id}
+                        aria-pressed={b.id === currentBundle.id}
                         className={`boxset-tab-btn ${b.id === currentBundle.id ? 'is-active' : ''}`}
                         onClick={() => setSelectedBundleId(b.id)}
                       >
                         <span className="boxset-tab-title">{b.title}</span>
-                        <span className="boxset-tab-save">Save {b.savingsPercentage}%</span>
+                        <span className="boxset-tab-save">{b.books.length} ebooks</span>
                       </button>
                     ))}
                   </div>
@@ -313,69 +277,26 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
                 <div className="boxset-grid">
                   {/* Left Column: Title, Prose, Contents List, Pricing, CTA */}
                   <div className="boxset-left">
+                    <span className="store-set-kicker">A CURATED DIGITAL READING SET</span>
                     <h3 id="boxset-heading" className="boxset-title">
                       {currentBundle.title}
                     </h3>
 
-                    <p className="boxset-desc">
-                      {(() => {
-                        const desc = currentBundle.description || currentBundle.subtitle;
-                        const parts = desc.split(/(The Focused Mind|Atomic Architectures)/g);
-                        return parts.map((part, i) =>
-                          part === 'The Focused Mind' || part === 'Atomic Architectures' ? (
-                            <em key={i} className="boxset-desc-em">{part}</em>
-                          ) : (
-                            part
-                          )
-                        );
-                      })()}
-                    </p>
-
+                    <p className="boxset-desc">Bring related ideas together. Explore {currentBundle.books.length} complementary ebooks in one reading set, with a sample and format details for every title.</p>
                     {/* Contents Index Table with Roman numerals and dot leaders */}
                     <ol className="boxset-contents-list" aria-label="Included editions and materials">
                       {currentBundle.books.map((b, idx) => (
                         <li key={b.id} className="boxset-contents-item">
                           <span className="boxset-contents-roman">{['i.', 'ii.', 'iii.', 'iv.', 'v.'][idx] || `${idx + 1}.`}</span>
-                          <span className="boxset-contents-name">{b.title.split(':')[0]}</span>
+                          <Link href={`/books/${b.slug}`} className="boxset-contents-name">{b.title.split(':')[0]}</Link>
                           <span className="boxset-contents-dots" aria-hidden="true" />
                           <span className="boxset-contents-tag">EBOOK</span>
                         </li>
                       ))}
-                      <li className="boxset-contents-item">
-                        <span className="boxset-contents-roman">{['i.', 'ii.', 'iii.', 'iv.', 'v.'][currentBundle.books.length] || `${currentBundle.books.length + 1}.`}</span>
-                        <span className="boxset-contents-name">Worksheets &amp; scorecards</span>
-                        <span className="boxset-contents-dots" aria-hidden="true" />
-                        <span className="boxset-contents-tag">INCLUDED</span>
-                      </li>
-                      <li className="boxset-contents-item">
-                        <span className="boxset-contents-roman">{['i.', 'ii.', 'iii.', 'iv.', 'v.'][currentBundle.books.length + 1] || `${currentBundle.books.length + 2}.`}</span>
-                        <span className="boxset-contents-name">Future revisions</span>
-                        <span className="boxset-contents-dots" aria-hidden="true" />
-                        <span className="boxset-contents-tag">INCLUDED</span>
-                      </li>
                     </ol>
 
-                    {/* Pricing and Savings */}
-                    <div className="boxset-pricing-row">
-                      <div className="boxset-price-main">
-                        <span className="boxset-price-amount">{money(currentBundle.price)}</span>
-                        <span className="boxset-price-currency">USD</span>
-                      </div>
-
-                      {standaloneSum > currentBundle.price && (
-                        <span className="boxset-price-comparison">
-                          <span className="boxset-price-strikethrough">{money(standaloneSum)}</span>
-                          <span className="boxset-price-sep-note"> bought separately</span>
-                        </span>
-                      )}
-
-                      {bundleSavings > 0 && (
-                        <span className="boxset-savings-pill">
-                          You save {money(bundleSavings)}
-                        </span>
-                      )}
-                    </div>
-
+                    <div className="boxset-pricing-row"><div className="boxset-price-main"><span className="boxset-price-amount">{money(standaloneSum)}</span><span className="boxset-price-currency">USD</span></div></div>
+                    <p className="store-set-note">Combined price · ebooks are added individually to your cart.</p>
                     {/* CTAs */}
                     <div className="boxset-actions-row">
                       <Link
@@ -386,7 +307,7 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
                         <span className="boxset-cta-arrow" aria-hidden="true">→</span>
                       </Link>
                       <span className="boxset-delivery-note">
-                        Kindle, EPUB &amp; PDF · Instant download
+                        Digital editions · See included formats
                       </span>
                     </div>
                   </div>
@@ -400,7 +321,7 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
                         <div className="boxset-book-left">
                           <div className="boxset-book-ribbon" aria-hidden="true" />
                           <div className="boxset-book-inner">
-                            <span className="boxset-book-imprint">KNOVERA PRESS</span>
+                            <span className="boxset-book-imprint">KNOVERA</span>
                             <div className="boxset-book-title-block">
                               <span className="boxset-book-title-serif">
                                 {book1?.title.split(':')[0] === 'The Focused Mind' ? (
@@ -421,14 +342,14 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
                         {/* Right Peeking Book (Umber Cloth Cover) */}
                         <div className="boxset-book-right">
                           {/* Burgundy Circular "SAVE 22%" Seal Badge Overlapping Top Right */}
-                          <div className="boxset-seal-badge" aria-label={`Save ${savingsPercent} percent`}>
+                          <div className="boxset-seal-badge" aria-label={`${currentBundle.books.length} digital ebooks`}>
                             <div className="boxset-seal-dashed-ring" />
-                            <span className="boxset-seal-label">SAVE</span>
-                            <span className="boxset-seal-percent">{savingsPercent}%</span>
+                            <span className="boxset-seal-label">EBOOKS</span>
+                            <span className="boxset-seal-percent">{currentBundle.books.length}</span>
                           </div>
 
                           <div className="boxset-book-inner">
-                            <span className="boxset-book-imprint">KNOVERA PRESS</span>
+                            <span className="boxset-book-imprint">KNOVERA</span>
                             <div className="boxset-book-title-block">
                               <span className="boxset-book-title-serif">
                                 {book2?.title.split(':')[0] === 'Atomic Architectures' ? (
@@ -460,7 +381,7 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
                           </span>
                           <div className="boxset-label-rule" />
                           <span className="boxset-label-meta">
-                            {currentBundle.books.length === 2 ? 'TWO EBOOKS · WORKSHEETS' : `${currentBundle.books.length} EBOOKS · DIGITAL EDITIONS`}
+                            {`${currentBundle.books.length} EBOOKS · DIGITAL EDITIONS`}
                           </span>
                         </div>
                       </div>
@@ -473,31 +394,10 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
         </div>
       </section>
 
-      {/* 3. EDITORIAL PRAISE & CRITICAL RECEPTION (Stripe Press Signature) */}
-      <section id="readers" className="sp-praise-block" aria-labelledby="praise-heading">
-        <div className="knovera-container">
-          <div className="sp-section-kicker">
-            <span className="sp-dash" aria-hidden="true" />
-            <span className="sp-kicker-text">EVERYDAY READERS</span>
-          </div>
-          <div className="knovera-section-header">
-            <h2 id="praise-heading" className="knovera-section-title">Different days. A shared curiosity.</h2>
-            <p className="knovera-section-sub">For the moments you make your own.</p>
-          </div>
-          <p className="reader-profile-note">Illustrative reader profiles, not customer reviews.</p>
-          <div className="sp-praise-grid">
-            {readerProfiles.map(profile => (
-              <article className="sp-praise-card reader-profile" key={profile.name}>
-                <div className="reader-profile-top">
-                  <span className="reader-profile-avatar" aria-hidden="true">{profile.initials}</span>
-                  <div><h3 className="sp-praise-name">{profile.name}</h3><span className="sp-praise-role">{profile.role} · Illustrative profile</span></div>
-                  <BookOpen className="reader-profile-icon" size={24} aria-hidden="true" />
-                </div>
-                <h4 className="reader-profile-title">{profile.title}</h4>
-                <p className="reader-profile-copy">{profile.text}</p>
-              </article>
-            ))}
-          </div>
+      <section className="store-feature-section knovera-container" aria-labelledby="store-features-heading">
+        <span className="studio-kicker">MAKE YOURSELF AT HOME</span><h2 id="store-features-heading">More than your next download.</h2>
+        <div className="store-feature-grid">
+          {[{href:'/books?saved=1',title:'Your saved finds',text:'Keep a shortlist of ebooks you want to come back to.',icon:Bookmark},{href:'/account/library',title:'Your personal library',text:'Find your purchases and access available downloads.',icon:BookOpen},{href:'/community',title:'A place to share ideas',text:'Explore reading circles, conversations, and your private journal.',icon:RefreshCw},{href:'/free-resources',title:'Explore free resources',text:'Discover companion resources and preview what’s available.',icon:Download}].map(({href,title,text,icon:Icon})=><Link key={href} href={href} className="store-feature-card"><Icon size={22} aria-hidden="true"/><h3>{title}</h3><p>{text}</p><span>Explore <ArrowRight size={16}/></span></Link>)}
         </div>
       </section>
 
@@ -519,11 +419,11 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
               <div className="knovera-pillar-icon" aria-hidden="true">
                 <Download size={22} />
               </div>
-              <h3 className="knovera-pillar-title">DRM-Free Formats</h3>
+              <h3 className="knovera-pillar-title">Know what’s included</h3>
               <p className="knovera-pillar-desc">
-                Receive both reflowable EPUB and cleanly typeset PDF editions with margin notes. No
-                proprietary reader app required.
+                Each product lists its included file formats. Check the details and read a sample before adding it to your cart.
               </p>
+              <Link href="/help" className="studio-text-link">Reading &amp; download help →</Link>
             </div>
 
             <div className="knovera-pillar-card">
@@ -532,8 +432,7 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
               </div>
               <h3 className="knovera-pillar-title">Device Compatibility</h3>
               <p className="knovera-pillar-desc">
-                Seamlessly read on Kindle (via Send-to-Kindle), Apple Books, Kobo, reMarkable, iPad,
-                or any PDF tablet reader.
+                Choose the format that suits your reading device. Our reading guides walk you through getting started.
               </p>
             </div>
 
@@ -541,10 +440,9 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
               <div className="knovera-pillar-icon" aria-hidden="true">
                 <RefreshCw size={22} />
               </div>
-              <h3 className="knovera-pillar-title">Lifetime Free Updates</h3>
+              <h3 className="knovera-pillar-title">Your purchase library</h3>
               <p className="knovera-pillar-desc">
-                When new editions or companion worksheets are released, they are automatically made
-                available in your library at zero additional cost.
+                Sign in to see your purchases and available downloads. Have an older order? Use purchase recovery to find it.
               </p>
             </div>
 
@@ -556,7 +454,7 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
               <p className="knovera-pillar-desc">
                 Need help with a download or your order? Visit our support page for assistance and
                 review our published refund policy before purchasing.
-              </p>
+              </p><Link href="/contact" className="studio-text-link">Contact support →</Link>
             </div>
           </div>
         </div>

@@ -5,9 +5,10 @@ import { usePathname } from 'next/navigation';
 export default function RouteChrome() {
     const path = usePathname();
     useLayoutEffect(() => {
+        document.body.setAttribute('data-auth', String(['/account/login','/account/signup','/account/update-password'].includes(path)));
         document.body.setAttribute('data-reader', String(path.startsWith('/samples/')));
         document.body.setAttribute('data-community', String(path.startsWith('/community')));
-        return () => { document.body.removeAttribute('data-community'); document.body.removeAttribute('data-reader'); };
+        return () => { document.body.removeAttribute('data-auth'); document.body.removeAttribute('data-community'); document.body.removeAttribute('data-reader'); };
     }, [path]);
     return null;
 }

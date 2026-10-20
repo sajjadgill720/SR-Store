@@ -1,9 +1,12 @@
 'use client';
 
-import { useState } from 'react';
-import { ArrowRight, CheckCircle2, Loader2, Lock } from 'lucide-react';
+import { useId, useState } from 'react';
+import Link from 'next/link';
+import { ArrowRight, CheckCircle2, Loader2, Lock, Mail } from 'lucide-react';
 
 export default function Newsletter() {
+  const inputId = useId();
+  const errorId = useId();
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
   const [error, setError] = useState('');
@@ -24,113 +27,24 @@ export default function Newsletter() {
       });
       const data = await response.json();
       if (!response.ok) {
-        throw new Error(data.error || 'Could not register your correspondence.');
+        throw new Error(data.error || 'Could not save your signup.');
       }
       setStatus('success');
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : 'Could not register your correspondence. Please try again.');
+      setError(reason instanceof Error ? reason.message : 'Could not save your signup. Please try again.');
       setStatus('idle');
     }
   };
 
-  return (
-    <div className="postal-slip-card">
-      {/* Side perforated notches */}
-      <div className="postal-notch postal-notch-left" aria-hidden="true" />
-      <div className="postal-notch postal-notch-right" aria-hidden="true" />
-
-      {/* Postal Header with circular postmark */}
-      <div className="postal-slip-head">
-        <div className="postal-slip-meta">
-          <span className="postal-folio">FOLIO NO. 28</span>
-          <span className="postal-title">SUBSCRIBER REQUISITION SLIP</span>
-        </div>
-
-        {/* Circular Postmark Stamp */}
-        <div className="postal-postmark-wrap" aria-hidden="true">
-          <svg viewBox="0 0 100 100" className="dispatch-postmark">
-            <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" strokeWidth="1.2" strokeDasharray="3 2" />
-            <circle cx="50" cy="50" r="37" fill="none" stroke="currentColor" strokeWidth="0.8" />
-            <path id="postmark-arc" d="M 16,50 A 34,34 0 1,1 84,50" fill="none" />
-            <text fill="currentColor" fontSize="7" fontWeight="700" letterSpacing="0.18em">
-              <textPath href="#postmark-arc" startOffset="50%" textAnchor="middle">
-                KNOVERA PRESS · 2026
-              </textPath>
-            </text>
-            <text x="50" y="53" fill="currentColor" fontSize="10.5" fontWeight="600" textAnchor="middle" fontFamily="serif">
-              POSTAL
-            </text>
-            <text x="50" y="66" fill="currentColor" fontSize="6" fontWeight="700" letterSpacing="0.1em" textAnchor="middle">
-              DESK
-            </text>
-          </svg>
-        </div>
-      </div>
-
-      <form className="postal-slip-form" onSubmit={submit} noValidate>
-        <label htmlFor="dispatch-email-input" className="postal-input-label">
-          RECIPIENT EMAIL ADDRESS
-        </label>
-
-        <div className="postal-input-underline-wrap">
-          <input
-            id="dispatch-email-input"
-            type="email"
-            autoComplete="email"
-            required
-            value={email}
-            onChange={event => {
-              setEmail(event.target.value);
-              if (status === 'success') setStatus('idle');
-              if (error) setError('');
-            }}
-            placeholder="reader@domain.com"
-            aria-describedby={error ? 'postal-error-msg' : undefined}
-            className="postal-email-input"
-          />
-        </div>
-
-        <button
-          type="submit"
-          className="postal-submit-btn"
-          disabled={status === 'loading' || status === 'success'}
-        >
-          {status === 'loading' ? (
-            <>
-              <Loader2 size={14} className="animate-spin shrink-0" aria-hidden="true" />
-              <span>Recording Requisition…</span>
-            </>
-          ) : status === 'success' ? (
-            <>
-              <CheckCircle2 size={14} className="shrink-0" aria-hidden="true" />
-              <span>Correspondence Confirmed</span>
-            </>
-          ) : (
-            <>
-              <span>Subscribe to Dispatches</span>
-              <ArrowRight size={13} className="shrink-0" aria-hidden="true" />
-            </>
-          )}
-        </button>
-
-        {error && (
-          <p className="postal-error-msg" id="postal-error-msg" role="alert">
-            {error}
-          </p>
-        )}
-
-        {status === 'success' ? (
-          <div className="postal-success-slip" role="status">
-            <CheckCircle2 size={14} className="text-emerald-700 shrink-0" aria-hidden="true" />
-            <span>✓ Subscribed. Check your inbox for the welcome dispatch and opening essay.</span>
-          </div>
-        ) : (
-          <div className="postal-slip-footer">
-            <Lock size={11} className="shrink-0" aria-hidden="true" />
-            <span>No commercial tracking · Instant 1-click unsubscribe in every issue.</span>
-          </div>
-        )}
-      </form>
-    </div>
-  );
+  return <div className="store-newsletter-card">
+    <h2>Good reads. Fresh finds.</h2>
+    <p>Ebook releases, reading inspiration, and useful digital goods. A little more curiosity in your inbox.</p>
+    <form onSubmit={submit}>
+      <label htmlFor={inputId}>Email address</label>
+      <div className="store-newsletter-input"><Mail size={18} aria-hidden="true"/><input id={inputId} type="email" required autoComplete="email" placeholder="you@example.com" value={email} onChange={event=>{setEmail(event.target.value);setError('');if(status==='success')setStatus('idle');}} aria-describedby={error?errorId:undefined}/></div>
+      <button className="store-auth-submit" disabled={status==='loading'||status==='success'}>{status==='loading'?<><Loader2 size={17} className="animate-spin"/> Signing up…</>:status==='success'?<><CheckCircle2 size={17}/> Check your inbox</>:<>Sign up free <ArrowRight size={17}/></>}</button>
+      {error && <p id={errorId} className="store-auth-error" role="alert">{error}</p>}
+      {status==='success'?<p role="status">Check your inbox to confirm your subscription. If you are already subscribed, you’re all set.</p>:<p className="store-newsletter-privacy"><Lock size={14} aria-hidden="true"/> Unsubscribe from any issue. <Link href="/legal/privacy">Privacy policy</Link></p>}
+    </form>
+  </div>;
 }

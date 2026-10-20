@@ -14,20 +14,20 @@ export default function CartPage() {
       <div className="cart-nav-back-wrap">
         <Link className="studio-back" href="/books">
           <ArrowLeft size={14} className="shrink-0" />
-          <span>Return to Catalogue</span>
+          <span>Continue shopping</span>
         </Link>
         <div className="cart-nav-folio" aria-hidden="true">
           <span>FOLIO § 0088</span>
           <span className="cart-nav-sep">·</span>
-          <span>ORDER REQUISITION</span>
+          <span>YOUR CART</span>
         </div>
       </div>
 
       <div className="studio-page-heading">
-        <span className="studio-kicker">DISPATCH REQUISITION · DIGITAL IMPRINTS</span>
-        <h1>Your reading slip.</h1>
+        <span className="studio-kicker">EBOOKS & DIGITAL GOODS</span>
+        <h1>Your cart.</h1>
         <p className="cart-lead-text">
-          Review your selected digital volumes prior to settlement. Delivered instantaneously in DRM-free formats.
+          Review your digital goods, adjust quantities, and continue to secure checkout.
         </p>
       </div>
 
@@ -36,19 +36,19 @@ export default function CartPage() {
       {!items.length ? (
         <div className="studio-empty cart-empty-slip">
           <span className="empty-slip-fleuron" aria-hidden="true">❦</span>
-          <h2>Your personal requisition slip is clean.</h2>
-          <p>No volumes are currently queued for settlement. Examine the catalogue or read an excerpt.</p>
+          <h2>Your cart is empty.</h2>
+          <p>Find your next ebook or try a free sample before you choose.</p>
           <Link className="studio-button outline" href="/books">
-            Explore All Editions
+            Explore ebooks
           </Link>
         </div>
       ) : (
         <div className="cart-ledger-layout">
           {/* LEFT: Ruled Ledger Table */}
-          <section aria-label="Books in your requisition" className="cart-ledger-main">
+          <section aria-label="Items in your cart" className="cart-ledger-main">
             <div className="cart-ledger-header">
-              <span className="clh-item">VOLUME</span>
-              <span className="clh-qty">COPIES</span>
+              <span className="clh-item">ITEM</span>
+              <span className="clh-qty">QUANTITY</span>
               <span className="clh-price">AMOUNT</span>
             </div>
 
@@ -129,38 +129,38 @@ export default function CartPage() {
                   if (window.confirm('Clear all volumes from your reading slip?')) clearCart();
                 }}
               >
-                Clear entire slip
+                Clear cart
               </button>
               <Link href="/books" className="cart-continue-link">
-                ← Add additional editions
+                ← Continue shopping
               </Link>
             </div>
           </section>
 
           {/* RIGHT: Accounting Settlement Slip */}
-          <aside className="cart-summary-slip" aria-label="Settlement Requisition Summary">
+          <aside className="cart-summary-slip" aria-label="Order summary">
             <div className="slip-perforation-edge" aria-hidden="true" />
             <div className="slip-inner">
               <div className="slip-kicker-bar">
-                <span>SETTLEMENT STATEMENT</span>
-                <span className="slip-number">SLIP NO. 0842-KP</span>
+                <span>CHECKOUT SUMMARY</span>
+                <span className="slip-number">DIGITAL ORDER</span>
               </div>
 
-              <h2 className="slip-title">Acquisition Ledger</h2>
+              <h2 className="slip-title">Order summary</h2>
               <p className="slip-caption">
                 All editions are delivered digitally upon completion. Universal DRM-free licensing included.
               </p>
 
               <dl className="slip-ledger-dl">
                 <div className="slip-ledger-row">
-                  <dt>Selected Volumes ({cartCount})</dt>
+                  <dt>Items ({cartCount})</dt>
                   <span className="dot-leader-fill" aria-hidden="true" />
                   <dd>{money(cartTotal)}</dd>
                 </div>
                 <div className="slip-ledger-row">
-                  <dt>Format Preparation</dt>
+                  <dt>File formats</dt>
                   <span className="dot-leader-fill" aria-hidden="true" />
-                  <dd>EPUB + Archival PDF</dd>
+                  <dd>See product details</dd>
                 </div>
                 <div className="slip-ledger-row">
                   <dt>Delivery Method</dt>
@@ -173,14 +173,14 @@ export default function CartPage() {
                   <dd>DRM-Free Perpetual</dd>
                 </div>
                 <div className="slip-ledger-row slip-total-row">
-                  <dt className="slip-total-label">Total Acquisition</dt>
+                  <dt className="slip-total-label">Total</dt>
                   <span className="dot-leader-fill" aria-hidden="true" />
                   <dd className="slip-total-val">{money(cartTotal)} USD</dd>
                 </div>
               </dl>
 
               <Link href="/checkout" className="cart-checkout-btn">
-                <span>Proceed to Settlement</span>
+                <span>Continue to checkout</span>
                 <ArrowRight size={14} className="shrink-0" />
               </Link>
 
@@ -190,7 +190,7 @@ export default function CartPage() {
                 </p>
                 <div className="slip-extra-links">
                   <Link href="/contact" className="slip-sub-link">
-                    Questions about your acquisition?
+                    Need help with your order?
                   </Link>
                   <Link href="/legal/refunds" className="slip-sub-link">
                     Delivery &amp; refund terms

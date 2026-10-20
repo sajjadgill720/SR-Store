@@ -68,7 +68,7 @@ export default function ReaderClubPage() {
           <HeartHandshake className="w-6 h-6" />
         </div>
         <span className="text-xs font-bold text-[var(--store-green)] uppercase tracking-widest block mb-1">
-          FREE COMMUNITY MEMBERSHIP
+          READING NEWSLETTER
         </span>
         <h1 className="font-serif text-3xl sm:text-5xl font-bold text-[var(--store-ink)] mb-3">
           The Knovera Reader Club
@@ -147,10 +147,11 @@ export default function ReaderClubPage() {
               </h2>
 
               <div>
-                <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
+                <label htmlFor="reader-club-email" className="text-xs font-bold text-[var(--store-ink)] block mb-1">
                   Email Address
                 </label>
                 <input
+                  id="reader-club-email"
                   type="email"
                   required
                   value={email}

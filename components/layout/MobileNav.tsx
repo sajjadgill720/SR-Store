@@ -9,7 +9,7 @@ function Navigation() {
   const path = usePathname();
   const { cartCount, isModalOpen } = useCart();
 
-  if (isModalOpen || path.startsWith('/samples/') || path.startsWith('/checkout')) {
+  if (isModalOpen || path.startsWith('/samples/') || path.startsWith('/checkout') || ['/account/login','/account/signup','/account/update-password'].includes(path)) {
     return null;
   }
 

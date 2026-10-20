@@ -27,7 +27,7 @@ export default function TermsPage() {
             1. Intellectual Property
           </h2>
           <p>
-            All texts, illustrations, cover artwork, and companion worksheets are the intellectual property of Knovera Press. Purchases grant personal reading and household printing licenses, not transfer of copyright.
+            All texts, illustrations, cover artwork, and companion worksheets are the intellectual property of their respective rights holders. Purchases grant personal reading and household printing licenses, not transfer of copyright.
           </p>
 
           <h2 className="font-serif text-lg font-bold text-[var(--store-ink)]">

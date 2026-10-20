@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import Newsletter from './Newsletter';
 import { ArrowUp } from 'lucide-react';
 
@@ -22,17 +23,17 @@ const groups = [
     title: 'Reader Library',
     links: [
       ['My Account & Library', '/account/library'],
-      ['Retrieve an Acquisition', '/access'],
+      ['Find a previous order', '/access'],
       ['Reading Device Guidance', '/help'],
       ['Send to Kindle Manual', '/help/kindle'],
-      ['Editorial Desk Support', '/contact'],
+      ['Contact support', '/contact'],
     ],
   },
   {
     roman: 'III',
-    title: 'Imprint & Integrity',
+    title: 'About & policies',
     links: [
-      ['About Knovera Press', '/about'],
+      ['About Knovera', '/about'],
       ['Free Reading Resources', '/free-resources'],
       ['The Readers Circle', '/community'],
       ['Delivery & Refunds', '/legal/refunds'],
@@ -43,6 +44,8 @@ const groups = [
 ];
 
 export default function Footer() {
+  const path = usePathname();
+  if (['/account/login','/account/signup','/account/update-password'].includes(path)) return null;
   const scrollToTop = () => {
     if (typeof window !== 'undefined') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -61,30 +64,29 @@ export default function Footer() {
             aria-label="Return to the first page"
           >
             <ArrowUp size={12} aria-hidden="true" className="shrink-0" />
-            <span>↑ Return to the first page</span>
+            <span>Back to top</span>
           </button>
         </div>
 
         {/* The Dispatch Letter & Postal Requisition Slip */}
-        <section className="dispatch-envelope-section" aria-label="Editorial dispatch correspondence">
+        <section className="dispatch-envelope-section" aria-label="Knovera newsletter">
           <div className="dispatch-letter-left">
             <div className="dispatch-eyebrow">
-              <span className="dispatch-fleuron">❦</span>
-              <span>KNOVERA PRESS · DISPATCH SERVICE · ISSUE 28</span>
+              <span className="dispatch-fleuron">✦</span>
+              <span>KNOVERA · READING NOTES</span>
             </div>
 
             <h2 className="dispatch-headline">
-              Notes from <span className="headline-italic">the press.</span>
+              Something good for <span className="headline-italic">your inbox.</span>
             </h2>
 
             <p className="dispatch-body">
-              Occasional monographs on cognitive focus, architectural leverage, and systems craft.
-              Delivered directly to your inbox without algorithmic noise or commercial dilution.
+              Discover your next read, explore new arrivals, and find digital tools for everyday life. Thoughtfully chosen, delivered to your inbox.
             </p>
 
             <div className="dispatch-endorsement">
-              <span className="endorsement-mark">❦</span>
-              <span>Over 4,200 thoughtful craftspeople subscribe to this private correspondence.</span>
+              <span className="endorsement-mark">✦</span>
+              <span>Ebooks first. Curiosity always.</span>
             </div>
           </div>
 
@@ -97,18 +99,17 @@ export default function Footer() {
         <div className="colophon-directory">
           <div className="colophon-brand-block">
             <Link href="/" className="colophon-brand-title">
-              Knovera Press
+              Knovera
             </Link>
             <p className="colophon-brand-mission">
-              An independent publishing press dedicated to books of exceptional typography and deep attention.
-              All digital editions are delivered DRM-free in open, permanent formats.
+              Your store for ebooks and useful digital goods. Explore the collection, try a sample, and keep your purchases together in your library.
             </p>
             <div className="colophon-brand-badges">
-              <span>100% DRM-FREE</span>
+              <span>DIGITAL GOODS</span>
               <span className="badge-sep">·</span>
-              <span>UNIVERSAL EPUB &amp; PDF</span>
+              <span>EBOOKS &amp; MORE</span>
               <span className="badge-sep">·</span>
-              <span>PERPETUAL LICENSE</span>
+              <span>YOUR PERSONAL LIBRARY</span>
             </div>
           </div>
 
@@ -135,14 +136,14 @@ export default function Footer() {
         {/* Final Colophon Imprint Statement */}
         <div className="colophon-imprint-bar">
           <div className="colophon-imprint-text">
-            <span>Typeset in Cormorant Garamond &amp; DM Sans</span>
-            <span className="colophon-sep">❦</span>
-            <span>Printed digitally on archival web standards</span>
-            <span className="colophon-sep">❦</span>
-            <span>Imprint No. 42 · San Francisco &amp; London</span>
+            <span>Made for curious minds</span>
+            <span className="colophon-sep">✦</span>
+            <span>Digital products. Real possibilities.</span>
+            <span className="colophon-sep">✦</span>
+            <span><Link href="/contact">Contact support</Link></span>
           </div>
           <div className="colophon-copyright">
-            <span>© 2026 KNOVERA PRESS · ALL RIGHTS RESERVED</span>
+            <span>© 2026 KNOVERA · ALL RIGHTS RESERVED</span>
           </div>
         </div>
       </div>

@@ -2,54 +2,59 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Gift, Download, FileText, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Gift, Download, ArrowRight } from 'lucide-react';
 
 export default function FreeResourcesPage() {
   const resources = [
     {
       id: 'res-focus-protocol',
-      title: 'Daily 90-Minute Focus Protocol (PDF)',
+      title: 'Daily Focus Planner',
       bookRef: 'The Focused Mind',
       description: 'The companion morning work-block worksheet designed to eliminate attention residue and time fragmentation.',
-      fileType: 'PDF Document',
-      fileSize: '1.2 MB'
+      fileType: 'Plain text · .txt',
+      fileSize: 'Free resource'
     },
     {
       id: 'res-habit-cheat-sheet',
-      title: 'The Habit Stacking & Friction Matrix (PDF)',
+      title: 'Habit & Friction Worksheet',
       bookRef: 'Atomic Architectures',
       description: 'Single-sheet reference guide for redesigning your home office to make productive behaviors effortless.',
-      fileType: 'PDF Document',
-      fileSize: '850 KB'
+      fileType: 'Plain text · .txt',
+      fileSize: 'Free resource'
     },
     {
       id: 'res-mindfulness-maze',
-      title: 'Young Explorer Calming Maze Sample (Printable)',
+      title: 'Young Explorer Curiosity Prompts',
       bookRef: 'The Young Explorer Activity Pack',
-      description: 'Sample 5-page high-resolution vector printable pack with finger-trace labyrinths for ages 6–10.',
-      fileType: 'Printable 300 DPI PDF',
-      fileSize: '3.4 MB'
+      description: 'Five simple questions to explore together, with space to draw, reflect, and plan your next discovery.',
+      fileType: 'Plain text · .txt',
+      fileSize: 'Free resource'
     },
     {
       id: 'res-solo-arch-checklist',
-      title: 'Production Software Deployment Checklist',
+      title: 'Software Deployment Checklist',
       bookRef: 'The Solo Architect',
       description: 'Pre-flight invariant verification guide for solo engineers shipping modular production applications.',
-      fileType: 'PDF Checklist',
-      fileSize: '620 KB'
+      fileType: 'Plain text · .txt',
+      fileSize: 'Free resource'
     }
   ];
 
   const handleDownloadResource = (resTitle: string) => {
-    // Generate sample PDF file download for demo
-    const content = `Knovera — Free Companion Resource\nTitle: ${resTitle}\nLicense: Free public personal-use license.\nVisit https://knovera.store for full book editions and reader club benefits.`;
+    const templates: Record<string,string> = {
+      'Daily Focus Planner': 'Date: __________\nMy one important task: __________\nWhat will finished look like? __________\nStart time: ____ End time: ____\nDistractions to remove: __________\nFirst small step: __________\nAfterwards: What worked? __________\nWhat will I change tomorrow? __________',
+      'Habit & Friction Worksheet': 'Habit I want to build: __________\nAfter I [existing routine], I will [small action]: __________\nMake it easier: What can I prepare? __________\nMake distractions harder: __________\nTrack this week: Mon [ ] Tue [ ] Wed [ ] Thu [ ] Fri [ ] Sat [ ] Sun [ ]\nWhat helped me start? __________',
+      'Young Explorer Curiosity Prompts': '1. Find something outside you have never noticed. Draw it.\n2. What question would you like to ask about it?\n3. Predict what might happen if it changes.\n4. Explore your question with a grown-up. What did you discover?\n5. Take three calm breaths. What would you like to explore tomorrow?',
+      'Software Deployment Checklist': '[ ] Review changes and configuration\n[ ] Run relevant tests and check the build\n[ ] Check secrets are excluded from source and logs\n[ ] Review migrations and backup needs\n[ ] Document a rollback plan\n[ ] Deploy to staging and verify key user journeys\n[ ] Confirm monitoring and error reporting\n[ ] Deploy and verify production health\n[ ] Record version and follow-up tasks'
+    };
+    const content = `Knovera — Free Resource\n${resTitle}\n\n${templates[resTitle] || ''}\n\nFor personal use. Explore more at the Knovera store.`;
     const blob = new Blob([content], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = `${resTitle.replace(/[^a-zA-Z0-9]/g, '-')}.txt`;
     a.click();
-    URL.revokeObjectURL(url);
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
   return (
@@ -66,7 +71,7 @@ export default function FreeResourcesPage() {
           Free Reader Companion Resources
         </h1>
         <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
-          Complementary worksheets, checklists, and printable samples to help you apply core concepts immediately. No purchase required.
+          Free planners, prompts, and checklists you can open in any text editor or print. These are plain-text downloads. No purchase required.
         </p>
       </div>
 
@@ -96,7 +101,7 @@ export default function FreeResourcesPage() {
                 className="px-4 py-2 bg-[var(--store-gold)] hover:bg-[var(--store-gold-hover)] text-[var(--store-ink)] text-xs font-bold rounded flex items-center gap-1.5 transition-colors cursor-pointer"
               >
                 <Download className="w-3.5 h-3.5" />
-                <span>Instant Download</span>
+                <span>Download .txt</span>
               </button>
             </div>
           </div>

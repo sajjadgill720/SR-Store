@@ -47,13 +47,13 @@ export default function Catalog({ books, bundles }: {
     const format = params.get('format') || 'All';
     const sort = params.get('sort') || 'featured';
     const savedOnly = params.get('saved') === '1';
-    const view = (params.get('view') || 'shelf') as 'shelf' | 'index' | 'grid';
+    const view = (params.get('view') || 'grid') as 'shelf' | 'index' | 'grid';
     const { wishlist, storageError } = useCart();
 
     const update = (key: string, value: string) => {
         const next = new URLSearchParams(params.toString());
         if (key !== 'page') next.delete('page');
-        if (!value || value === 'All' || value === 'featured' || (key === 'view' && value === 'shelf'))
+        if (!value || value === 'All' || value === 'featured' || (key === 'view' && value === 'grid'))
             next.delete(key);
         else
             next.set(key, value);
@@ -75,9 +75,9 @@ export default function Catalog({ books, bundles }: {
 
     return <div className="storefront knovera-catalog-page">
     <div className="studio-page-heading">
-      <span className="studio-kicker">THE COMPLETE COLLECTION · VOL. 2026</span>
+      <span className="studio-kicker">EBOOKS & DIGITAL GOODS</span>
       <h1>A book for where you are.</h1>
-      <p className="catalog-lead-text">Browse by standing cloth volume or bibliographic index, inspect excerpts, and choose your next perspective.</p>
+      <p className="catalog-lead-text">Search by title or topic, choose your format, and read a sample before you buy. Save your favorites for later.</p>
     </div>
 
     {/* Search & Saved Toolbar */}
@@ -163,7 +163,7 @@ export default function Catalog({ books, bundles }: {
             title="Cover Plates View"
           >
             <Grid size={13} aria-hidden="true" className="shrink-0"/>
-            <span>Plates</span>
+            <span>Grid</span>
           </button>
         </div>
 
@@ -230,7 +230,7 @@ export default function Catalog({ books, bundles }: {
                     <span className="spine-title-vert">{book.title}</span>
                     <div className="spine-foot">
                       <span className="spine-author-caps">{book.author}</span>
-                      <span className="spine-colophon-mark">KP</span>
+                      <span className="spine-colophon-mark">KN</span>
                     </div>
                   </Link>
 
@@ -320,10 +320,10 @@ export default function Catalog({ books, bundles }: {
     {/* Bundles section */}
     {pageBundles.map(bundle => (
       <article className="studio-set-card" key={bundle.id}>
-        <span className="studio-kicker">ARCHIVAL PAIR · TWO-VOLUME SLIPCASE</span>
+        <span className="studio-kicker">CURATED DIGITAL READING SET</span>
         <h2>{bundle.title}</h2>
         <p>{bundle.description}</p>
-        <p className="studio-caption">Explore the titles in this paired imprint. Editions are priced individually.</p>
+        <p className="studio-caption">Explore the ebooks in this set. Each ebook is priced individually.</p>
         <Link className="studio-button outline" href={`/bundles/${bundle.slug}`}>
           Explore the set <ArrowRight size={17} className="shrink-0"/>
         </Link>
