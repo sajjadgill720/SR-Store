@@ -28,6 +28,7 @@ export async function GET() {
     },
     orders: storeData.orders,
     books: storeData.books || [],
+    bundles: storeData.bundles || [],
     entitlements: storeData.entitlements,
     tickets: storeData.supportTickets,
     reviews: storeData.reviews,
@@ -42,6 +43,25 @@ export async function POST(req: NextRequest) {
     const { action, payload } = await req.json();
 
     if (action === 'REFRESH_CATALOG') {
+      await advanceCatalogVersion();
+      invalidatePublicCatalog();
+      return NextResponse.json({ success: true });
+    }
+
+    if (action === 'SAVE_BUNDLE') {
+      const { bundle } = payload;
+      await db.upsertBundle(bundle);
+      await advanceCatalogVersion();
+      invalidatePublicCatalog();
+      return NextResponse.json({ success: true });
+    }
+
+    if (action === 'DELETE_BUNDLE') {
+      const { bundleId } = payload;
+      const success = await db.deleteBundle(bundleId);
+      if (!success) {
+        return NextResponse.json({ error: 'Bundle not found' }, { status: 404 });
+      }
       await advanceCatalogVersion();
       invalidatePublicCatalog();
       return NextResponse.json({ success: true });

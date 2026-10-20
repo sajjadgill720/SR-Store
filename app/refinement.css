@@ -620,6 +620,489 @@ body {
   margin-top: 24px;
 }
 
+/* ==========================================================================
+   DYNAMIC 3D BOX SET SLIPCASE SECTION (MATCHING REFERENCE DESIGN)
+   ========================================================================== */
+.boxset-section {
+  margin-top: 64px;
+  padding: 56px 0 24px;
+  border-top: 1px solid var(--paper-rule, #E4DCCE);
+}
+
+.boxset-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 36px;
+  flex-wrap: wrap;
+}
+
+.boxset-tab-btn {
+  background: var(--paper-card, #F7F3EB);
+  border: 1px solid var(--paper-rule, #E4DCCE);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  color: var(--ink-muted, #5F594F);
+  transition: all 0.15s ease;
+}
+
+.boxset-tab-btn:hover {
+  border-color: var(--ink-primary, #1A1815);
+  color: var(--ink-primary, #1A1815);
+}
+
+.boxset-tab-btn.is-active {
+  background: var(--ink-primary, #1A1815);
+  color: var(--paper-page, #F1ECE3);
+  border-color: var(--ink-primary, #1A1815);
+}
+
+.boxset-tab-save {
+  font-size: 11px;
+  font-weight: 700;
+  opacity: 0.85;
+}
+
+.boxset-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 52px;
+  align-items: center;
+}
+
+@media (max-width: 960px) {
+  .boxset-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+}
+
+.boxset-left {
+  max-width: 560px;
+}
+
+.boxset-title {
+  font-family: var(--font-editorial), Georgia, serif;
+  font-size: clamp(34px, 4.2vw, 48px);
+  line-height: 1.08;
+  font-weight: 400;
+  color: var(--ink-primary, #1A1815);
+  margin: 0 0 18px 0;
+  letter-spacing: -0.02em;
+}
+
+.boxset-desc {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink-muted, #5F594F);
+  margin: 0 0 28px 0;
+  max-width: 520px;
+}
+
+.boxset-desc-em {
+  font-style: italic;
+  color: var(--ink-primary, #1A1815);
+}
+
+.boxset-contents-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 32px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 480px;
+}
+
+.boxset-contents-item {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 13.5px;
+}
+
+.boxset-contents-roman {
+  font-family: var(--font-editorial), Georgia, serif;
+  font-style: italic;
+  font-size: 14.5px;
+  color: var(--tone-umber, #8A7B66);
+  min-width: 22px;
+}
+
+.boxset-contents-name {
+  font-family: var(--font-sans), sans-serif;
+  font-weight: 500;
+  color: var(--ink-primary, #1A1815);
+  white-space: nowrap;
+}
+
+.boxset-contents-dots {
+  flex: 1;
+  border-bottom: 1px dotted var(--tone-sand, #D9CFBD);
+  height: 1px;
+  min-width: 24px;
+}
+
+.boxset-contents-tag {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--ink-muted, #5F594F);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.boxset-pricing-row {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.boxset-price-main {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.boxset-price-amount {
+  font-family: var(--font-editorial), Georgia, serif;
+  font-size: 40px;
+  font-weight: 500;
+  color: var(--ink-primary, #1A1815);
+  line-height: 1;
+}
+
+.boxset-price-currency {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-muted, #5F594F);
+  letter-spacing: 0.05em;
+}
+
+.boxset-price-comparison {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.boxset-price-strikethrough {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 14px;
+  text-decoration: line-through;
+  color: var(--tone-umber, #8A7B66);
+}
+
+.boxset-price-sep-note {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 14px;
+  color: var(--tone-umber, #8A7B66);
+}
+
+.boxset-savings-pill {
+  background: rgba(138, 123, 102, 0.14);
+  color: var(--tone-deep-ink, #3A342C);
+  font-family: var(--font-sans), sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 9999px;
+}
+
+.boxset-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.boxset-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--ink-primary, #1A1815);
+  color: var(--paper-page, #F1ECE3);
+  padding: 13px 24px;
+  border-radius: 10px;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 8px rgba(26, 24, 21, 0.12);
+}
+
+.boxset-cta-btn:hover {
+  background: #2D2721;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(26, 24, 21, 0.2);
+}
+
+.boxset-cta-arrow {
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+
+.boxset-cta-btn:hover .boxset-cta-arrow {
+  transform: translateX(3px);
+}
+
+.boxset-delivery-note {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 13px;
+  color: var(--ink-muted, #5F594F);
+}
+
+/* 3D Box Set Visual */
+.boxset-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.boxset-visual-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  height: 410px;
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+/* Peeking Books Inside Slipcase */
+.boxset-peeking-books {
+  position: absolute;
+  bottom: 60px;
+  display: flex;
+  gap: 16px;
+  z-index: 2;
+}
+
+.boxset-book-left {
+  position: relative;
+  width: 138px;
+  height: 285px;
+  background: #E4DDD2;
+  color: #3A342C;
+  border-radius: 3px 5px 5px 3px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16), -2px 0 4px rgba(0, 0, 0, 0.05) inset;
+  transform: rotate(-3deg) translate(-10px, 0);
+  transition: transform 0.25s ease;
+}
+
+.boxset-book-left:hover {
+  transform: rotate(-4deg) translate(-12px, -6px);
+}
+
+.boxset-book-ribbon {
+  position: absolute;
+  top: -3px;
+  right: 14px;
+  width: 15px;
+  height: 50px;
+  background: #68212C;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
+  z-index: 5;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.28);
+}
+
+.boxset-book-inner {
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.boxset-book-imprint {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 6.8px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #7A6F5F;
+  white-space: nowrap;
+}
+
+.boxset-book-title-block {
+  margin-top: 28px;
+}
+
+.boxset-book-title-serif {
+  font-family: var(--font-editorial), Georgia, serif;
+  font-size: 19px;
+  line-height: 1.15;
+  color: #2C261F;
+  display: block;
+}
+
+.boxset-book-rule {
+  width: 22px;
+  height: 1px;
+  background: #9E917F;
+  margin-top: 10px;
+}
+
+.boxset-book-right {
+  position: relative;
+  width: 138px;
+  height: 280px;
+  background: #635A4B;
+  color: #EFEAE0;
+  border-radius: 3px 5px 5px 3px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22), -2px 0 4px rgba(0, 0, 0, 0.14) inset;
+  transform: rotate(2.5deg) translate(8px, 6px);
+  transition: transform 0.25s ease;
+}
+
+.boxset-book-right:hover {
+  transform: rotate(3.5deg) translate(10px, 0px);
+}
+
+.boxset-book-right .boxset-book-imprint {
+  color: #C5BBAA;
+}
+
+.boxset-book-right .boxset-book-title-serif {
+  color: #FAF7F2;
+}
+
+.boxset-book-right .boxset-book-rule {
+  background: #ACA08E;
+}
+
+/* Burgundy Round Seal Badge anchored to top-right of book-right */
+.boxset-seal-badge {
+  position: absolute;
+  top: -30px;
+  right: -28px;
+  width: 84px;
+  height: 84px;
+  background: #68212C;
+  border-radius: 50%;
+  color: #FAF5EE;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 12;
+  box-shadow: 0 6px 20px rgba(104, 33, 44, 0.45);
+  transform: rotate(5deg);
+  pointer-events: none;
+}
+
+.boxset-seal-dashed-ring {
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  border: 1px dashed rgba(255, 255, 255, 0.45);
+  pointer-events: none;
+}
+
+.boxset-seal-label {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.boxset-seal-percent {
+  font-family: var(--font-editorial), Georgia, serif;
+  font-size: 27px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.05;
+  margin-top: 1px;
+}
+
+/* 3D Slipcase Front Face */
+.boxset-slipcase-box {
+  position: relative;
+  width: 355px;
+  height: 152px;
+  background: #25211D;
+  border-radius: 6px;
+  z-index: 5;
+  margin-bottom: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 32px 64px -10px rgba(18, 15, 12, 0.48), 0 12px 24px -4px rgba(18, 15, 12, 0.3), -3px 0 6px rgba(0, 0, 0, 0.35) inset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.boxset-slipcase-depth {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 14px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, transparent 100%);
+  border-radius: 6px 6px 0 0;
+}
+
+.boxset-paper-label {
+  width: 275px;
+  height: 104px;
+  padding: 14px 20px;
+  background: #FAF7F2;
+  border-radius: 2px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.22);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.boxset-label-kicker {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #7A6F5F;
+  margin-bottom: 5px;
+}
+
+.boxset-label-title {
+  font-family: var(--font-editorial), Georgia, serif;
+  font-size: 25px;
+  font-weight: 400;
+  color: #1A1815;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  display: block;
+}
+
+.boxset-label-rule {
+  width: 32px;
+  height: 1px;
+  background: #9E917F;
+  margin: 9px auto;
+}
+
+.boxset-label-meta {
+  font-family: var(--font-sans), sans-serif;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #5F594F;
+  display: block;
+}
+
 /* Desktop Table of Contents Bar */
 .running-head-toc {
   padding: 6px var(--studio-space, 24px);

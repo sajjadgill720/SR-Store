@@ -26,13 +26,31 @@ import { Book } from '../../lib/types';
 import SignOut from '../../components/auth/SignOut';
 
 export default function AdminDashboardPage() {
-  const [tab, setTab] = useState<'overview' | 'orders' | 'books' | 'support' | 'reviews' | 'logs'>('overview');
+  const [tab, setTab] = useState<'overview' | 'orders' | 'books' | 'bundles' | 'support' | 'reviews' | 'logs'>('overview');
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const readGeneration = useRef(0);
   const pendingRead = useRef<Promise<void> | null>(null);
   const [refreshingCatalog, setRefreshingCatalog] = useState(false);
   const [catalogMessage, setCatalogMessage] = useState('');
+
+  // Bundle Form state
+  const [isBundleFormOpen, setIsBundleFormOpen] = useState(false);
+  const [editingBundleId, setEditingBundleId] = useState<string | null>(null);
+  const [submittingBundle, setSubmittingBundle] = useState(false);
+  const [bundleForm, setBundleForm] = useState({
+    id: '',
+    title: '',
+    slug: '',
+    subtitle: '',
+    description: '',
+    price: '29.99',
+    originalPrice: '38.49',
+    savingsPercentage: '22',
+    badge: 'Special Box Set · Save 22%',
+    coverImage: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=800&auto=format&fit=crop',
+    selectedBookIds: [] as string[]
+  });
 
   async function refreshCatalog() {
     setRefreshingCatalog(true);
@@ -243,6 +261,155 @@ export default function AdminDashboardPage() {
     }
   };
 
+  const openNewBundleForm = () => {
+    setEditingBundleId(null);
+    const available = (data?.books || []).filter((b: any) => b.isPublished);
+    const defaultBooks = available.slice(0, 2);
+    const sumCents = defaultBooks.reduce((acc: number, b: any) => acc + b.price, 0);
+    const sum = sumCents / 100;
+    const disc = Math.round(sum * 0.78 * 100) / 100;
+    setBundleForm({
+      id: `bundle-${Date.now()}`,
+      title: 'New Curated Box Set',
+      slug: `curated-box-set-${Date.now()}`,
+      subtitle: 'Complete dual-edition digital box set.',
+      description: 'Get both editions together in one comprehensive package with bonus materials and companion worksheets.',
+      price: disc.toFixed(2),
+      originalPrice: sum.toFixed(2),
+      savingsPercentage: '22',
+      badge: 'Special Box Set · Save 22%',
+      coverImage: defaultBooks[0]?.coverImage || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=800&auto=format&fit=crop',
+      selectedBookIds: defaultBooks.map((b: any) => b.id)
+    });
+    setIsBundleFormOpen(true);
+  };
+
+  const openEditBundleForm = (bundle: any) => {
+    setEditingBundleId(bundle.id);
+    const bookIds = bundle.books ? bundle.books.map((b: any) => b.id) : (bundle.bookIds || []);
+    setBundleForm({
+      id: bundle.id,
+      title: bundle.title,
+      slug: bundle.slug,
+      subtitle: bundle.subtitle || '',
+      description: bundle.description || '',
+      price: (bundle.price / 100).toFixed(2),
+      originalPrice: ((bundle.originalPrice || 0) / 100).toFixed(2),
+      savingsPercentage: String(bundle.savingsPercentage || 20),
+      badge: bundle.badge || `Save ${bundle.savingsPercentage || 20}%`,
+      coverImage: bundle.coverImage || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=800&auto=format&fit=crop',
+      selectedBookIds: bookIds
+    });
+    setIsBundleFormOpen(true);
+  };
+
+  const handleToggleBundleBook = (bookId: string) => {
+    const isSelected = bundleForm.selectedBookIds.includes(bookId);
+    const nextIds = isSelected 
+      ? bundleForm.selectedBookIds.filter(id => id !== bookId)
+      : [...bundleForm.selectedBookIds, bookId];
+    
+    const allBooks = data?.books || [];
+    const selectedBooks = allBooks.filter((b: any) => nextIds.includes(b.id));
+    const sumCents = selectedBooks.reduce((acc: number, b: any) => acc + b.price, 0);
+    const sumDollars = (sumCents / 100).toFixed(2);
+    
+    const pct = parseFloat(bundleForm.savingsPercentage) || 20;
+    const newPriceCents = Math.round(sumCents * (1 - pct / 100));
+    const newPriceDollars = (newPriceCents / 100).toFixed(2);
+
+    setBundleForm(prev => ({
+      ...prev,
+      selectedBookIds: nextIds,
+      originalPrice: sumDollars,
+      price: newPriceDollars
+    }));
+  };
+
+  const handleSavingsPercentageChange = (pctStr: string) => {
+    const pct = parseFloat(pctStr) || 0;
+    const orig = parseFloat(bundleForm.originalPrice) || 0;
+    const newPrice = orig > 0 ? (orig * (1 - pct / 100)).toFixed(2) : bundleForm.price;
+    setBundleForm(prev => ({
+      ...prev,
+      savingsPercentage: pctStr,
+      price: newPrice,
+      badge: `Special Box Set · Save ${pctStr}%`
+    }));
+  };
+
+  const handlePriceChange = (priceStr: string) => {
+    const p = parseFloat(priceStr) || 0;
+    const orig = parseFloat(bundleForm.originalPrice) || 0;
+    const pct = orig > 0 && p < orig ? Math.round(((orig - p) / orig) * 100) : 0;
+    setBundleForm(prev => ({
+      ...prev,
+      price: priceStr,
+      savingsPercentage: String(pct),
+      badge: `Special Box Set · Save ${pct}%`
+    }));
+  };
+
+  const handleSaveBundle = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!bundleForm.title.trim()) return alert('Please enter bundle title');
+    if (bundleForm.selectedBookIds.length === 0) return alert('Please select at least one book for this bundle');
+
+    setSubmittingBundle(true);
+    try {
+      const priceCents = Math.round(parseFloat(bundleForm.price) * 100);
+      const originalPriceCents = Math.round(parseFloat(bundleForm.originalPrice) * 100);
+      const savingsPercentage = parseInt(bundleForm.savingsPercentage, 10) || 0;
+
+      const payloadBundle = {
+        id: bundleForm.id || `bundle-${Date.now()}`,
+        slug: bundleForm.slug || bundleForm.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+        title: bundleForm.title,
+        subtitle: bundleForm.subtitle,
+        description: bundleForm.description,
+        price: priceCents,
+        originalPrice: originalPriceCents,
+        savingsPercentage,
+        badge: bundleForm.badge,
+        coverImage: bundleForm.coverImage,
+        bookIds: bundleForm.selectedBookIds
+      };
+
+      const res = await fetch('/api/admin/actions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'SAVE_BUNDLE', payload: { bundle: payloadBundle } })
+      });
+      const resJson = await res.json();
+      if (!res.ok) throw new Error(resJson.error || 'Failed to save bundle');
+
+      alert(`Box Set "${bundleForm.title}" saved successfully! Storefront has been updated.`);
+      setIsBundleFormOpen(false);
+      await fetchData();
+    } catch (err: any) {
+      alert(`Error saving bundle: ${err.message}`);
+    } finally {
+      setSubmittingBundle(false);
+    }
+  };
+
+  const handleDeleteBundle = async (bundleId: string, bundleTitle: string) => {
+    if (!confirm(`Are you sure you want to delete bundle "${bundleTitle}"?`)) return;
+    try {
+      const res = await fetch('/api/admin/actions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'DELETE_BUNDLE', payload: { bundleId } })
+      });
+      const resJson = await res.json();
+      if (!res.ok) throw new Error(resJson.error || 'Failed to delete bundle');
+      alert(`Bundle "${bundleTitle}" deleted.`);
+      await fetchData();
+    } catch (err: any) {
+      alert(`Error deleting bundle: ${err.message}`);
+    }
+  };
+
   if (loading) {
     return (
       <div className="py-20 text-center text-stone-500">
@@ -348,6 +515,7 @@ export default function AdminDashboardPage() {
           { id: 'overview', label: 'Overview & Settings' },
           { id: 'orders', label: `Orders (${data?.orders?.length || 0})` },
           { id: 'books', label: `Catalog Management (${catalogBooks.length})` },
+          { id: 'bundles', label: `Box Sets & Bundles (${data?.bundles?.length || 0})` },
           { id: 'support', label: `Support Tickets (${data?.tickets?.length || 0})` },
           { id: 'reviews', label: `Reviews (${data?.reviews?.length || 0})` },
           { id: 'logs', label: 'Audit Trail' }
@@ -875,6 +1043,311 @@ export default function AdminDashboardPage() {
             ))}
           </div>
 
+        </div>
+      )}
+
+      {/* Tab: Box Sets & Bundles */}
+      {tab === 'bundles' && (
+        <div className="space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 bg-white rounded-xl border border-stone-200 shadow-2xs">
+            <div>
+              <h2 className="font-serif font-bold text-lg text-[var(--store-ink)]">
+                Box Sets &amp; Dynamic Bundles Management
+              </h2>
+              <p className="text-xs text-stone-500 mt-0.5">
+                Create and customize multi-edition digital box sets, edit prices, adjust discount percentages, and select included titles.
+              </p>
+            </div>
+            <button
+              onClick={openNewBundleForm}
+              className="px-4 py-2 bg-[var(--store-gold)] hover:bg-[var(--store-gold-hover)] text-[var(--store-ink)] text-xs font-bold rounded-lg shadow-sm flex items-center gap-1.5 transition-transform hover:-translate-y-0.5 self-start sm:self-auto cursor-pointer"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Create New Box Set</span>
+            </button>
+          </div>
+
+          {/* Create / Edit Bundle Modal Form */}
+          {isBundleFormOpen && (
+            <div className="p-6 bg-white rounded-xl border-2 border-[var(--store-green)] shadow-lg space-y-5 animate-in fade-in duration-200">
+              <div className="flex items-center justify-between border-b border-stone-100 pb-3">
+                <div className="flex items-center gap-2">
+                  <ShoppingBag className="w-5 h-5 text-[var(--store-green)]" />
+                  <h3 className="font-serif font-bold text-lg text-[var(--store-ink)]">
+                    {editingBundleId ? 'Edit Box Set Bundle' : 'Create New Curated Box Set'}
+                  </h3>
+                </div>
+                <button
+                  onClick={() => setIsBundleFormOpen(false)}
+                  className="p-1 hover:bg-stone-100 rounded text-stone-400 hover:text-stone-700 cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <form onSubmit={handleSaveBundle} className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
+                      Bundle Title <span className="text-rose-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. The Complete Mastery & Productivity Bundle"
+                      value={bundleForm.title}
+                      onChange={(e) => setBundleForm({ ...bundleForm, title: e.target.value })}
+                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[var(--store-green)]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
+                      URL Slug
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. the-complete-mastery-bundle"
+                      value={bundleForm.slug}
+                      onChange={(e) => setBundleForm({ ...bundleForm, slug: e.target.value })}
+                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[var(--store-green)]"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
+                    Subtitle / Box Set Tagline
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Short description shown on storefront"
+                    value={bundleForm.subtitle}
+                    onChange={(e) => setBundleForm({ ...bundleForm, subtitle: e.target.value })}
+                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[var(--store-green)]"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
+                    Comprehensive Description
+                  </label>
+                  <textarea
+                    rows={3}
+                    placeholder="Detailed explanation of what the reader gets..."
+                    value={bundleForm.description}
+                    onChange={(e) => setBundleForm({ ...bundleForm, description: e.target.value })}
+                    className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[var(--store-green)]"
+                  />
+                </div>
+
+                {/* Included Books Selector */}
+                <div>
+                  <label className="text-xs font-bold text-[var(--store-ink)] block mb-1.5">
+                    Select Included Editions ({bundleForm.selectedBookIds.length} selected) <span className="text-rose-500">*</span>
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 p-3 bg-stone-50 rounded-lg border border-stone-200 max-h-56 overflow-y-auto">
+                    {catalogBooks.filter((b: any) => b.isPublished).map((book: any) => {
+                      const isChecked = bundleForm.selectedBookIds.includes(book.id);
+                      return (
+                        <label
+                          key={book.id}
+                          className={`flex items-start gap-2.5 p-2 rounded border cursor-pointer transition-colors ${
+                            isChecked ? 'bg-emerald-50 border-emerald-300' : 'bg-white border-stone-200 hover:border-stone-300'
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => handleToggleBundleBook(book.id)}
+                            className="mt-1 w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
+                          />
+                          <div className="min-w-0 text-xs">
+                            <span className="font-bold text-stone-800 block truncate">{book.title}</span>
+                            <span className="text-stone-500">${(book.price / 100).toFixed(2)} USD</span>
+                          </div>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Pricing, Discount Percentage & Badge */}
+                <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 p-4 bg-amber-50/50 rounded-lg border border-amber-200">
+                  <div>
+                    <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
+                      Standalone Total ($)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={bundleForm.originalPrice}
+                      onChange={(e) => setBundleForm({ ...bundleForm, originalPrice: e.target.value })}
+                      className="w-full px-3 py-2 text-xs font-mono bg-white border border-stone-300 rounded"
+                    />
+                    <span className="text-[10px] text-stone-500">Sum of separate books</span>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
+                      Discount Percentage (%)
+                    </label>
+                    <input
+                      type="number"
+                      min="0"
+                      max="100"
+                      value={bundleForm.savingsPercentage}
+                      onChange={(e) => handleSavingsPercentageChange(e.target.value)}
+                      className="w-full px-3 py-2 text-xs font-mono bg-white border border-stone-300 rounded font-bold text-emerald-700"
+                    />
+                    <span className="text-[10px] text-stone-500">Auto-adjusts bundle price</span>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
+                      Final Bundle Price ($)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={bundleForm.price}
+                      onChange={(e) => handlePriceChange(e.target.value)}
+                      className="w-full px-3 py-2 text-xs font-mono bg-white border border-stone-300 rounded font-bold text-[var(--store-ink)]"
+                    />
+                    <span className="text-[10px] text-stone-500">Price customer pays</span>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
+                      Badge Text
+                    </label>
+                    <input
+                      type="text"
+                      value={bundleForm.badge}
+                      onChange={(e) => setBundleForm({ ...bundleForm, badge: e.target.value })}
+                      className="w-full px-3 py-2 text-xs bg-white border border-stone-300 rounded"
+                    />
+                    <span className="text-[10px] text-stone-500">e.g. Save 22%</span>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="pt-2 flex items-center justify-end gap-3 border-t border-stone-100">
+                  <button
+                    type="button"
+                    onClick={() => setIsBundleFormOpen(false)}
+                    className="px-4 py-2 border border-stone-300 text-stone-600 text-xs font-semibold rounded hover:bg-stone-50 cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={submittingBundle}
+                    className="px-6 py-2 bg-[var(--store-gold)] hover:bg-[var(--store-gold-hover)] text-[var(--store-ink)] text-xs font-bold rounded-lg shadow-sm flex items-center gap-2 transition-transform hover:-translate-y-0.5 cursor-pointer disabled:opacity-50"
+                  >
+                    {submittingBundle ? (
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <CheckCircle className="w-4 h-4 text-emerald-600" />
+                    )}
+                    <span>{submittingBundle ? 'Saving Box Set...' : 'Save & Publish Box Set'}</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+
+          {/* Current Bundles Grid */}
+          <div className="grid grid-cols-1 gap-6">
+            {(data?.bundles || []).map((bundle: any) => {
+              const bundleBooks = bundle.books || [];
+              const standaloneSum = (bundle.originalPrice || 0) / 100;
+              const bundlePrice = (bundle.price || 0) / 100;
+              const savingsAmount = standaloneSum > bundlePrice ? (standaloneSum - bundlePrice).toFixed(2) : '0.00';
+
+              return (
+                <div
+                  key={bundle.id}
+                  className="p-6 bg-white rounded-xl border border-stone-200 shadow-2xs hover:border-stone-300 transition-colors flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
+                >
+                  <div className="space-y-3 flex-1 min-w-0">
+                    <div className="flex items-center gap-2.5 flex-wrap">
+                      <span className="px-2.5 py-0.5 text-[10px] font-bold text-amber-900 bg-amber-100 rounded-full">
+                        {bundle.badge || `Save ${bundle.savingsPercentage}%`}
+                      </span>
+                      <span className="text-xs text-stone-400 font-mono">
+                        slug: /{bundle.slug}
+                      </span>
+                    </div>
+
+                    <h3 className="font-serif text-xl font-bold text-[var(--store-ink)]">
+                      {bundle.title}
+                    </h3>
+
+                    <p className="text-xs text-stone-600 max-w-2xl leading-relaxed">
+                      {bundle.description || bundle.subtitle}
+                    </p>
+
+                    <div className="flex items-center gap-4 text-xs pt-1">
+                      <span className="font-serif text-lg font-bold text-[var(--store-ink)]">
+                        ${bundlePrice.toFixed(2)} USD
+                      </span>
+                      <span className="line-through text-stone-400">
+                        ${standaloneSum.toFixed(2)} separate
+                      </span>
+                      <span className="text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded">
+                        Save ${savingsAmount} ({bundle.savingsPercentage}%)
+                      </span>
+                    </div>
+
+                    {/* Included books list */}
+                    <div className="pt-2">
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-stone-400 block mb-1.5">
+                        Included Editions ({bundleBooks.length}):
+                      </span>
+                      <div className="flex flex-wrap gap-2">
+                        {bundleBooks.map((b: any) => (
+                          <span
+                            key={b.id}
+                            className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-stone-100 rounded text-xs text-stone-700 font-medium"
+                          >
+                            <BookOpen className="w-3.5 h-3.5 text-stone-500" />
+                            <span>{b.title}</span>
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex md:flex-col gap-2 shrink-0 self-stretch md:self-auto justify-end">
+                    <button
+                      onClick={() => openEditBundleForm(bundle)}
+                      className="px-4 py-2 text-xs font-bold bg-stone-100 hover:bg-stone-200 text-stone-800 rounded transition-colors cursor-pointer"
+                    >
+                      Edit Bundle
+                    </button>
+                    <Link
+                      href={`/bundles/${bundle.slug}`}
+                      target="_blank"
+                      className="px-4 py-2 text-xs font-bold text-[var(--store-green)] hover:bg-emerald-50 rounded transition-colors text-center flex items-center justify-center gap-1"
+                    >
+                      <span>Preview</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </Link>
+                    <button
+                      onClick={() => handleDeleteBundle(bundle.id, bundle.title)}
+                      className="px-4 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 rounded transition-colors cursor-pointer flex items-center justify-center gap-1"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>Delete</span>
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
 

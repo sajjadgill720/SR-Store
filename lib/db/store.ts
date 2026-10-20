@@ -36,6 +36,39 @@ export const db = {
     const members = await query<{bundle_id: string; id: string; data: Omit<Book,'id'>}>("SELECT bb.bundle_id,b.id,b.data FROM knovera.bundle_books bb JOIN knovera.books b ON b.id=bb.book_id WHERE (b.data->>'isPublished')::boolean ORDER BY bb.position");
     return result.rows.map(row => ({...document<BundleOffer>(row), books: members.rows.filter(member => member.bundle_id===row.id).map(document<Book>)})).filter(bundle => bundle.books.length>0);
   },
+  async upsertBundle(bundle: Omit<BundleOffer, 'books'> & { bookIds: string[] }) {
+    return transaction(async client => {
+      const { id, bookIds, ...data } = bundle;
+      await client.query(
+        'INSERT INTO knovera.bundles (id, data) VALUES ($1, $2) ON CONFLICT (id) DO UPDATE SET data = $2',
+        [id, data]
+      );
+      await client.query('DELETE FROM knovera.bundle_books WHERE bundle_id = $1', [id]);
+      for (const [index, bookId] of (bookIds || []).entries()) {
+        await client.query(
+          'INSERT INTO knovera.bundle_books (bundle_id, book_id, position) VALUES ($1, $2, $3)',
+          [id, bookId, index]
+        );
+      }
+      await client.query(
+        'INSERT INTO knovera.audit_logs VALUES ($1, $2, $3, $4)',
+        [randomUUID(), 'BUNDLE_SAVED', `Saved bundle ${data.title}`, new Date().toISOString()]
+      );
+      return true;
+    });
+  },
+  async deleteBundle(id: string) {
+    return transaction(async client => {
+      await client.query('DELETE FROM knovera.bundle_books WHERE bundle_id = $1', [id]);
+      const res = await client.query('DELETE FROM knovera.bundles WHERE id = $1 RETURNING id', [id]);
+      if (!res.rowCount) return false;
+      await client.query(
+        'INSERT INTO knovera.audit_logs VALUES ($1, $2, $3, $4)',
+        [randomUUID(), 'BUNDLE_DELETED', `Deleted bundle ${id}`, new Date().toISOString()]
+      );
+      return true;
+    });
+  },
   getOrders: () => orders("ORDER BY data->>'createdAt' DESC,id"),
   async getOrderByToken(token: string) { return (await orders("WHERE data->>'publicToken'=$1", [token]))[0]; },
   getOrdersByEmail: (email: string) => orders("WHERE lower(data->>'customerEmail')=$1 ORDER BY data->>'createdAt' DESC", [email.trim().toLowerCase()]),
@@ -71,7 +104,7 @@ export const db = {
   async updateReviewApproval(id: string, isApproved: boolean) { await query("UPDATE knovera.reviews SET data=jsonb_set(data,'{isApproved}',$2::jsonb) WHERE id=$1",[id,JSON.stringify(isApproved)]); },
   async addAuditLog(action: string, details: string) { await query('INSERT INTO knovera.audit_logs VALUES($1,$2,$3,$4)',[randomUUID(),action,details,new Date().toISOString()]); },
   async get() {
-    const [books,orders,entitlements,supportTickets,reviews,auditLogs]=await Promise.all([this.getBooks(),this.getOrders(),query<Entitlement>('SELECT * FROM knovera.entitlements'),this.getTickets(),this.getReviews(),query('SELECT * FROM knovera.audit_logs ORDER BY timestamp DESC LIMIT 100')]);
-    return { books,orders,entitlements:entitlements.rows,supportTickets,reviews,auditLogs:auditLogs.rows };
+    const [books,bundles,orders,entitlements,supportTickets,reviews,auditLogs]=await Promise.all([this.getBooks(),this.getBundles(),this.getOrders(),query<Entitlement>('SELECT * FROM knovera.entitlements'),this.getTickets(),this.getReviews(),query('SELECT * FROM knovera.audit_logs ORDER BY timestamp DESC LIMIT 100')]);
+    return { books,bundles,orders,entitlements:entitlements.rows,supportTickets,reviews,auditLogs:auditLogs.rows };
   },
 };

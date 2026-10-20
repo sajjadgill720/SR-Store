@@ -14,7 +14,7 @@ import {
 import BookCover from '../books/BookCover';
 import { money, formatsLabel } from '../../lib/catalog';
 import { useCart } from '../../lib/store/cart';
-import type { Book } from '../../lib/types';
+import type { Book, BundleOffer } from '../../lib/types';
 
 const motionQuery = '(prefers-reduced-motion: reduce)';
 const subscribeMotion = (notify: () => void) => {
@@ -24,15 +24,17 @@ const subscribeMotion = (notify: () => void) => {
 };
 const getReducedMotion = () => window.matchMedia(motionQuery).matches;
 
-export default function Marketplace({ books }: { books: Book[] }) {
+export default function Marketplace({ books, bundles = [] }: { books: Book[]; bundles?: BundleOffer[] }) {
   const { toggleWishlist, isWishlisted } = useCart();
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedBundleId, setSelectedBundleId] = useState<string | null>(null);
   const [playing, setPlaying] = useState(true);
   const showcase = useRef<HTMLDivElement>(null);
   const reducedMotion = useSyncExternalStore(subscribeMotion, getReducedMotion, () => true);
   const featured = books.find(book => book.id === selectedId) || books.find(book => book.featured) || books[0];
   const selectedIndex = featured ? books.findIndex(book => book.id === featured.id) : 0;
+  const currentBundle = bundles.find(b => b.id === selectedBundleId) || bundles[0];
   const canRotate = books.length > 1;
   const autoRotate = playing && !reducedMotion && canRotate;
   const move = (direction: number) => {
@@ -280,29 +282,194 @@ export default function Marketplace({ books }: { books: Book[] }) {
             })}
           </div>
 
-          {/* Dual Edition Box Set / Bundle Banner */}
-          <div className="knovera-bundle-banner">
-            <div className="knovera-bundle-content">
-              <span className="knovera-bundle-pill">SPECIAL BOX SET · SAVE 22%</span>
-              <h3 className="knovera-bundle-title">The Complete Mastery &amp; Productivity Bundle</h3>
-              <p className="knovera-bundle-desc">
-                Get both <em>The Focused Mind</em> and <em>Atomic Architectures</em> together in one
-                comprehensive package. Includes all companion worksheets, scorecards, and future revisions.
-              </p>
-              <div className="knovera-bundle-meta">
-                <span className="knovera-bundle-price">$29.99 USD</span>
-                <span className="knovera-bundle-compare">Standard standalone sum: $38.49</span>
+          {/* Dual Edition Box Set / Dynamic Bundle Showcase */}
+          {currentBundle && (() => {
+            const standaloneSum = currentBundle.originalPrice || currentBundle.books.reduce((sum, b) => sum + b.price, 0);
+            const bundleSavings = standaloneSum > currentBundle.price ? standaloneSum - currentBundle.price : 0;
+            const savingsPercent = currentBundle.savingsPercentage || (standaloneSum > 0 ? Math.round((bundleSavings / standaloneSum) * 100) : 0);
+            const book1 = currentBundle.books[0];
+            const book2 = currentBundle.books[1] || currentBundle.books[0];
+
+            return (
+              <div className="boxset-section" id="box-sets" aria-labelledby="boxset-heading">
+                {bundles.length > 1 && (
+                  <div className="boxset-tabs" role="tablist" aria-label="Available Box Sets">
+                    {bundles.map(b => (
+                      <button
+                        key={b.id}
+                        type="button"
+                        role="tab"
+                        aria-selected={b.id === currentBundle.id}
+                        className={`boxset-tab-btn ${b.id === currentBundle.id ? 'is-active' : ''}`}
+                        onClick={() => setSelectedBundleId(b.id)}
+                      >
+                        <span className="boxset-tab-title">{b.title}</span>
+                        <span className="boxset-tab-save">Save {b.savingsPercentage}%</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                <div className="boxset-grid">
+                  {/* Left Column: Title, Prose, Contents List, Pricing, CTA */}
+                  <div className="boxset-left">
+                    <h3 id="boxset-heading" className="boxset-title">
+                      {currentBundle.title}
+                    </h3>
+
+                    <p className="boxset-desc">
+                      {(() => {
+                        const desc = currentBundle.description || currentBundle.subtitle;
+                        const parts = desc.split(/(The Focused Mind|Atomic Architectures)/g);
+                        return parts.map((part, i) =>
+                          part === 'The Focused Mind' || part === 'Atomic Architectures' ? (
+                            <em key={i} className="boxset-desc-em">{part}</em>
+                          ) : (
+                            part
+                          )
+                        );
+                      })()}
+                    </p>
+
+                    {/* Contents Index Table with Roman numerals and dot leaders */}
+                    <ol className="boxset-contents-list" aria-label="Included editions and materials">
+                      {currentBundle.books.map((b, idx) => (
+                        <li key={b.id} className="boxset-contents-item">
+                          <span className="boxset-contents-roman">{['i.', 'ii.', 'iii.', 'iv.', 'v.'][idx] || `${idx + 1}.`}</span>
+                          <span className="boxset-contents-name">{b.title.split(':')[0]}</span>
+                          <span className="boxset-contents-dots" aria-hidden="true" />
+                          <span className="boxset-contents-tag">EBOOK</span>
+                        </li>
+                      ))}
+                      <li className="boxset-contents-item">
+                        <span className="boxset-contents-roman">{['i.', 'ii.', 'iii.', 'iv.', 'v.'][currentBundle.books.length] || `${currentBundle.books.length + 1}.`}</span>
+                        <span className="boxset-contents-name">Worksheets &amp; scorecards</span>
+                        <span className="boxset-contents-dots" aria-hidden="true" />
+                        <span className="boxset-contents-tag">INCLUDED</span>
+                      </li>
+                      <li className="boxset-contents-item">
+                        <span className="boxset-contents-roman">{['i.', 'ii.', 'iii.', 'iv.', 'v.'][currentBundle.books.length + 1] || `${currentBundle.books.length + 2}.`}</span>
+                        <span className="boxset-contents-name">Future revisions</span>
+                        <span className="boxset-contents-dots" aria-hidden="true" />
+                        <span className="boxset-contents-tag">INCLUDED</span>
+                      </li>
+                    </ol>
+
+                    {/* Pricing and Savings */}
+                    <div className="boxset-pricing-row">
+                      <div className="boxset-price-main">
+                        <span className="boxset-price-amount">{money(currentBundle.price)}</span>
+                        <span className="boxset-price-currency">USD</span>
+                      </div>
+
+                      {standaloneSum > currentBundle.price && (
+                        <span className="boxset-price-comparison">
+                          <span className="boxset-price-strikethrough">{money(standaloneSum)}</span>
+                          <span className="boxset-price-sep-note"> bought separately</span>
+                        </span>
+                      )}
+
+                      {bundleSavings > 0 && (
+                        <span className="boxset-savings-pill">
+                          You save {money(bundleSavings)}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* CTAs */}
+                    <div className="boxset-actions-row">
+                      <Link
+                        href={`/bundles/${currentBundle.slug}`}
+                        className="boxset-cta-btn"
+                      >
+                        <span>Explore the Box Set</span>
+                        <span className="boxset-cta-arrow" aria-hidden="true">→</span>
+                      </Link>
+                      <span className="boxset-delivery-note">
+                        Kindle, EPUB &amp; PDF · Instant download
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Right Column: 3D Box Set Slipcase with Peeking Books and Save Badge */}
+                  <div className="boxset-right">
+                    <div className="boxset-visual-wrap">
+                      {/* Books protruding from top of slipcase */}
+                      <div className="boxset-peeking-books">
+                        {/* Left Peeking Book (Sand Cloth Cover) */}
+                        <div className="boxset-book-left">
+                          <div className="boxset-book-ribbon" aria-hidden="true" />
+                          <div className="boxset-book-inner">
+                            <span className="boxset-book-imprint">KNOVERA PRESS</span>
+                            <div className="boxset-book-title-block">
+                              <span className="boxset-book-title-serif">
+                                {book1?.title.split(':')[0] === 'The Focused Mind' ? (
+                                  <>
+                                    The<br />
+                                    Focused<br />
+                                    Mind
+                                  </>
+                                ) : (
+                                  book1?.title.split(':')[0] || 'The Focused Mind'
+                                )}
+                              </span>
+                            </div>
+                            <div className="boxset-book-rule" />
+                          </div>
+                        </div>
+
+                        {/* Right Peeking Book (Umber Cloth Cover) */}
+                        <div className="boxset-book-right">
+                          {/* Burgundy Circular "SAVE 22%" Seal Badge Overlapping Top Right */}
+                          <div className="boxset-seal-badge" aria-label={`Save ${savingsPercent} percent`}>
+                            <div className="boxset-seal-dashed-ring" />
+                            <span className="boxset-seal-label">SAVE</span>
+                            <span className="boxset-seal-percent">{savingsPercent}%</span>
+                          </div>
+
+                          <div className="boxset-book-inner">
+                            <span className="boxset-book-imprint">KNOVERA PRESS</span>
+                            <div className="boxset-book-title-block">
+                              <span className="boxset-book-title-serif">
+                                {book2?.title.split(':')[0] === 'Atomic Architectures' ? (
+                                  <>
+                                    Atomic<br />
+                                    Architec-<br />
+                                    tures
+                                  </>
+                                ) : (
+                                  book2?.title.split(':')[0] || 'Atomic Architectures'
+                                )}
+                              </span>
+                            </div>
+                            <div className="boxset-book-rule" />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* The 3D Slipcase Box Front */}
+                      <div className="boxset-slipcase-box">
+                        {/* Interior depth shadow */}
+                        <div className="boxset-slipcase-depth" />
+
+                        {/* Front Inset Paper Label */}
+                        <div className="boxset-paper-label">
+                          <span className="boxset-label-kicker">BOX SET</span>
+                          <span className="boxset-label-title">
+                            {currentBundle.title.replace('The Complete ', '').replace(' Bundle', '')}
+                          </span>
+                          <div className="boxset-label-rule" />
+                          <span className="boxset-label-meta">
+                            {currentBundle.books.length === 2 ? 'TWO EBOOKS · WORKSHEETS' : `${currentBundle.books.length} EBOOKS · DIGITAL EDITIONS`}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="knovera-bundle-action">
-              <Link
-                href="/bundles/the-complete-mastery-bundle"
-                className="studio-button knovera-bundle-btn"
-              >
-                Explore the Box Set <ArrowRight size={16} aria-hidden="true" />
-              </Link>
-            </div>
-          </div>
+            );
+          })()}
         </div>
       </section>
 

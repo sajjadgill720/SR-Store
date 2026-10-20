@@ -33,7 +33,7 @@ export default function CachedCatalog({view,slug,initial}:{view:'home'|'books'|'
   const book = data.books.find(b => b.slug === slug);
   const bundle = data.bundles.find(b => b.slug === slug);
   return <>{error && <p className="storefront" role="status">{error}</p>}{
-    view === 'home' ? <Marketplace books={data.books.filter(b => b.productType !== 'bundle')}/> :
+    view === 'home' ? <Marketplace books={data.books.filter(b => b.productType !== 'bundle')} bundles={data.bundles}/> :
     view === 'books' ? <Catalog books={data.books} bundles={data.bundles}/> :
     view === 'bundle' && bundle ? <BundleDetail bundle={bundle}/> :
     view === 'sample' && book ? <SampleReader book={book}/> :
