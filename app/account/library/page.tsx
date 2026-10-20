@@ -3,7 +3,7 @@ import { useEffect, useState, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { Download } from 'lucide-react';
 import type { Book } from '../../../lib/types';
-import { formatLabel } from '../../../lib/catalog';
+import { formatLabel, authorLabel } from '../../../lib/catalog';
 import BookCover from '../../../components/books/BookCover';
 import { privateRead } from '../../../lib/cache/private';
 import { browserReads, accountScope, subscribeAccountScope } from '../../../lib/cache/browser';
@@ -83,7 +83,7 @@ export default function LibraryPage() {
       <div className="studio-section-heading"><p className="studio-shelf-count">{books.length} {books.length === 1 ? 'book' : 'books'} · {account?'Your account':`Order ${orderNumber}`}</p>{account?<SignOut />:<button className="studio-text-link" onClick={() => void closeLibrary()}>Close this library</button>}</div>
       <div className="studio-shelf-grid">{books.map(book => <article className="studio-shelf-book" key={book.id}>
         <Link href={`/books/${book.slug}`}><BookCover src={book.coverImage} title={book.title}/></Link>
-        <div><h2>{book.title}</h2><p>{book.author}</p><p className="studio-caption">{book.currentEdition.version}</p>
+        <div><h2>{book.title}</h2><p>{authorLabel(book.author)}</p><p className="studio-caption">{book.currentEdition.version}</p>
           <div className="studio-download-actions">{book.formats.map(format => <button className="studio-button outline" disabled={!!downloading} key={format} onClick={() => void download(book.id, format)}><Download size={16}/>{downloading === book.id + format ? 'Preparing…' : formatLabel(format)}</button>)}</div>
           <Link className="studio-text-link" href={`/books/${book.slug}`}>View edition details</Link>
         </div></article>)}</div>

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { Book } from '../../lib/types';
 import { ArrowRight, BookOpen } from 'lucide-react';
 import BookCover from '../books/BookCover';
-import { money, formatsLabel } from '../../lib/catalog';
+import { money, formatsLabel, authorLabel } from '../../lib/catalog';
 export default function HeroBanner({ featuredBook: book }: {
     featuredBook?: Book;
 }) {
@@ -26,7 +26,7 @@ export default function HeroBanner({ featuredBook: book }: {
         <Link href={`/books/${book.slug}`}>
         <h2>{book.title}</h2>
         </Link>
-        <p>{book.author} · {formatsLabel(book.formats)}</p>
+        <p>{authorLabel(book.author)} · {formatsLabel(book.formats)}</p>
         <span>{money(book.price)} USD</span>
         </div>
         </div>}

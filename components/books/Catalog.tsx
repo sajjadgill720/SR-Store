@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useBrowserSearch, replaceCatalogSearch } from '@/lib/use-browser-search';
 import { Bookmark, Search, X, ArrowRight, Library, List, Grid } from 'lucide-react';
 import type { Book, BundleOffer } from '../../lib/types';
-import { discoverBooks, money } from '../../lib/catalog';
+import { discoverBooks, money, authorLabel } from '../../lib/catalog';
 import { useCart } from '../../lib/store/cart';
 import BookCard from './BookCard';
 import BookCover from './BookCover';
@@ -223,13 +223,13 @@ export default function Catalog({ books, bundles }: {
                   <Link
                     href={detail}
                     className="standing-spine"
-                    aria-label={`${book.title} by ${book.author}, ${money(book.price)}`}
+                    aria-label={`${book.title} by ${authorLabel(book.author)}, ${money(book.price)}`}
                   >
                     {saved && <span className="spine-ribbon-tab" title="Saved edition" aria-hidden="true" />}
                     <span className="spine-headband" aria-hidden="true" />
                     <span className="spine-title-vert">{book.title}</span>
                     <div className="spine-foot">
-                      <span className="spine-author-caps">{book.author}</span>
+                      <span className="spine-author-caps">{authorLabel(book.author)}</span>
                       <span className="spine-colophon-mark">KN</span>
                     </div>
                   </Link>
@@ -242,7 +242,7 @@ export default function Catalog({ books, bundles }: {
                     <div className="spine-peek-body">
                       <span className="spine-peek-kicker">{book.category}</span>
                       <h4 className="spine-peek-title">{book.title}</h4>
-                      <p className="spine-peek-author">by {book.author}</p>
+                      <p className="spine-peek-author">by {authorLabel(book.author)}</p>
                       <p className="spine-peek-desc">{book.shortDescription}</p>
                       <div className="spine-peek-action">
                         <span className="spine-peek-price">{money(book.price)} <small>USD</small></span>
@@ -290,7 +290,7 @@ export default function Catalog({ books, bundles }: {
                   {book.subtitle && <span className="ci-subtitle">{book.subtitle}</span>}
                   <span className="ci-category-tag">{book.category}</span>
                 </div>
-                <span className="ci-author">{book.author}</span>
+                <span className="ci-author">{authorLabel(book.author)}</span>
                 <span className="ci-format">
                   {book.formats.map(f => f === 'printable_pdf' ? 'Printable' : f.toUpperCase()).join(' · ')}
                 </span>

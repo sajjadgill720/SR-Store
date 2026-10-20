@@ -21,7 +21,7 @@ export function bookSchema(book:Book) {
   return {
     '@context':'https://schema.org','@type':['Book','Product'],'@id':url+'#book',url,
     name:book.title,description:book.shortDescription,image:book.coverImage,
-    author:{'@type':'Person',name:book.author},bookFormat:'https://schema.org/EBook',
+    author:{'@type':'Person',name:book.author.replace(/s[.\s]*r[.\s]*rehman/gi, 'Knovera')},bookFormat:'https://schema.org/EBook',
     ...(book.isbn?{isbn:book.isbn}:{}),...(book.pageCount?{numberOfPages:book.pageCount}:{}),
     offers:{'@type':'Offer',url,price:(book.price/100).toFixed(2),priceCurrency:'USD',
       availability:book.isInStock && book.rightsStatus === 'wide'?'https://schema.org/InStock':'https://schema.org/OutOfStock',

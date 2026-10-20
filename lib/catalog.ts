@@ -1,4 +1,8 @@
 import type { Book, BookFormat, Order } from './types';
+/** Retire the old personal byline, including records saved in older browsers. */
+export function authorLabel(author: string) {
+    return /s[.\s]*r[.\s]*rehman/i.test(author) ? 'Knovera' : author;
+}
 export const money = (minorUnits: number, currency = 'USD') => new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(minorUnits / 100);
 export const formatLabel = (format: BookFormat) => format === 'printable_pdf' ? 'Printable PDF' : format.toUpperCase();
 export const formatsLabel = (formats: BookFormat[]) => formats.map(formatLabel).join(' + ');

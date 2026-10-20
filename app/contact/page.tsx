@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Mail, HelpCircle, CheckCircle2, Clock, ShieldCheck, AlertCircle } from 'lucide-react';
+import { Mail, CheckCircle2, Clock } from 'lucide-react';
 
 export default function ContactSupportPage() {
   const [email, setEmail] = useState('');
@@ -13,12 +13,14 @@ export default function ContactSupportPage() {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [ticketNumber, setTicketNumber] = useState('');
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim() || !message.trim()) return;
 
     setIsSubmitting(true);
+    setError('');
     try {
       const res = await fetch('/api/support', {
         method: 'POST',
@@ -32,19 +34,20 @@ export default function ContactSupportPage() {
         })
       });
       const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Could not send your request. Your message has been kept; please try again.');
       if (res.ok) {
         setTicketNumber(data.ticketNumber);
         setSubmitted(true);
       }
     } catch (err) {
-      console.error(err);
+      setError(err instanceof Error ? err.message : 'Could not send your request. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="py-12 sm:py-16 max-w-2xl mx-auto px-4">
+    <div className="store-support py-12 sm:py-16 max-w-2xl mx-auto px-4">
       <div className="bg-white p-6 sm:p-10 rounded-2xl border border-stone-200 shadow-sm">
         
         <div className="text-center mb-8">
@@ -58,7 +61,7 @@ export default function ContactSupportPage() {
             How Can We Assist You?
           </h1>
           <p className="text-xs sm:text-sm text-stone-600 mt-2">
-            Every inquiry is handled directly by our publishing team. Published response expectation: within 2 business days.
+            Tell us about your order or download. Include your device and order reference if you have one.
           </p>
         </div>
 
@@ -81,13 +84,14 @@ export default function ContactSupportPage() {
             </div>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4" aria-busy={isSubmitting}>
+            {error && <p className="studio-error" role="alert">{error}</p>}
             
             <div>
-              <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
+              <label htmlFor="support-field-1" className="text-xs font-bold text-[var(--store-ink)] block mb-1">
                 Your Email Address <span className="text-rose-500">*</span>
               </label>
-              <input
+              <input id="support-field-1"
                 type="email"
                 required
                 value={email}
@@ -99,12 +103,12 @@ export default function ContactSupportPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
+                <label htmlFor="support-field-2" className="text-xs font-bold text-[var(--store-ink)] block mb-1">
                   Inquiry Category
                 </label>
-                <select
+              <select id="support-field-2"
                   value={category}
-                  onChange={(e) => setCategory(e.target.value as any)}
+                  onChange={(e) => setCategory(e.target.value as typeof category)}
                   className="w-full px-3 py-2.5 text-xs sm:text-sm bg-stone-50 border border-stone-300 rounded focus:bg-white focus:outline-hidden focus:border-[var(--store-green)]"
                 >
                   <option value="download_help">Download Link or Expired Access</option>
@@ -115,10 +119,10 @@ export default function ContactSupportPage() {
               </div>
 
               <div>
-                <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
+                <label htmlFor="support-field-3" className="text-xs font-bold text-[var(--store-ink)] block mb-1">
                   Order Number (If known)
                 </label>
-                <input
+              <input id="support-field-3"
                   type="text"
                   value={orderRef}
                   onChange={(e) => setOrderRef(e.target.value)}
@@ -129,10 +133,10 @@ export default function ContactSupportPage() {
             </div>
 
             <div>
-              <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
+              <label htmlFor="support-field-4" className="text-xs font-bold text-[var(--store-ink)] block mb-1">
                 Subject
               </label>
-              <input
+              <input id="support-field-4"
                 type="text"
                 required
                 value={subject}
@@ -143,10 +147,10 @@ export default function ContactSupportPage() {
             </div>
 
             <div>
-              <label className="text-xs font-bold text-[var(--store-ink)] block mb-1">
+              <label htmlFor="support-field-5" className="text-xs font-bold text-[var(--store-ink)] block mb-1">
                 Message & Context <span className="text-rose-500">*</span>
               </label>
-              <textarea
+              <textarea id="support-field-5"
                 required
                 rows={4}
                 value={message}

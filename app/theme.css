@@ -22,6 +22,16 @@
   --cloth-sand: #D9CFBD;
   --cloth-cream: #F2ECE0;
 
+  /* Shared component aliases; keep legacy styles on the same design tokens. */
+  --color-paper-page: var(--paper-page);
+  --color-paper-card: var(--paper-card);
+  --color-paper-raised: var(--paper-raised);
+  --color-hairline: var(--paper-rule);
+  --color-ink-faint: var(--ink-muted);
+  --color-sand: var(--cloth-sand);
+  --font-cormorant: var(--font-editorial), Georgia, serif;
+  --font-dm-sans: var(--font-sans), sans-serif;
+
   /* Mapped Core Variables */
   --bg-paper: var(--paper-page);
   --bg-surface: var(--paper-raised);

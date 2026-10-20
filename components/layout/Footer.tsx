@@ -46,6 +46,7 @@ const groups = [
 export default function Footer() {
   const path = usePathname();
   if (['/account/login','/account/signup','/account/update-password'].includes(path)) return null;
+  if (['/cart','/checkout','/access','/account/library','/checkout/return'].includes(path) || path.startsWith('/orders/')) return <footer className="store-flow-footer"><Link href="/">Knovera · Digital store</Link><nav aria-label="Customer support"><Link href="/contact">Support</Link><Link href="/legal/refunds">Delivery &amp; refunds</Link><Link href="/legal/privacy">Privacy</Link></nav></footer>;
   const scrollToTop = () => {
     if (typeof window !== 'undefined') {
       window.scrollTo({ top: 0, behavior: 'smooth' });

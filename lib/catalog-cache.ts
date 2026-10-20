@@ -2,12 +2,13 @@ import { cacheLife, cacheTag, revalidateTag } from 'next/cache';
 import { db } from './db/store';
 import type { Book } from './types';
 import { catalogVersion } from './catalog-version';
+import { authorLabel } from './catalog';
 
 export const CATALOG_TAG = 'public-catalog';
 
 // File locations stay on the server; downloads resolve them after checking access.
 function publicBook(book: Book): Book {
-  return { ...book, currentEdition: { ...book.currentEdition, assets: [] } };
+  return { ...book, author: authorLabel(book.author), ...(book.penName ? {penName: authorLabel(book.penName)} : {}), currentEdition: { ...book.currentEdition, assets: [] } };
 }
 
 async function snapshot(version: string) {

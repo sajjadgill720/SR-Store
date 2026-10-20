@@ -1,0 +1,338 @@
+[
+  {
+    "path": "/cart",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 1433,
+    "unlabeled": [],
+    "width": 1440
+  },
+  {
+    "path": "/checkout",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 1433,
+    "unlabeled": [],
+    "width": 1440
+  },
+  {
+    "path": "/books",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 1433,
+    "unlabeled": [],
+    "width": 1440
+  },
+  {
+    "path": "/account/library",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 1440,
+    "unlabeled": [],
+    "width": 1440
+  },
+  {
+    "path": "/access",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 1440,
+    "unlabeled": [],
+    "width": 1440
+  },
+  {
+    "path": "/contact",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 1433,
+    "unlabeled": [],
+    "width": 1440
+  },
+  {
+    "path": "/help",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 1433,
+    "unlabeled": [],
+    "width": 1440
+  },
+  {
+    "path": "/help/kindle",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 1433,
+    "unlabeled": [],
+    "width": 1440
+  },
+  {
+    "path": "/free-resources",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 1433,
+    "unlabeled": [],
+    "width": 1440
+  },
+  {
+    "path": "/reader-club",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 1433,
+    "unlabeled": [],
+    "width": 1440
+  },
+  {
+    "path": "/newsletter",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 1433,
+    "unlabeled": [],
+    "width": 1440
+  },
+  {
+    "path": "/about",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 1433,
+    "unlabeled": [],
+    "width": 1440
+  },
+  {
+    "path": "/community",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 1433,
+    "unlabeled": [],
+    "width": 1440
+  },
+  {
+    "path": "/community/the-focus-room",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 1433,
+    "unlabeled": [],
+    "width": 1440
+  },
+  {
+    "path": "/community/discussions/protecting-your-first-hour",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 1433,
+    "unlabeled": [],
+    "width": 1440
+  },
+  {
+    "path": "/samples/atomic-architectures",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 1433,
+    "unlabeled": [],
+    "width": 1440
+  },
+  {
+    "path": "/account/login",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 1440,
+    "unlabeled": [],
+    "width": 1440
+  },
+  {
+    "path": "/account/signup",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 1433,
+    "unlabeled": [],
+    "width": 1440
+  },
+  {
+    "path": "/legal/refunds",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 1433,
+    "unlabeled": [],
+    "width": 1440
+  },
+  {
+    "path": "/cart",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 383,
+    "unlabeled": [],
+    "width": 390
+  },
+  {
+    "path": "/checkout",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 383,
+    "unlabeled": [],
+    "width": 390
+  },
+  {
+    "path": "/books",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 383,
+    "unlabeled": [],
+    "width": 390
+  },
+  {
+    "path": "/books/atomic-architectures",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 383,
+    "unlabeled": [],
+    "width": 390
+  },
+  {
+    "path": "/bundles/the-complete-mastery-bundle",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 383,
+    "unlabeled": [],
+    "width": 390
+  },
+  {
+    "path": "/access",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 383,
+    "unlabeled": [],
+    "width": 390
+  },
+  {
+    "path": "/contact",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 383,
+    "unlabeled": [],
+    "width": 390
+  },
+  {
+    "path": "/help",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 383,
+    "unlabeled": [],
+    "width": 390
+  },
+  {
+    "path": "/community",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 383,
+    "unlabeled": [],
+    "width": 390
+  },
+  {
+    "path": "/community/discussions/protecting-your-first-hour",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 383,
+    "unlabeled": [],
+    "width": 390
+  },
+  {
+    "path": "/account/library",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 383,
+    "unlabeled": [],
+    "width": 390
+  },
+  {
+    "path": "/account/login",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 383,
+    "unlabeled": [],
+    "width": 390
+  },
+  {
+    "path": "/account/signup",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 383,
+    "unlabeled": [],
+    "width": 390
+  },
+  {
+    "path": "/",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 383,
+    "unlabeled": [],
+    "width": 390
+  },
+  {
+    "path": "/cart",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 313,
+    "unlabeled": [],
+    "width": 320
+  },
+  {
+    "path": "/checkout",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 313,
+    "unlabeled": [],
+    "width": 320
+  },
+  {
+    "path": "/books",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 313,
+    "unlabeled": [],
+    "width": 320
+  },
+  {
+    "path": "/contact",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 313,
+    "unlabeled": [],
+    "width": 320
+  },
+  {
+    "path": "/",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 313,
+    "unlabeled": [],
+    "width": 320
+  },
+  {
+    "path": "/books/atomic-architectures",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 1433,
+    "unlabeled": [],
+    "width": 1440
+  },
+  {
+    "path": "/bundles/the-complete-mastery-bundle",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 1433,
+    "unlabeled": [],
+    "width": 1440
+  },
+  {
+    "path": "/legal/privacy",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 1433,
+    "unlabeled": [],
+    "width": 1440
+  },
+  {
+    "path": "/legal/terms",
+    "legacyName": false,
+    "lowContrast": [],
+    "scroll": 1433,
+    "unlabeled": [],
+    "width": 1440
+  }
+]

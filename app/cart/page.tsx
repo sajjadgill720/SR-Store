@@ -1,206 +1,38 @@
 'use client';
-
+import { useState } from 'react';
 import Link from 'next/link';
-import { Minus, Plus, Trash2, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Minus, Plus, Trash2, ArrowRight, ArrowLeft, ShoppingBag, Undo2 } from 'lucide-react';
 import { useCart } from '../../lib/store/cart';
+import { updateShopping } from '../../lib/store/shopping';
+import type { CartItem } from '../../lib/types';
 import { money } from '../../lib/catalog';
 import BookCover from '../../components/books/BookCover';
 
 export default function CartPage() {
   const { items, cartTotal, cartCount, removeFromCart, updateQuantity, clearCart, storageError } = useCart();
-
-  return (
-    <div className="storefront cart-ledger-page">
-      <div className="cart-nav-back-wrap">
-        <Link className="studio-back" href="/books">
-          <ArrowLeft size={14} className="shrink-0" />
-          <span>Continue shopping</span>
-        </Link>
-        <div className="cart-nav-folio" aria-hidden="true">
-          <span>FOLIO § 0088</span>
-          <span className="cart-nav-sep">·</span>
-          <span>YOUR CART</span>
-        </div>
-      </div>
-
-      <div className="studio-page-heading">
-        <span className="studio-kicker">EBOOKS & DIGITAL GOODS</span>
-        <h1>Your cart.</h1>
-        <p className="cart-lead-text">
-          Review your digital goods, adjust quantities, and continue to secure checkout.
-        </p>
-      </div>
-
-      {storageError && <p className="studio-error" role="alert">{storageError}</p>}
-
-      {!items.length ? (
-        <div className="studio-empty cart-empty-slip">
-          <span className="empty-slip-fleuron" aria-hidden="true">❦</span>
-          <h2>Your cart is empty.</h2>
-          <p>Find your next ebook or try a free sample before you choose.</p>
-          <Link className="studio-button outline" href="/books">
-            Explore ebooks
-          </Link>
-        </div>
-      ) : (
-        <div className="cart-ledger-layout">
-          {/* LEFT: Ruled Ledger Table */}
-          <section aria-label="Items in your cart" className="cart-ledger-main">
-            <div className="cart-ledger-header">
-              <span className="clh-item">ITEM</span>
-              <span className="clh-qty">QUANTITY</span>
-              <span className="clh-price">AMOUNT</span>
-            </div>
-
-            <div className="cart-ledger-rows">
-              {items.map((item, index) => (
-                <article className="cart-ledger-row" key={item.bookId}>
-                  <div className="cart-row-left">
-                    <span className="cart-row-index" aria-hidden="true">
-                      {String(index + 1).padStart(2, '0')}.
-                    </span>
-                    <Link
-                      href={`/books/${item.slug}`}
-                      className="cart-row-cover shrink-0"
-                      aria-label={`View ${item.title}`}
-                    >
-                      <BookCover src={item.coverImage} title={item.title} size="small" />
-                    </Link>
-                    <div className="cart-row-info">
-                      <Link href={`/books/${item.slug}`} className="cart-row-title-link">
-                        <h2 className="cart-row-title">{item.title}</h2>
-                      </Link>
-                      <p className="cart-row-author">by {item.author}</p>
-                      <p className="cart-row-format">
-                        {item.formatSelected} · {money(item.price)} USD / copy
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="cart-row-controls">
-                    <div className="cart-stepper" aria-label={`Quantity for ${item.title}`}>
-                      <button
-                        type="button"
-                        aria-label={`Decrease quantity of ${item.title}`}
-                        onClick={() => updateQuantity(item.bookId, item.quantity - 1)}
-                        className="stepper-btn"
-                      >
-                        <Minus size={13} />
-                      </button>
-                      <output aria-live="polite" className="stepper-val">
-                        {item.quantity}
-                      </output>
-                      <button
-                        type="button"
-                        aria-label={`Increase quantity of ${item.title}`}
-                        disabled={item.quantity >= 99}
-                        onClick={() => updateQuantity(item.bookId, item.quantity + 1)}
-                        className="stepper-btn"
-                      >
-                        <Plus size={13} />
-                      </button>
-                    </div>
-
-                    <button
-                      type="button"
-                      className="cart-remove-link"
-                      onClick={() => removeFromCart(item.bookId)}
-                      aria-label={`Remove ${item.title} from cart`}
-                    >
-                      <Trash2 size={13} className="shrink-0" />
-                      <span>Remove</span>
-                    </button>
-                  </div>
-
-                  <div className="cart-row-total">
-                    <span className="cart-row-amount">
-                      {money(item.price * item.quantity)}
-                    </span>
-                  </div>
-                </article>
-              ))}
-            </div>
-
-            <div className="cart-ledger-footer-actions">
-              <button
-                type="button"
-                className="cart-clear-btn"
-                onClick={() => {
-                  if (window.confirm('Clear all volumes from your reading slip?')) clearCart();
-                }}
-              >
-                Clear cart
-              </button>
-              <Link href="/books" className="cart-continue-link">
-                ← Continue shopping
-              </Link>
-            </div>
-          </section>
-
-          {/* RIGHT: Accounting Settlement Slip */}
-          <aside className="cart-summary-slip" aria-label="Order summary">
-            <div className="slip-perforation-edge" aria-hidden="true" />
-            <div className="slip-inner">
-              <div className="slip-kicker-bar">
-                <span>CHECKOUT SUMMARY</span>
-                <span className="slip-number">DIGITAL ORDER</span>
-              </div>
-
-              <h2 className="slip-title">Order summary</h2>
-              <p className="slip-caption">
-                All editions are delivered digitally upon completion. Universal DRM-free licensing included.
-              </p>
-
-              <dl className="slip-ledger-dl">
-                <div className="slip-ledger-row">
-                  <dt>Items ({cartCount})</dt>
-                  <span className="dot-leader-fill" aria-hidden="true" />
-                  <dd>{money(cartTotal)}</dd>
-                </div>
-                <div className="slip-ledger-row">
-                  <dt>File formats</dt>
-                  <span className="dot-leader-fill" aria-hidden="true" />
-                  <dd>See product details</dd>
-                </div>
-                <div className="slip-ledger-row">
-                  <dt>Delivery Method</dt>
-                  <span className="dot-leader-fill" aria-hidden="true" />
-                  <dd>Direct Instant Download</dd>
-                </div>
-                <div className="slip-ledger-row">
-                  <dt>License Rights</dt>
-                  <span className="dot-leader-fill" aria-hidden="true" />
-                  <dd>DRM-Free Perpetual</dd>
-                </div>
-                <div className="slip-ledger-row slip-total-row">
-                  <dt className="slip-total-label">Total</dt>
-                  <span className="dot-leader-fill" aria-hidden="true" />
-                  <dd className="slip-total-val">{money(cartTotal)} USD</dd>
-                </div>
-              </dl>
-
-              <Link href="/checkout" className="cart-checkout-btn">
-                <span>Continue to checkout</span>
-                <ArrowRight size={14} className="shrink-0" />
-              </Link>
-
-              <div className="slip-guarantees-box">
-                <p className="slip-assurance">
-                  Immediate digital delivery link presented on screen and sent to your email receipt.
-                </p>
-                <div className="slip-extra-links">
-                  <Link href="/contact" className="slip-sub-link">
-                    Need help with your order?
-                  </Link>
-                  <Link href="/legal/refunds" className="slip-sub-link">
-                    Delivery &amp; refund terms
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </aside>
-        </div>
-      )}
-    </div>
-  );
+  const [removed, setRemoved] = useState<CartItem[]>([]);
+  function remove(item: CartItem) { setRemoved([item]); removeFromCart(item.bookId); }
+  function undo() {
+    updateShopping(previous => ({...previous, items:[...previous.items,...removed.filter(item=>!previous.items.some(current=>current.bookId===item.bookId))]}));
+    setRemoved([]);
+  }
+  return <div className="storefront store-cart">
+    <Link className="studio-back" href="/books"><ArrowLeft size={16}/> Continue shopping</Link>
+    <div className="studio-page-heading"><span className="studio-kicker">YOUR DIGITAL GOODS</span><h1>Your cart.</h1><p>Review your finds, then continue to secure checkout.</p></div>
+    {storageError && <p className="studio-error" role="alert">{storageError}</p>}
+    {removed.length>0 && <div className="store-cart-feedback" role="status"><span>{removed.length===1?'Item removed.':'Cart cleared.'}</span><button type="button" onClick={undo}><Undo2 size={16}/> Undo</button></div>}
+    {!items.length ? <section className="store-cart-empty"><ShoppingBag size={32} aria-hidden="true"/><h2>Your next discovery is waiting.</h2><p>Explore our ebooks and try a free sample before you choose.</p><Link className="studio-button" href="/books">Explore ebooks <ArrowRight size={17}/></Link></section> : <div className="store-cart-layout">
+      <section aria-label="Items in your cart" className="store-cart-items">
+        <div className="store-cart-section-heading"><h2>{cartCount} {cartCount===1?'item':'items'} in your cart</h2><button type="button" className="store-cart-clear" onClick={()=>{setRemoved(items);clearCart();}}>Clear cart</button></div>
+        {items.map(item=><article className="store-cart-item" key={item.bookId}>
+          <Link href={`/books/${item.slug}`} className="store-cart-cover" aria-label={`View ${item.title}`}><BookCover src={item.coverImage} title={item.title} size="small"/></Link>
+          <div className="store-cart-item-info"><Link href={`/books/${item.slug}`}><h2 className="store-cart-item-title">{item.title}</h2></Link><p>{item.formatSelected}</p><span className="store-cart-unit-price">{money(item.price)} each</span>
+            <div className="store-cart-item-actions"><div className="store-cart-stepper" role="group" aria-label={`Quantity for ${item.title}`}><button type="button" aria-label={`Decrease quantity of ${item.title}`} disabled={item.quantity<=1} onClick={()=>updateQuantity(item.bookId,item.quantity-1)}><Minus size={16}/></button><output aria-live="polite">{item.quantity}</output><button type="button" aria-label={`Increase quantity of ${item.title}`} disabled={item.quantity>=99} onClick={()=>updateQuantity(item.bookId,item.quantity+1)}><Plus size={16}/></button></div><button type="button" className="store-cart-remove" onClick={()=>remove(item)} aria-label={`Remove ${item.title} from cart`}><Trash2 size={15}/> Remove</button></div>
+          </div><strong className="store-cart-item-price">{money(item.price*item.quantity)}</strong>
+        </article>)}
+        <p className="store-cart-digital-note">Digital products only. No shipping or delivery fees.</p>
+      </section>
+      <aside className="store-cart-summary" aria-labelledby="cart-summary-title"><h2 id="cart-summary-title">Order summary</h2><dl><div><dt>Subtotal ({cartCount} {cartCount===1?'item':'items'})</dt><dd>{money(cartTotal)}</dd></div><div><dt>Delivery</dt><dd>Digital download</dd></div><div className="store-cart-total"><dt>Total before tax</dt><dd>{money(cartTotal)} <small>USD</small></dd></div></dl><p className="store-cart-tax-note">Any applicable taxes are shown at payment.</p><Link href="/checkout" className="store-primary-action">Continue to checkout <ArrowRight size={18}/></Link><p className="store-cart-access-note">Access your downloads after payment confirmation.</p><Link href="/legal/refunds" className="store-cart-policy">Delivery &amp; refund policy</Link><Link href="/contact" className="store-cart-policy">Need help with your order?</Link></aside>
+    </div>}
+  </div>;
 }

@@ -12,7 +12,7 @@ import {
   Bookmark,
 } from 'lucide-react';
 import BookCover from '../books/BookCover';
-import { money, formatsLabel } from '../../lib/catalog';
+import { money, formatsLabel, authorLabel } from '../../lib/catalog';
 import { useCart } from '../../lib/store/cart';
 import type { Book, BundleOffer } from '../../lib/types';
 
@@ -118,7 +118,7 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
                     </div>
 
                     <div className="hero-pic-front-footer">
-                      <span className="hero-pic-front-author">{second?.author || "DIGITAL EDITION"}</span>
+                      <span className="hero-pic-front-author">{second ? authorLabel(second.author) : "DIGITAL EDITION"}</span>
                     </div>
                   </div>
                 </Link>
@@ -279,7 +279,7 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
                   <div className="boxset-left">
                     <span className="store-set-kicker">A CURATED DIGITAL READING SET</span>
                     <h3 id="boxset-heading" className="boxset-title">
-                      {currentBundle.title}
+                      {currentBundle.title === 'The Complete Mastery & Productivity Bundle' ? <>The Complete<br/>Mastery &amp; <em>Productivity</em><br/>Bundle</> : currentBundle.title}
                     </h3>
 
                     <p className="boxset-desc">Bring related ideas together. Explore {currentBundle.books.length} complementary ebooks in one reading set, with a sample and format details for every title.</p>
@@ -313,7 +313,7 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
                   </div>
 
                   {/* Right Column: 3D Box Set Slipcase with Peeking Books and Save Badge */}
-                  <div className="boxset-right">
+                  <div className="boxset-right" aria-hidden="true">
                     <div className="boxset-visual-wrap">
                       {/* Books protruding from top of slipcase */}
                       <div className="boxset-peeking-books">
@@ -344,7 +344,7 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
                           {/* Burgundy Circular "SAVE 22%" Seal Badge Overlapping Top Right */}
                           <div className="boxset-seal-badge" aria-label={`${currentBundle.books.length} digital ebooks`}>
                             <div className="boxset-seal-dashed-ring" />
-                            <span className="boxset-seal-label">EBOOKS</span>
+                            <span className="boxset-seal-label">DIGITAL</span>
                             <span className="boxset-seal-percent">{currentBundle.books.length}</span>
                           </div>
 
@@ -355,8 +355,7 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
                                 {book2?.title.split(':')[0] === 'Atomic Architectures' ? (
                                   <>
                                     Atomic<br />
-                                    Architec-<br />
-                                    tures
+                                    <em>Architectures</em>
                                   </>
                                 ) : (
                                   book2?.title.split(':')[0] || 'Atomic Architectures'

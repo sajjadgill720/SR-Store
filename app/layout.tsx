@@ -7,6 +7,7 @@ import './theme.css';
 import './storefront.css';
 import './refinement.css';
 import './store-identity.css';
+import './customer-experience.css';
 import { CartProvider } from '../lib/store/cart';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';

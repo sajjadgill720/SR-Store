@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useBrowserSearch } from '@/lib/use-browser-search';
 import {
   ArrowLeft,
@@ -14,10 +15,11 @@ import {
   CheckCircle,
 } from 'lucide-react';
 import type { Book } from '../../lib/types';
-import { sampleSections, money, formatsLabel } from '../../lib/catalog';
+import { sampleSections, money, formatsLabel, authorLabel } from '../../lib/catalog';
 import { useCart } from '../../lib/store/cart';
 
 export default function SampleReader({ book }: { book: Book }) {
+  const router = useRouter();
   const sections = sampleSections(book.sampleExcerpt || '');
   const from = useBrowserSearch().get('from');
   const bookPath = `/books/${book.slug}${
@@ -64,13 +66,13 @@ export default function SampleReader({ book }: { book: Book }) {
         change(position - 1);
       }
       if (event.key === 'Escape') {
-        window.location.assign(bookPath);
+        router.push(bookPath);
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [position, sections.length, change, bookPath]);
+  }, [position, sections.length, change, bookPath, router]);
 
   // Set reader attribute on body for chrome styling
   useEffect(() => {
@@ -167,7 +169,7 @@ export default function SampleReader({ book }: { book: Book }) {
       {/* Main Reading Canvas */}
       <main className="reader-page" style={{ fontSize: `${size}px` }}>
         <div className="knovera-reader-title-area">
-          <span className="studio-kicker">{book.author}</span>
+          <span className="studio-kicker">{authorLabel(book.author)}</span>
           <h1 ref={titleRef} tabIndex={-1} className="knovera-reader-h1">
             {book.title}
           </h1>

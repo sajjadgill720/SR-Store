@@ -4738,7 +4738,7 @@ textarea:focus-visible {
 .book-acquisition-btn small,
 .cart-checkout-btn,
 .cart-checkout-btn span {
-  color: var(--color-paper-page) !important;
+  color: #FCFAF6 !important;
 }
 
 .book-acquisition-btn .btn-price-tag,
