@@ -4,11 +4,14 @@ import { AccessError, purchaseAccess, PURCHASE_COOKIE } from '@/lib/downloads/ac
 import { currentUser, AuthError } from '@/lib/auth/server';
 import { sameOrigin } from '@/lib/auth/http';
 import { accountLibrary } from '@/lib/downloads/account';
+import { rateLimit, RequestError, requestFailure } from '@/lib/http-guard';
 
 const headers = { 'Cache-Control': 'private, no-store' };
 export async function GET(req: NextRequest) {
   try {
+    await rateLimit(req, 'library', 60);
     const user = await currentUser();
+    if (user) await rateLimit(req, 'account-library', 60, 60000, user.id);
     if (user) return NextResponse.json({ books:await accountLibrary(user),account:true,orderNumber:'Your account' }, {headers});
     const { order, entitlements } = await purchaseAccess(req.cookies.get(PURCHASE_COOKIE)?.value);
     const books = (await db.getBooksByIds(entitlements.map(item => item.bookId)))
@@ -16,6 +19,7 @@ export async function GET(req: NextRequest) {
       .map(book => ({ ...book, formats: book.formats.filter(format => order.items.some(item => item.bookId === book.id && item.formats.includes(format))) }));
     return NextResponse.json({ books, orderNumber: order.orderNumber }, { headers });
   } catch (error) {
+    if (error instanceof RequestError) return requestFailure(error);
     return NextResponse.json({ error: error instanceof AccessError || error instanceof AuthError ? error.message : 'Could not open your library. Please try again.' }, { status: error instanceof AccessError || error instanceof AuthError ? error.status : 503, headers });
   }
 }

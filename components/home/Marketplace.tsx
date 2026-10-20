@@ -10,9 +10,9 @@ import {
   Smartphone,
   RefreshCw,
   Bookmark,
-  Mail,
 } from 'lucide-react';
 import BookCover from '../books/BookCover';
+import ReaderClubEntry from '../layout/ReaderClubEntry';
 import BundleShowcase from './BundleShowcase';
 import { money, formatsLabel, authorLabel } from '../../lib/catalog';
 import { useCart } from '../../lib/store/cart';
@@ -63,11 +63,7 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
                 <span className="hero-pic-formats-dash" aria-hidden="true" />
                 <span className="hero-pic-formats-tags">Kindle · EPUB · PDF</span>
               </div>
-              <Link href="/reader-club" className="hero-reader-club">
-                <span className="hero-reader-club-icon"><Mail size={18} aria-hidden="true" /></span>
-                <span><strong>Join the Reader Club</strong><small>Free reading news · Choose your topics</small></span>
-                <ArrowRight size={17} aria-hidden="true" />
-              </Link>
+              <ReaderClubEntry />
             </div>
 
             {/* Right: 3D Fanned 3-Book Stack & Instant Delivery Stamp */}

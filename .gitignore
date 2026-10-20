@@ -46,3 +46,4 @@ next-env.d.ts
 /artifacts/community/*.sqlite*
 /.data/email.sqlite*
 /.data/email-preview.html
+/.data/community-dev*.log

@@ -30,10 +30,22 @@ test('email flows: validation, consent, previews, retries and duplicate suppress
   const confirmation = mail.preview(pending);
   assert.ok(confirmation);
   assert.equal(mail.subscribe('reader@example.com', []), null);
+  const pendingReceipt = mail.rememberClub('reader@example.com');
+  assert.equal(mail.clubSessionStatus(pendingReceipt.token), 'pending');
+  assert.equal(mail.clubSessionStatus('invalid'), 'none');
+  sqlite = new DatabaseSync(process.env.EMAIL_DB_PATH);
+  sqlite.prepare('DELETE FROM limits').run();
+  assert.equal(mail.subscribe(' READER@Example.com ', ['deep-work']), null, 'Repeat signup after cooldown preserves the original confirmation');
+  assert.equal(mail.outbox().filter(row => row.id.startsWith('confirmation-')).length, 1);
   assert.equal(mail.campaign({id:'before-confirmation',subject:'News',body:'Hello'}),0);
   const token = confirmation.text.match(/token=([a-f0-9]{64})/)[1];
   assert.equal(mail.confirm('bad'),null);
   assert.equal(mail.confirm(token).email,'reader@example.com');
+  assert.equal(mail.clubSessionStatus(pendingReceipt.token), 'pending', 'Unverified signup cannot disclose membership');
+  const memberReceipt = mail.rememberClub('reader@example.com', true);
+  assert.equal(mail.clubSessionStatus(memberReceipt.token), 'subscribed');
+  assert.equal(mail.subscribe('READER@example.com', []), null);
+  assert.equal(sqlite.prepare('SELECT count(*) AS n FROM contacts').get().n, 1);
   assert.equal(mail.campaign({id:'confirmed',subject:'News',body:'Hello',topic:'new-releases'}),1);
   mail.campaign({id:'confirmed',subject:'News',body:'Hello',topic:'new-releases'});
   assert.equal(mail.outbox().filter(row=>row.id.startsWith('campaign-confirmed-')).length,1);
@@ -41,6 +53,7 @@ test('email flows: validation, consent, previews, retries and duplicate suppress
   const campaignRow=mail.outbox().find(row=>row.id.startsWith('campaign-confirmed-'));
   const unsubscribeToken=mail.preview(campaignRow.id).text.match(/token=([a-f0-9]{64})/)[1];
   assert.equal(mail.unsubscribe(unsubscribeToken),true);
+  assert.equal(mail.clubSessionStatus(memberReceipt.token), 'none', 'Unsubscribe invalidates remembered membership');
   assert.equal(mail.confirm(token),null);
   assert.equal(mail.campaign({id:'after-unsubscribe',subject:'News',body:'Hello'}),0);
   assert.equal(mail.recovery('missing@example.com',[]),null);
@@ -66,7 +79,6 @@ test('email flows: validation, consent, previews, retries and duplicate suppress
   const before=calls;
   await mail.deliver(failedId);
   assert.equal(calls,before);
-  sqlite=new DatabaseSync(process.env.EMAIL_DB_PATH);
   sqlite.prepare('UPDATE mail SET next_attempt=0 WHERE id=?').run(failedId);
   global.fetch=async()=>({ok:true,json:async()=>({id:'retry-success'})});
   assert.equal(await mail.deliver(failedId),'accepted');

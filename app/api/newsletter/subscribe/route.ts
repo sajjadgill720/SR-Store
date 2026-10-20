@@ -1,6 +1,7 @@
 import { limitedBody, rateLimit, RequestError, requestFailure } from '@/lib/http-guard';
 import { NextRequest, NextResponse } from 'next/server';
 import { emailAddress, subscribe, deliver } from '@/lib/email/service.mjs';
+import { rememberReaderClub } from '@/lib/email/club-cookie';
 export async function POST(req: NextRequest) {
   try {
     await rateLimit(req,'newsletter',5);
@@ -14,8 +15,9 @@ export async function POST(req: NextRequest) {
     await rateLimit(req,'newsletter-email',3,3600000,email);
     const id = subscribe(email, topics.length ? topics : ['general']);
     if (id) await deliver(id);
-    if (!json) return NextResponse.redirect(new URL('/newsletter/confirm', req.url), 303);
-    return NextResponse.json({ success: true, message: 'Check your inbox to confirm your subscription. If you are already subscribed, you are all set.' });
+    const response = !json ? new NextResponse(null, { status: 303, headers: { Location: '/newsletter/confirm' } })
+      : NextResponse.json({ success: true, status: 'pending', message: 'Check your inbox to confirm your subscription. If you are already subscribed, you are all set.' }, { headers: { 'Cache-Control': 'private, no-store' } });
+    return rememberReaderClub(response, email);
   } catch (error) {
     if(error instanceof RequestError)return requestFailure(error);
     const invalid = error instanceof SyntaxError || (error instanceof Error && error.message === 'Valid email required');

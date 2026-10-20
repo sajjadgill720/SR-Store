@@ -80,7 +80,8 @@ test('email verification validates type and same-origin before consuming a token
   const server={AuthError,serverAuth:async()=>({auth:{verifyOtp:async()=>{calls++;return {error:null};}}})};
   const http=compiled('lib/auth/http.ts',id=>id==='next/server'?{NextResponse}:server);
   const nav=compiled('lib/auth/navigation.ts',require);
-  const route=compiled('app/api/auth/confirm/route.ts',id=>({'next/server':{NextResponse},'@/lib/auth/server':server,'@/lib/auth/http':http,'@/lib/auth/navigation':nav}[id]));
+  const guard={rateLimit:async()=>{},limitedBody:req=>req.text(),RequestError:class extends Error {},requestFailure:()=>NextResponse.json({error:'Limited'},{status:429})};
+  const route=compiled('app/api/auth/confirm/route.ts',id=>({'next/server':{NextResponse},'@/lib/auth/server':server,'@/lib/auth/http':http,'@/lib/auth/navigation':nav,'@/lib/http-guard':guard}[id]));
   const request=(data,origin='http://localhost')=>new NextRequest('http://localhost/api/auth/confirm',{method:'POST',headers:{host:'localhost',origin,'Content-Type':'application/json'},body:JSON.stringify(data)});
   assert.equal((await route.POST(request({type:'recovery',token_hash:'secret'},'https://evil.example'))).status,403);
   assert.equal((await route.POST(request({type:'admin',token_hash:'secret'}))).status,400);assert.equal(calls,0);

@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { query, transaction } from '../db/postgres.mjs';
 import { getCircle, getDiscussion } from '../data/community';
 import { emptyActivity, type Activity, type Member } from './types';
+import { consumeLimit } from '../http-guard';
 
 export class CommunityError extends Error { constructor(message: string, public status = 400) { super(message); } }
 export function text(value: unknown, min: number, max: number, label: string) {
@@ -9,9 +10,7 @@ export function text(value: unknown, min: number, max: number, label: string) {
   return value.trim();
 }
 export async function limit(key: string, max: number, windowMs: number) {
-  const now=Date.now();
-  const {rows}=await query<{count:number}>('INSERT INTO knovera.limits VALUES($1,1,$2) ON CONFLICT(key) DO UPDATE SET count=CASE WHEN knovera.limits.expires<=$3 THEN 1 ELSE knovera.limits.count+1 END,expires=CASE WHEN knovera.limits.expires<=$3 THEN excluded.expires ELSE knovera.limits.expires END RETURNING count',[key,now+windowMs,now]);
-  if (rows[0].count>max) throw new CommunityError('Too many attempts. Please try again later.',429);
+  await consumeLimit(`community:${key}`, max, windowMs);
 }
 export async function getActivity(member:string) {
   const row=(await query<{value:Activity;revision:number}>('SELECT value,revision FROM knovera.activity WHERE member=$1',[member])).rows[0];

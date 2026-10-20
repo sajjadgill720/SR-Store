@@ -1,18 +1,23 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useReaderClub, rememberClubSignup } from '@/lib/store/reader-club';
+import React, { useState, useSyncExternalStore } from 'react';
 import Link from 'next/link';
-import { 
-  HeartHandshake, 
-  CheckCircle2, 
-  ShieldCheck, 
-  Gift, 
-  Bell, 
+import {
+  HeartHandshake,
+  CheckCircle2,
+  ShieldCheck,
+  Gift,
+  Bell,
   ArrowRight
 } from 'lucide-react';
 
 export default function ReaderClubPage() {
-  const [email, setEmail] = useState('');
+  const clubStatus = useReaderClub();
+  const [useAnotherEmail, setUseAnotherEmail] = useState(false);
+  const draftEmail = useSyncExternalStore(() => () => {}, () => { try { return sessionStorage.getItem('knovera-reader-club-email') || ''; } catch { return ''; } }, () => '');
+  const [emailValue, setEmail] = useState<string | null>(null);
+  const email = emailValue ?? draftEmail;
   const [selectedTopics, setSelectedTopics] = useState<string[]>([
     'deep-work',
     'new-releases'
@@ -22,10 +27,11 @@ export default function ReaderClubPage() {
   const [error, setError] = useState('');
 
   const availableTopics = [
-    { id: 'deep-work', label: 'Deep Work & Productivity Protocol updates' },
-    { id: 'habit-systems', label: 'Behavioral Architecture & Habit Scorecards' },
-    { id: 'children-activities', label: 'Children STEM & Mindfulness Worksheets' },
-    { id: 'new-releases', label: 'New Book Releases & Direct Launch Discounts' }
+    { id: 'general', label: 'Reading inspiration & useful digital resources' },
+    { id: 'deep-work', label: 'Focus & productivity' },
+    { id: 'habit-systems', label: 'Habits & personal growth' },
+    { id: 'children-activities', label: 'Children’s learning & activities' },
+    { id: 'new-releases', label: 'New ebooks & special offers' }
   ];
 
   const handleToggleTopic = (topicId: string) => {
@@ -38,6 +44,7 @@ export default function ReaderClubPage() {
     e.preventDefault();
     if (!email.trim() || !email.includes('@')) return;
 
+    if (!selectedTopics.length) { setError('Choose at least one topic to continue.'); return; }
     setIsSubmitting(true);
     setError('');
     try {
@@ -51,7 +58,10 @@ export default function ReaderClubPage() {
       });
       const result = await res.json();
       if (!res.ok) throw new Error(result.error || 'Could not save your signup.');
+      try { sessionStorage.removeItem('knovera-reader-club-email'); } catch { /* Optional browser draft. */ }
       setSubmitted(true);
+      setUseAnotherEmail(false);
+      rememberClubSignup();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Please try again later.');
     } finally {
@@ -61,7 +71,7 @@ export default function ReaderClubPage() {
 
   return (
     <div className="py-12 sm:py-16 max-w-4xl mx-auto px-4">
-      
+
       {/* Hero */}
       <div className="text-center max-w-2xl mx-auto mb-12">
         <div className="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center mx-auto mb-4">
@@ -79,7 +89,7 @@ export default function ReaderClubPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-        
+
         <Link href="/community" className="md:col-span-12 rounded-2xl border border-[#c6ddd0] bg-[var(--store-sage)] p-6 flex items-center justify-between gap-4"><div><h2 className="font-serif text-2xl text-[var(--store-ink)]">Find your reading circle</h2><p className="text-sm text-slate-600 mt-1">Thoughtful reads, small practices, and room for your perspective.</p></div><ArrowRight className="shrink-0 text-[var(--store-green)]" /></Link>
         {/* Left: Perks breakdown */}
         <div className="md:col-span-6 space-y-4">
@@ -123,14 +133,14 @@ export default function ReaderClubPage() {
         {/* Right: Signup & Preferences Form */}
         <div className="md:col-span-6 bg-white p-6 sm:p-8 rounded-2xl border border-stone-200 shadow-sm" id="preferences">
           {error && <p role="alert" className="studio-error">{error}</p>}
-          {submitted ? (
+          {clubStatus === 'loading' ? <p role="status">Checking your Reader Club…</p> : (submitted || (!useAnotherEmail && clubStatus === 'subscribed' && !draftEmail)) ? (
             <div className="text-center py-8 space-y-4">
               <CheckCircle2 className="w-12 h-12 text-emerald-600 mx-auto" />
               <h3 className="font-serif text-2xl font-bold text-[var(--store-ink)]">
-                Check your inbox
+                {clubStatus === 'subscribed' ? 'You’re in the Reader Club' : 'Confirm your subscription'}
               </h3>
               <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
-                Check <strong>{email}</strong> for a confirmation link. Already subscribed? You’re all set. Free resources are available while you wait.
+                {clubStatus === 'subscribed' ? 'Your membership is active. Explore your circles and free resources below.' : 'Check your inbox for your confirmation link. Already subscribed? You’re all set. You do not need to register again.'}
               </p>
               <Link
                 href="/free-resources"
@@ -139,11 +149,13 @@ export default function ReaderClubPage() {
                 <span>Access Free Resources</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
+              <p><Link href="/community" className="studio-text-link">Explore reading circles →</Link></p>
+              <button type="button" className="studio-text-link" onClick={() => { setUseAnotherEmail(true); setSubmitted(false); setEmail(''); }}>Use a different email</button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <h2 className="font-serif text-lg font-bold text-[var(--store-ink)] pb-2 border-b border-stone-200">
-                Join or Update Preferences
+                Join the Reader Club
               </h2>
 
               <div>
@@ -164,7 +176,7 @@ export default function ReaderClubPage() {
               {/* Topic Interests Selection */}
               <div>
                 <label className="text-xs font-bold text-[var(--store-ink)] block mb-2">
-                  Select Your Topics of Interest:
+                  Choose what you’d like to receive:
                 </label>
                 <div className="space-y-2">
                   {availableTopics.map((topic) => (
@@ -195,7 +207,7 @@ export default function ReaderClubPage() {
               </div>
 
               <p className="text-[11px] text-stone-400 text-center">
-                Unsubscribe or change your topics at anytime. No mandatory purchase required.
+                Unsubscribe from any newsletter. Free resources and community reading need no purchase.
               </p>
             </form>
           )}

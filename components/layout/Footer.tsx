@@ -2,6 +2,7 @@
 
 import Link from './FooterLink';
 import { usePathname } from 'next/navigation';
+import { useReaderClub } from '@/lib/store/reader-club';
 import Newsletter from './Newsletter';
 import { ArrowUp } from 'lucide-react';
 
@@ -44,9 +45,10 @@ const groups = [
 ];
 
 export default function Footer() {
+  const clubStatus = useReaderClub();
   const path = usePathname();
   if (['/account/login','/account/signup','/account/update-password'].includes(path)) return null;
-  if (['/cart','/checkout','/access','/account/library','/checkout/return'].includes(path) || path.startsWith('/orders/')) return <footer id="store-footer" tabIndex={-1} className="store-flow-footer"><Link href="/">Knovera · Digital store</Link><nav aria-label="Customer support"><Link href="/contact">Support</Link><Link href="/legal/refunds">Delivery &amp; refunds</Link><Link href="/legal/privacy">Privacy</Link></nav></footer>;
+  if ((path === '/community' || path.startsWith('/community/')) || ['/cart','/checkout','/access','/account/library','/checkout/return'].includes(path) || path.startsWith('/orders/')) return <footer id="store-footer" tabIndex={-1} className="store-flow-footer"><Link href="/">Knovera · Digital store</Link><nav aria-label="Customer support"><Link href="/contact">Support</Link><Link href="/legal/refunds">Delivery &amp; refunds</Link><Link href="/legal/privacy">Privacy</Link></nav></footer>;
   const scrollToTop = () => {
     if (typeof window !== 'undefined') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -70,7 +72,7 @@ export default function Footer() {
         </div>
 
         {/* The Dispatch Letter & Postal Requisition Slip */}
-        <section className="dispatch-envelope-section" aria-label="Knovera newsletter">
+        {clubStatus === 'none' && path !== '/reader-club' && <section className="dispatch-envelope-section" aria-label="Knovera newsletter">
           <div className="dispatch-letter-left">
             <div className="dispatch-eyebrow">
               <span className="dispatch-fleuron">✦</span>
@@ -94,7 +96,9 @@ export default function Footer() {
           <div className="dispatch-slip-right">
             <Newsletter />
           </div>
-        </section>
+        </section>}
+
+        {clubStatus === 'pending' && <p role="status" className="store-club-saved">Your Reader Club signup is saved. Check your inbox to confirm; if already subscribed, you’re all set. <Link href="/community">Explore reading circles →</Link></p>}
 
         {/* Directory Structured as Table of Contents */}
         <div className="colophon-directory">
