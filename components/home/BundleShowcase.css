@@ -1,0 +1,61 @@
+.bshow-showcase { width:100%; min-width:0; align-self:center; }
+.bshow-stage { position:relative; height:430px; perspective:1100px; isolation:isolate; }
+.bshow-halo { position:absolute; inset:8% -4% 0; border-radius:50%; background:radial-gradient(ellipse,#d7c29b52 0%,#e5d5b621 45%,transparent 72%); pointer-events:none; }
+.bshow-scene { position:relative; width:100%; height:100%; transform:rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg)); transition:transform .5s cubic-bezier(.2,.7,.2,1); transform-style:preserve-3d; }
+.bshow-books { position:absolute; bottom:108px; left:50%; width:76%; max-width:320px; display:flex; gap:13px; align-items:flex-end; transform:translateX(-50%); z-index:2; }
+.bshow-book { --angle:-5deg; position:relative; flex:1; min-width:0; height:270px; border:1px solid #b9ab9466; border-radius:4px 9px 9px 4px; text-align:left; padding:30px 18px 24px 22px; display:flex; flex-direction:column; color:#211e19; background:#ded5c5; transform:rotate(var(--angle)); transform-origin:50% 100%; box-shadow:4px 9px 18px #332b2226,inset 4px 0 8px #46372314; cursor:pointer; transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .5s,filter .3s; -webkit-tap-highlight-color:transparent; }
+.bshow-book::after { content:''; position:absolute; top:4px; bottom:4px; right:-4px; width:4px; border-radius:0 3px 3px 0; background:repeating-linear-gradient(90deg,#eee8da 0 1px,#c8bcaa 1px 2px); z-index:-1; }
+.bshow-book.bshow-umber { --angle:4deg; color:#fcf7ed; background:linear-gradient(115deg,#776a54,#635744); border-color:#645944; }
+.bshow-book.bshow-sand { background:linear-gradient(115deg,#e9e1d3,#d7ccba); }
+.bshow-spine { position:absolute; inset:0 auto 0 5px; width:3px; background:linear-gradient(90deg,#342b211f,transparent); pointer-events:none; }
+.bshow-imprint { font:500 8px var(--font-sans),sans-serif; letter-spacing:.18em; opacity:.85; }
+.bshow-ribbon { position:absolute; right:18px; top:-1px; width:16px; height:48px; background:#70283b; clip-path:polygon(0 0,100% 0,100% 100%,50% 80%,0 100%); }
+.bshow-bookTitle { font:400 clamp(22px,2.1vw,29px)/1.06 var(--font-editorial),Georgia,serif; margin-top:37px; overflow-wrap:anywhere; letter-spacing:-.015em; text-wrap:balance; }
+.bshow-umber .bshow-bookTitle { font-style:italic; font-size:23px; }
+.bshow-rule { width:26px; height:1px; background:currentColor; opacity:.5; margin-top:17px; }
+.bshow-peek { position:absolute; bottom:24px; right:15px; width:26px; height:26px; border:1px solid currentColor; border-radius:50%; display:grid; place-items:center; opacity:.6; }
+.bshow-book.bshow-selected { transform:translateY(-44px) rotate(0deg); box-shadow:4px 20px 30px #332b2233,inset 4px 0 8px #46372314; filter:brightness(1.025); }
+.bshow-book:focus-visible { outline:3px solid #9e6b18; outline-offset:7px; }
+.bshow-slipcase { position:absolute; left:50%; bottom:15px; width:94%; max-width:390px; height:205px; transform:translateX(-50%) translateZ(12px); display:grid; place-items:center; background:linear-gradient(120deg,#433d33,#302b25); border:1px solid #746955; border-radius:9px; box-shadow:0 24px 25px -16px #342b2266,inset 0 10px 14px -10px #000b; z-index:3; pointer-events:auto; }
+.bshow-slipcase::before { content:''; position:absolute; top:0; left:6px; right:6px; height:2px; background:linear-gradient(90deg,transparent,#a6987b66,transparent); }
+.bshow-label { width:77%; min-height:120px; padding:16px 12px; background:#faf7f0; border:1px solid #f4eddf; border-radius:3px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#211e19; }
+.bshow-label>span { font:500 7px var(--font-sans),sans-serif; letter-spacing:.2em; }
+.bshow-label strong { font:400 clamp(22px,2.1vw,29px)/1.05 var(--font-editorial),Georgia,serif; margin-top:10px; }
+.bshow-label i { width:25px; height:1px; background:#9e917e; margin:10px auto; }
+.bshow-label small { font:400 7px var(--font-sans),sans-serif; letter-spacing:.12em; }
+.bshow-seal { position:absolute; z-index:4; right:0; top:34px; width:72px; height:72px; border-radius:50%; background:#70283b; color:#fff8ed; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; box-shadow:0 8px 16px #44232a26; transform:rotate(9deg) translateZ(20px); pointer-events:none; }
+.bshow-seal::after { content:''; position:absolute; inset:5px; border:1px dashed #eed8d0a8; border-radius:50%; }
+.bshow-seal span { font:500 6px var(--font-sans),sans-serif; letter-spacing:.18em; }
+.bshow-seal strong { font:italic 400 27px/1 var(--font-editorial),Georgia,serif; }
+.bshow-hint { display:flex; align-items:center; justify-content:center; gap:8px; color:#655b4c; font:400 11px/1.6 var(--font-sans),sans-serif; margin:5px 0 18px; }
+.bshow-preview { position:relative; min-height:136px; border:1px solid #d9cdbb; border-radius:17px; background:#fcfaf2c9; box-shadow:0 8px 24px -16px #5d493f33; padding:24px; }
+.bshow-invitation { display:flex; align-items:center; justify-content:center; gap:16px; min-height:86px; }
+.bshow-invitationIcon { flex-shrink:0; width:42px; height:42px; border:1px solid #d9cdbb; background:#eee4d2; border-radius:50%; color:#72583b; display:grid; place-items:center; }
+.bshow-preview h4 { font:500 27px/1.15 var(--font-editorial),Georgia,serif; color:#211e19; margin:0 0 8px; }
+.bshow-preview p { font:400 12px/1.7 var(--font-sans),sans-serif; color:#5f594f; margin:0; }
+.bshow-previewOpen { background:#fffdf7; border-color:#c4ad8d; }
+.bshow-previewContent { animation:bshow-reveal .3s ease both; }
+.bshow-meta { display:flex; gap:8px 16px; flex-wrap:wrap; margin:0 28px 12px 0; color:#725e43; font:500 9px/1.5 var(--font-sans),sans-serif; letter-spacing:.05em; text-transform:uppercase; }
+.bshow-close { position:absolute; z-index:2; right:10px; top:10px; width:34px; height:34px; display:grid; place-items:center; color:#655b4c; border-radius:50%; }
+.bshow-close:hover { background:#eee4d2; }
+.bshow-actions { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px 18px; margin-top:18px; }
+.bshow-sample,.bshow-details { display:inline-flex; align-items:center; gap:7px; font:500 11px/1.6 var(--font-sans),sans-serif; min-height:38px; }
+.bshow-sample { color:#fffaf2; background:#241f1a; padding:9px 12px; border-radius:8px; }
+.bshow-sample:hover { background:#4a372d; }
+.bshow-details { color:#654635; text-underline-offset:4px; }
+.bshow-details:hover { text-decoration:underline; }
+@keyframes bshow-reveal { from {opacity:0;transform:translateY(5px)} to {opacity:1;transform:translateY(0)} }
+@media(hover:hover) and (pointer:fine) { .bshow-book:hover { transform:translateY(-27px) rotate(-1deg); box-shadow:5px 20px 28px #332b2233; } .bshow-book.bshow-selected:hover { transform:translateY(-48px) rotate(0deg); } }
+@media(max-width:960px) { .bshow-showcase { max-width:520px; margin:auto; } }
+@media(max-width:600px) {
+ .bshow-stage { height:360px; } .bshow-books { bottom:95px; gap:10px; width:76%; } .bshow-book { height:225px; padding:24px 13px 20px 17px; }
+ .bshow-bookTitle { font-size:24px; margin-top:28px; } .bshow-imprint { font-size:7px; } .bshow-ribbon { right:13px; height:42px; width:13px; }
+ .bshow-slipcase { height:165px; width:100%; } .bshow-label { width:80%; min-height:100px; padding:12px 8px; } .bshow-label strong { font-size:24px; }
+ .bshow-umber .bshow-bookTitle { font-size:20px; }
+ .bshow-seal { width:60px; height:60px; top:28px; right:-2px; } .bshow-seal strong { font-size:23px; } .bshow-seal span { font-size:5px; }
+ .bshow-preview { padding:20px; min-height:128px; } .bshow-preview h4 { font-size:26px; } .bshow-invitation { gap:12px; } .bshow-invitationIcon { width:35px; height:35px; }
+ .bshow-close { width:40px; height:40px; top:5px; right:5px; } .bshow-sample,.bshow-details { min-height:44px; }
+ .bshow-hint { font-size:10px; }
+}
+@media(max-width:380px) { .bshow-bookTitle { font-size:21px; } .bshow-label strong { font-size:22px; } .bshow-seal { right:-4px; width:52px; height:52px; } .bshow-invitationIcon { display:none; } }
+@media(prefers-reduced-motion:reduce) { .bshow-scene,.bshow-book,.bshow-book.bshow-selected,.bshow-book.bshow-selected:hover,.bshow-book:hover { transition:none; } .bshow-scene { transform:none; } .bshow-previewContent { animation:none; } }

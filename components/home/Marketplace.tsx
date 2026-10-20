@@ -12,6 +12,7 @@ import {
   Bookmark,
 } from 'lucide-react';
 import BookCover from '../books/BookCover';
+import BundleShowcase from './BundleShowcase';
 import { money, formatsLabel, authorLabel } from '../../lib/catalog';
 import { useCart } from '../../lib/store/cart';
 import type { Book, BundleOffer } from '../../lib/types';
@@ -252,8 +253,6 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
           {/* Dual Edition Box Set / Dynamic Bundle Showcase */}
           {currentBundle && currentBundle.books.length > 0 && (() => {
             const standaloneSum = currentBundle.books.reduce((sum, b) => sum + b.price, 0);
-            const book1 = currentBundle.books[0];
-            const book2 = currentBundle.books[1] || currentBundle.books[0];
 
             return (
               <div className="boxset-section" id="box-sets" aria-labelledby="boxset-heading">
@@ -312,80 +311,7 @@ export default function Marketplace({ books, bundles = [] }: { books: Book[]; bu
                     </div>
                   </div>
 
-                  {/* Right Column: 3D Box Set Slipcase with Peeking Books and Save Badge */}
-                  <div className="boxset-right" aria-hidden="true">
-                    <div className="boxset-visual-wrap">
-                      {/* Books protruding from top of slipcase */}
-                      <div className="boxset-peeking-books">
-                        {/* Left Peeking Book (Sand Cloth Cover) */}
-                        <div className="boxset-book-left">
-                          <div className="boxset-book-ribbon" aria-hidden="true" />
-                          <div className="boxset-book-inner">
-                            <span className="boxset-book-imprint">KNOVERA</span>
-                            <div className="boxset-book-title-block">
-                              <span className="boxset-book-title-serif">
-                                {book1?.title.split(':')[0] === 'The Focused Mind' ? (
-                                  <>
-                                    The<br />
-                                    Focused<br />
-                                    Mind
-                                  </>
-                                ) : (
-                                  book1?.title.split(':')[0] || 'The Focused Mind'
-                                )}
-                              </span>
-                            </div>
-                            <div className="boxset-book-rule" />
-                          </div>
-                        </div>
-
-                        {/* Right Peeking Book (Umber Cloth Cover) */}
-                        <div className="boxset-book-right">
-                          {/* Burgundy Circular "SAVE 22%" Seal Badge Overlapping Top Right */}
-                          <div className="boxset-seal-badge" aria-label={`${currentBundle.books.length} digital ebooks`}>
-                            <div className="boxset-seal-dashed-ring" />
-                            <span className="boxset-seal-label">DIGITAL</span>
-                            <span className="boxset-seal-percent">{currentBundle.books.length}</span>
-                          </div>
-
-                          <div className="boxset-book-inner">
-                            <span className="boxset-book-imprint">KNOVERA</span>
-                            <div className="boxset-book-title-block">
-                              <span className="boxset-book-title-serif">
-                                {book2?.title.split(':')[0] === 'Atomic Architectures' ? (
-                                  <>
-                                    Atomic<br />
-                                    <em>Architectures</em>
-                                  </>
-                                ) : (
-                                  book2?.title.split(':')[0] || 'Atomic Architectures'
-                                )}
-                              </span>
-                            </div>
-                            <div className="boxset-book-rule" />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* The 3D Slipcase Box Front */}
-                      <div className="boxset-slipcase-box">
-                        {/* Interior depth shadow */}
-                        <div className="boxset-slipcase-depth" />
-
-                        {/* Front Inset Paper Label */}
-                        <div className="boxset-paper-label">
-                          <span className="boxset-label-kicker">BOX SET</span>
-                          <span className="boxset-label-title">
-                            {currentBundle.title.replace('The Complete ', '').replace(' Bundle', '')}
-                          </span>
-                          <div className="boxset-label-rule" />
-                          <span className="boxset-label-meta">
-                            {`${currentBundle.books.length} EBOOKS · DIGITAL EDITIONS`}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <BundleShowcase key={currentBundle.id} bundle={currentBundle}/>
                 </div>
               </div>
             );
